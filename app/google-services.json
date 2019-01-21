@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "770258625538",
+    "firebase_url": "https://oc-go4lunch-eliza.firebaseio.com",
+    "project_id": "oc-go4lunch-eliza",
+    "storage_bucket": "oc-go4lunch-eliza.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770258625538:android:621ef5ab504ab3c4",
+        "android_client_info": {
+          "package_name": "com.oc.liza.go4lunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770258625538-kjca2s5damch1of190puatlmub7uuet5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oc.liza.go4lunch",
+            "certificate_hash": "89b949d881bef0b7f986ec14af6cf03680617366"
+          }
+        },
+        {
+          "client_id": "770258625538-d7hgnn77ipep6vp6ksjgaib56cu83s0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwEYfXc1SVsggGTT01TbDB7DWga5kfngI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770258625538-d7hgnn77ipep6vp6ksjgaib56cu83s0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
