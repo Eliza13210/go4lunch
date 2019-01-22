@@ -1,6 +1,20 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
     <string name="sign_in_google">Sign in with Google</string>
     <string name="sign_in_facebook">Sign in with Facebook</string>
     <string name="client_id_google">770258625538-kjca2s5damch1of190puatlmub7uuet5.apps.googleusercontent.com</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">312200446079297</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb312200446079297</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="error_authentication_canceled">error_cancel</string>
+    <string name="error_no_internet">error_no_internet</string>
+    <string name="error_unknown_error">error_unknown</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

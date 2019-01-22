@@ -7,4 +7,8 @@
     <color name="googleRed">#db3236</color>
     <color name="facebookBlue">#4267b2</color>
     <color name="white">#ffff</color>
+
+    //Color profile activity
+    <color name="darkOrange">#b50504</color>
+    <color name="orange">#fc3f1b</color>
 </resources>
