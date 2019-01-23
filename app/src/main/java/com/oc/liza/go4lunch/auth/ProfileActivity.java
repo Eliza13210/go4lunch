@@ -27,9 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 
-public class ProfileActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ProfileActivity extends AppCompatActivity {
 
-    private GoogleMap mMap;
     private TextView mTextMessage;
     /**
      * Get User info
@@ -59,8 +58,6 @@ public class ProfileActivity extends AppCompatActivity implements OnMapReadyCall
      */
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-    private double mProviderLatitude;
-    private double mProviderLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +65,6 @@ public class ProfileActivity extends AppCompatActivity implements OnMapReadyCall
         setContentView(R.layout.activity_profile);
 
         initBottomMenu();
-        initMapFragment();
-    }
-
-    private void initMapFragment() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     private void initBottomMenu() {
@@ -111,16 +101,17 @@ public class ProfileActivity extends AppCompatActivity implements OnMapReadyCall
         };
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney, Australia, and move the camera.
-
-        LatLng place = new LatLng(mProviderLatitude, mProviderLongitude);
-        mMap.addMarker(new MarkerOptions().position(place).title("Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
-    }
+    /**
+     * @Override public void onMapReady(GoogleMap googleMap) {
+     * mMap = googleMap;
+     * <p>
+     * // Add a marker in Sydney, Australia, and move the camera.
+     * <p>
+     * LatLng place = new LatLng(mProviderLatitude, mProviderLongitude);
+     * mMap.addMarker(new MarkerOptions().position(place).title("Marker"));
+     * mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
+     * }
+     */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
