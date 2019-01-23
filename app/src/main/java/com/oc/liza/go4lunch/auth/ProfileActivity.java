@@ -14,6 +14,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,70 +27,101 @@ import com.google.firebase.auth.FirebaseUser;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private GoogleMap mMap;
     private TextView mTextMessage;
-    /** Get user info
-     *
+    /**
+     * Get User info
+     * <p>
+     * <p>
+     * private void updateUIWhenCreating(){
+     * <p>
+     * if (this.getCurrentUser() != null){
+     * <p>
+     * //Get picture URL from Firebase
+     * if (this.getCurrentUser().getPhotoUrl() != null) {
+     * Glide.with(this)
+     * .load(this.getCurrentUser().getPhotoUrl())
+     * .apply(RequestOptions.circleCropTransform())
+     * .into(imageViewProfile);
+     * }
+     * <p>
+     * //Get email & username from Firebase
+     * String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+     * String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+     * <p>
+     * //Update views with data
+     * this.textInputEditTextUsername.setText(username);
+     * this.textViewEmail.setText(email);
+     * }
+     * }
+     */
 
-    private void updateUIWhenCreating(){
-
-        if (this.getCurrentUser() != null){
-
-            //Get picture URL from Firebase
-            if (this.getCurrentUser().getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(this.getCurrentUser().getPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(imageViewProfile);
-            }
-
-            //Get email & username from Firebase
-            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
-            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
-
-            //Update views with data
-            this.textInputEditTextUsername.setText(username);
-            this.textViewEmail.setText(email);
-        }
-    }*/
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    AuthUI.getInstance()
-                            .signOut(ProfileActivity.this)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                public void onComplete(@NonNull Task<Void> task) {
-                                   startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                }
-                            });
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-    };
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
+    private double mProviderLatitude;
+    private double mProviderLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        initBottomMenu();
+        initMapFragment();
+    }
+
+    private void initMapFragment() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    private void initBottomMenu() {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        mOnNavigationItemSelectedListener
+                = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        mTextMessage.setText(R.string.title_home);
+                        AuthUI.getInstance()
+                                .signOut(ProfileActivity.this)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                                    }
+                                });
+                        return true;
+                    case R.id.navigation_dashboard:
+                        mTextMessage.setText(R.string.title_dashboard);
+                        return true;
+                    case R.id.navigation_notifications:
+                        mTextMessage.setText(R.string.title_notifications);
+                        return true;
+                }
+                return false;
+            }
+        };
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney, Australia, and move the camera.
+
+        LatLng place = new LatLng(mProviderLatitude, mProviderLongitude);
+        mMap.addMarker(new MarkerOptions().position(place).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,11 +130,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
     @Nullable
-    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+    protected FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
 
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+    protected Boolean isCurrentUserLogged() {
+        return (this.getCurrentUser() != null);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -110,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity {
                 //User chose the "Search" item
                 break;
         }
-            return true;
+        return true;
 
     }
 

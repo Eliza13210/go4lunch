@@ -11,18 +11,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.oc.liza.go4lunch.auth.ProfileActivity;
 
 import java.util.Arrays;
@@ -30,7 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if User is signed in (non-null) and update UI accordingly.
          currentUser = mAuth.getCurrentUser();
         // updateUI(currentUser);
     }
@@ -65,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         googleButton.setOnClickListener(this);
         facebookButton.setOnClickListener(this);
-startSignInActivity();
+        startSignInActivity();
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
@@ -76,7 +70,6 @@ startSignInActivity();
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
                 new AuthUI.IdpConfig.FacebookBuilder().build());
 
-        Log.e("button", "clicked");
         // Create and launch sign-in intent
         startActivityForResult(
                 AuthUI.getInstance()
@@ -124,7 +117,7 @@ startSignInActivity();
                         showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
                     }
                 }
-                // Sign in failed. If response is null the user canceled the
+                // Sign in failed. If response is null the User canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
@@ -183,14 +176,14 @@ startSignInActivity();
  .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
  @Override public void onComplete(@NonNull Task<AuthResult> task) {
  if (task.isSuccessful()) {
- // Sign in success, update UI with the signed-in user's information
+ // Sign in success, update UI with the signed-in User's information
  Log.d("success", "signInWithCredential:success");
- FirebaseUser user = mAuth.getCurrentUser();
+ FirebaseUser User = mAuth.getCurrentUser();
  Snackbar.make(findViewById(R.id.activity_main), "Authentication Succeded.", Snackbar.LENGTH_SHORT).show();
 
- // updateUI(user);
+ // updateUI(User);
  } else {
- // If sign in fails, display a message to the user.
+ // If sign in fails, display a message to the User.
  Log.w("fail", "signInWithCredential:failure", task.getException());
  Snackbar.make(findViewById(R.id.activity_main), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
  }
@@ -231,12 +224,12 @@ startSignInActivity();
  .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
  @Override public void onComplete(@NonNull Task<AuthResult> task) {
  if (task.isSuccessful()) {
- // Sign in success, update UI with the signed-in user's information
+ // Sign in success, update UI with the signed-in User's information
  Log.d("success", "signInWithCredential:success");
- FirebaseUser user = mAuth.getCurrentUser();
+ FirebaseUser User = mAuth.getCurrentUser();
 
  } else {
- // If sign in fails, display a message to the user.
+ // If sign in fails, display a message to the User.
  Log.w("credential", "signInWithCredential:failure", task.getException());
  Toast.makeText(MainActivity.this, "Authentication failed.",
  Toast.LENGTH_SHORT).show();
