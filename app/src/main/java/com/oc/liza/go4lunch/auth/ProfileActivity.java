@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.auth;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.oc.liza.go4lunch.MainActivity;
+import com.oc.liza.go4lunch.Manifest;
 import com.oc.liza.go4lunch.R;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -67,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         initBottomMenu();
     }
 
+
     private void initBottomMenu() {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -100,18 +103,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
     }
-
-    /**
-     * @Override public void onMapReady(GoogleMap googleMap) {
-     * mMap = googleMap;
-     * <p>
-     * // Add a marker in Sydney, Australia, and move the camera.
-     * <p>
-     * LatLng place = new LatLng(mProviderLatitude, mProviderLongitude);
-     * mMap.addMarker(new MarkerOptions().position(place).title("Marker"));
-     * mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
-     * }
-     */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
