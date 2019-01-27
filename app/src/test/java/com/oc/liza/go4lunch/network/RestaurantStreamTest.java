@@ -1,6 +1,9 @@
 package com.oc.liza.go4lunch.network;
 
+import android.util.Log;
+
 import com.oc.liza.go4lunch.models.Restaurants;
+import com.oc.liza.go4lunch.models.Result;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +26,8 @@ import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class RestaurantStreamTest {
+    private List<Result> results;
+
     @Before
     public void setUp() {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(new Function<Callable<Scheduler>, Scheduler>() {
@@ -43,7 +48,8 @@ public class RestaurantStreamTest {
     public void getRestaurantsStream_shouldReturnObject() {
         //1 - Get the stream
         Observable<Restaurants> observable = RestaurantStream.fetchNearbyRestaurantsStream
-                ("-33.8670522,151.1957362");
+                (("-33.8670522,151.1957362")
+                );
         //2 - Create a new TestObserver
         TestObserver<Restaurants> testObserver = new TestObserver<>();
         //3 - Launch observable
@@ -54,9 +60,32 @@ public class RestaurantStreamTest {
 
         // 4 - Get list of user fetched
         Restaurants restaurants = testObserver.values().get(0);
-        List<Restaurants> results = new ArrayList<>();
+        results=new ArrayList<>();
+        results.addAll(restaurants.getResults());
 
-        assertNotNull(results);
+        assertEquals("OK",restaurants.getStatus());
+    }
+    @Test
+    public void getDetailsStream_shouldReturnObject() {
+        String place_id=results.get(0).getPlace_id();
+        //1 - Get the stream
+        Observable<Restaurants> observable = RestaurantStream.fetchDetailsStream
+                ((place_id)
+                );
+        //2 - Create a new TestObserver
+        TestObserver<Restaurants> testObserver = new TestObserver<>();
+        //3 - Launch observable
+        observable.subscribeWith(testObserver)
+                .assertNoErrors() // 3.1 - Check if no errors
+                .assertNoTimeout() // 3.2 - Check if no Timeout
+                .awaitTerminalEvent(); // 3.3 - Await the stream terminated before continue
+
+        // 4 - Get list of user fetched
+        Restaurants restaurant = testObserver.values().get(0);
+        List<Result> results=new ArrayList<>();
+        results=restaurant.getResults();
+
+        assertEquals("OK",restaurant.getStatus());
     }
 
 }

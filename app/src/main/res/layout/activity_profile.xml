@@ -10,7 +10,7 @@
   <fragment
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:name="com.oc.liza.go4lunch.MapFragment"/>
+      android:name="com.oc.liza.go4lunch.controllers.fragments.MapFragment"/>
 
 
     <android.support.design.widget.BottomNavigationView

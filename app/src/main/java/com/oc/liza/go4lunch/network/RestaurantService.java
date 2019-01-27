@@ -7,15 +7,20 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface RestaurantService {
-     String apiKey="AIzaSyAv1YigRBCspJCcYQwzY7rHtbrX1dpx868";
-     String radius="1500";
-     String type="restaurant";
+     String API_KEY="AIzaSyAv1YigRBCspJCcYQwzY7rHtbrX1dpx868";
+     String RADIUS="1500";
+     String TYPE="restaurant";
+     String NEARBY="nearbysearch";
+     String PLACE_ID="placeid";
 
-    @GET("json")
+    @GET("{search}/json")
     Observable<Restaurants> getRestaurant(
+            @Path("search") String search,
             @Query("location") String location,
             @Query("radius")String radius,
             @Query("type") String type,
@@ -23,7 +28,7 @@ public interface RestaurantService {
             );
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+            .baseUrl("https://maps.googleapis.com/maps/api/place/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build();
