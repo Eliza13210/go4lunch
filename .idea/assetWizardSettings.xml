@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_people_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_public_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,8 +34,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="imageAsset" value="D:\OpenClassrooms\facebook.png" />
-                                      <entry key="outputName" value="ic_workmates" />
-                                      <entry key="themeColor" value="4267b2" />
+                                      <entry key="outputName" value="ic_website" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="b50504" />
                                     </map>
                                   </option>
                                 </PersistentState>
