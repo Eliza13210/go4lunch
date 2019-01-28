@@ -72,6 +72,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private Disposable mDisposable;
     private List<Result> results;
 
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor prefsEditor;
 
     public MapFragment() {
         // Required empty public constructor
@@ -97,6 +99,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        prefs = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        prefsEditor = prefs.edit();
     }
 
     @Override
@@ -221,6 +226,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                     .title("User")));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLatitude, mLongitude), 15));
 
+                            //Save latitude and longitude to calculate distance in list view
+                            prefsEditor.putString("CurrentLatitude", mLatitude.toString()).apply();
+                            prefsEditor.putString("CurrentLongitude", mLongitude.toString()).apply();
 
                             String location = mLatitude.toString() + "," + mLongitude;
                             getRestaurants(location);
@@ -325,8 +333,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             results.addAll(restaurants.getResults());
             Log.e("test", restaurants.getResults().get(0).getName());
 
-            SharedPreferences prefs=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-            SharedPreferences.Editor prefsEditor = prefs.edit();
             Gson gson = new Gson();
             String json = gson.toJson(results);
             prefsEditor.putString("List", json);

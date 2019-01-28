@@ -37,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder restaurantViewHolder, int i) {
-        restaurantViewHolder.updateWithNewsItem(this.listOfRestaurants.get(i), context);
+        restaurantViewHolder.updateWithRestaurantItem(this.listOfRestaurants.get(i), context);
     }
 
     @Override
