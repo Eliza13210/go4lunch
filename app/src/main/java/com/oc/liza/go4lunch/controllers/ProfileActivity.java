@@ -1,4 +1,4 @@
-package com.oc.liza.go4lunch.auth;
+package com.oc.liza.go4lunch.controllers;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -28,10 +29,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.Manifest;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+
     private TextView mTextMessage;
+
     /**
      * Get User info
      * <p>
@@ -65,8 +74,15 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        ButterKnife.bind(this);
         initBottomMenu();
+        initViewpager();
+    }
+
+    private void initViewpager() {
+        MyFragmentPagerAdapter adapter=new MyFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
     }
 
 
@@ -84,19 +100,15 @@ public class ProfileActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.navigation_map:
                         mTextMessage.setText(R.string.title_map);
-                        AuthUI.getInstance()
-                                .signOut(ProfileActivity.this)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                    }
-                                });
+                        viewPager.setCurrentItem(0);
                         return true;
                     case R.id.navigation_list:
                         mTextMessage.setText(R.string.title_list);
+                        viewPager.setCurrentItem(1);
                         return true;
                     case R.id.navigation_users:
                         mTextMessage.setText(R.string.title_users);
+                        viewPager.setCurrentItem(2);
                         return true;
                 }
                 return false;

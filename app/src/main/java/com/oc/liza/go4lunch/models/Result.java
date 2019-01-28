@@ -9,7 +9,6 @@ import java.util.List;
 public class Result {
 
 
-
     @SerializedName("place_id")
     @Expose
     private String place_id;
@@ -42,6 +41,13 @@ public class Result {
     @Expose
     private List<Photos> photos;
 
+    @SerializedName("opening_hours")
+    @Expose
+    private Result opening_hours;
+
+    @SerializedName("open_now")
+    @Expose
+    private String open_now;
 
     public String getPlace_id() {
         return place_id;

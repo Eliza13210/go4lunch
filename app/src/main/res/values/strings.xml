@@ -22,4 +22,7 @@
     <string name="phone">CALL</string>
     <string name="like">LIKE</string>
     <string name="website">WEBSITE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

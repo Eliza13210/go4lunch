@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.controllers.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.RestaurantManager;
 import com.oc.liza.go4lunch.models.Restaurants;
@@ -74,6 +76,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public MapFragment() {
         // Required empty public constructor
     }
+
+    public static MapFragment newInstance() {
+        MapFragment fragment = new MapFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -288,34 +298,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void getRestaurants(String location) {
         this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
-        .subscribeWith(new DisposableObserver<Restaurants>() {
-            @Override
-            public void onNext(Restaurants restaurants) {
-                addToList(restaurants);
-                Log.e("onNext", restaurants.toString());
-            }
+                .subscribeWith(new DisposableObserver<Restaurants>() {
+                    @Override
+                    public void onNext(Restaurants restaurants) {
+                        addToList(restaurants);
+                        Log.e("onNext", restaurants.toString());
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onComplete() {
-                Log.e("list", results.toString());
-                displayRestaurantsOnMap();
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                        Log.e("list", results.toString());
+                        displayRestaurantsOnMap();
+                    }
+                });
 
     }
 
     private void addToList(Restaurants restaurants) {
         results = new ArrayList<>();
-        if(restaurants.getStatus().equals("OK")) {
+        if (restaurants.getStatus().equals("OK")) {
             results.addAll(restaurants.getResults());
             Log.e("test", restaurants.getResults().get(0).getName());
-        }else{
-            Toast.makeText(getActivity(),"Too many query today, try again tomorrow", Toast.LENGTH_LONG).show();
+
+            SharedPreferences prefs=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+            SharedPreferences.Editor prefsEditor = prefs.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(results);
+            prefsEditor.putString("List", json);
+            prefsEditor.apply();
+
+        } else {
+            Toast.makeText(getActivity(), "Too many query today, try again tomorrow", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -24,9 +24,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".controllers.RestaurantActivity"
-            android:theme="@style/RestaurantTheme">
-           // android:theme="@style/AppTheme.NoTitle">
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,11 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".auth.ProfileActivity"
+            android:name=".controllers.ProfileActivity"
             android:label="I&apos;m hungry!"
             android:theme="@style/ProfileTheme" />
-       <!-- <activity android:name=".controllers.RestaurantActivity"
-       android:theme="@style/AppTheme.NoTitle"></activity> -->
+        <activity android:name=".controllers.RestaurantActivity"
+       android:theme="@style/RestaurantTheme"></activity>
     </application>
 
 </manifest>
