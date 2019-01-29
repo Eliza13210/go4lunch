@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 
@@ -64,8 +66,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     .load(defaultImg)
                     .into(photo);
         }
-
-
+        showRestaurantWhenClicked(result, details, context);
     }
 
     private void getRestaurantRating(int rating) {
@@ -85,6 +86,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
             this.rating.addView(star);
+
         }
     }
 
@@ -116,4 +118,28 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         Log.e("calculate", "result:" + distance);
         return distance;
     }
+
+    private void showRestaurantWhenClicked(final Result result, final RestaurantDetails details, final Context context) {
+
+        //when user click on view, open the article in a web view inside the app
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //store the articles web url in shared preferences
+                SharedPreferences sharedPref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Name", result.getName())
+                        .putString("Img", result.getPhotos().get(0).getPhotoRef())
+                        .putString("Address", details.getAddress())
+                        .putString("Phone", details.getPhone())
+                        .putString("Website", details.getWebsite());
+                editor.apply();
+
+                //Start web view activity
+                Intent restaurant = new Intent(context, RestaurantActivity.class);
+                context.startActivity(restaurant);
+            }
+        });
+    }
+
 }

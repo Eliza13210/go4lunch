@@ -80,14 +80,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initViewpager() {
-        MyFragmentPagerAdapter adapter=new MyFragmentPagerAdapter(getSupportFragmentManager());
+        MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
     }
 
 
     private void initBottomMenu() {
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -123,6 +122,16 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    @Nullable
+    protected FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+
+    protected Boolean isCurrentUserLogged() {
+        return (this.getCurrentUser() != null);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -137,7 +146,6 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
 
     }
-
 
 
 }
