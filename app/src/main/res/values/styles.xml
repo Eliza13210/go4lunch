@@ -21,7 +21,7 @@
     <style name="RestaurantTheme" parent="AppTheme.NoTitle">
         <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/orange</item>
+        <item name="colorAccent">@color/white</item>
         <item name="android:icon">@color/orange</item>
 
     </style>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,10 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
+import com.oc.liza.go4lunch.models.Restaurants;
 import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.network.RestaurantStream;
 import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
 
 import java.lang.reflect.Type;
@@ -23,6 +27,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,8 +44,10 @@ public class ListFragment extends Fragment {
     RecyclerView recyclerView;
 
     private List<Result> listRestaurants;
+    private ArrayList<RestaurantDetails> listOfDetails;
     private RecyclerViewAdapter adapter;
     private OnFragmentInteractionListener mListener;
+    private Disposable disposable;
 
     public ListFragment() {
         // Required empty public constructor
@@ -82,6 +90,10 @@ public class ListFragment extends Fragment {
         }.getType();
 
          listRestaurants = gson.fromJson(json, type);
+         for(Result r:listRestaurants){
+             getRestaurantDetails(r.getPlace_id());
+         }
+
     }
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
@@ -89,14 +101,38 @@ public class ListFragment extends Fragment {
         // 3.1 - Reset list
         this.listRestaurants = new ArrayList<>();
         // 3.2 - Create adapter passing the list of news
-        this.adapter = new RecyclerViewAdapter(this.listRestaurants);
+        this.adapter = new RecyclerViewAdapter(this.listRestaurants, this.listOfDetails);
         // 3.3 - Attach the adapter to the recycler view to populate items
         this.recyclerView.setAdapter(this.adapter);
         // 3.4 - Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void getRestaurantDetails(String place_id) {
+        this.disposable = RestaurantStream.fetchDetailsStream((place_id))
+                .subscribeWith(new DisposableObserver<Restaurants>() {
+
+                    @Override
+                    public void onNext(Restaurants restaurants) {
+                        listOfDetails=new ArrayList<>();
+                        listOfDetails.add(restaurants.getDetails());
+                        adapter.notifyDataSetChanged();
+                           }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+                    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

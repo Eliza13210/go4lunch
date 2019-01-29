@@ -351,6 +351,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         manager.displayOnMap();
     }
 
+
     private void disposeWhenDestroy() {
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }

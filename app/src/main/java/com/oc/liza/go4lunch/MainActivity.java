@@ -22,38 +22,28 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.activity_main)
+    LinearLayout linearLayout;
 
     private static final int RC_SIGN_IN = 100;
     private FirebaseAuth mAuth;
-
-    @BindView(R.id.activity_main) LinearLayout linearLayout;
-
-    @BindView(R.id.button_google)
-    Button googleButton;
-    @BindView(R.id.button_facebook)
-    Button facebookButton;
     private CallbackManager mCallbackManager;
-    List<AuthUI.IdpConfig> providers;
-    FirebaseUser currentUser;
+    private List<AuthUI.IdpConfig> providers;
+    private FirebaseUser currentUser;
 
-    // ...
     @Override
     public void onStart() {
         super.onStart();
-        // Check if User is signed in (non-null) and update UI accordingly.
-         currentUser = mAuth.getCurrentUser();
-        // updateUI(currentUser);
+        // Check if User is signed in (non-null)
+        currentUser = mAuth.getCurrentUser();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
-        googleButton.setOnClickListener(this);
-        facebookButton.setOnClickListener(this);
         startSignInActivity();
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -73,24 +63,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setTheme(R.style.AppTheme_NoTitle)
                         .build(),
                 RC_SIGN_IN);
-
-
     }
 
-    private void startProfileActivity() {
-        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-
-    }
-
-    protected Boolean isCurrentUserLogged(){ return (currentUser != null); }
-
-    @Override
-    public void onClick(View v) {
-    }
-   // Show Snack Bar with a message
-    private void showSnackBar(LinearLayout linearLayout, String message){
+    // Show Snack Bar with a message
+    private void showSnackBar(LinearLayout linearLayout, String message) {
         Snackbar.make(linearLayout, message, Snackbar.LENGTH_SHORT).show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -102,20 +81,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 startProfileActivity();
-                // ...
+
             } else { // ERRORS
-                    if (response == null) {
-                        showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));
-                    } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                        showSnackBar(this.linearLayout, getString(R.string.error_no_internet));
-                    } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                        showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
-                    }
+                if (response == null) {
+                    showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));
+                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showSnackBar(this.linearLayout, getString(R.string.error_no_internet));
+                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                    showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
                 }
-                // Sign in failed. If response is null the User canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
             }
         }
     }
+
+    private void startProfileActivity() {
+        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+    }
+}

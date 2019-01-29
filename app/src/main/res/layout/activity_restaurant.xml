@@ -8,56 +8,81 @@
     android:weightSum="6"
     tools:context=".controllers.RestaurantActivity">
 
-    <ImageView
-        android:id="@+id/rest_photo"
+    <RelativeLayout
+        android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        />
+        android:layout_weight="3"
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/orange"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        >
 
-        <TextView
-            android:id="@+id/rest_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="4"
+            android:layout_alignParentTop="true">
 
-        <TextView
-            android:id="@+id/rest_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/orange"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"/>
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/rest_photo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/orange"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rest_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/rest_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/orange"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="?android:attr/windowBackground"
+                app:itemIconTint="@color/orange"
+                app:itemTextColor="@color/orange"
+                app:menu="@menu/menu_restaurant"
+                />
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_check" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
-         app:menu="@menu/menu_restaurant"
-        app:itemIconTint="@color/orange"
-        app:itemTextColor="@color/orange"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"/>
+        android:layout_weight="3" />
 
 
 </LinearLayout>

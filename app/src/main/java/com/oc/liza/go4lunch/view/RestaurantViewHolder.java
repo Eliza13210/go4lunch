@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 
 import butterknife.BindView;
@@ -39,18 +40,16 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithRestaurantItem(final Result result, final Context context) {
+    public void updateWithRestaurantItem(final Result result, final RestaurantDetails details, final Context context) {
         this.context = context;
         this.name.setText(result.getName());
-        this.address.setText("adress");
-        this.opening_hours.setText("open");
+        this.address.setText(details.getAddress());
+        this.opening_hours.setText(result.getOpen_now());
         String distance = calculateDistance(result.getLat(), result.getLng());
         this.distance.setText(distance);
 
         //set stars depending on rating
-        ImageView star = new ImageView(context);
-        star.setImageResource(R.drawable.ic_star);
-        this.rating.addView(star);
+        getRestaurantRating(details.getRating());
 
         //Set photo
         try {
@@ -67,6 +66,26 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
 
 
+    }
+
+    private void getRestaurantRating(int rating) {
+
+        if (rating >= 4) {
+            ImageView star = new ImageView(context);
+            star.setImageResource(R.drawable.ic_star);
+            this.rating.addView(star);
+            this.rating.addView(star);
+            this.rating.addView(star);
+        } else if (rating >= 2) {
+            ImageView star = new ImageView(context);
+            star.setImageResource(R.drawable.ic_star);
+            this.rating.addView(star);
+            this.rating.addView(star);
+        } else if (rating == 1) {
+            ImageView star = new ImageView(context);
+            star.setImageResource(R.drawable.ic_star);
+            this.rating.addView(star);
+        }
     }
 
     private String calculateDistance(Double lat, Double lng) {

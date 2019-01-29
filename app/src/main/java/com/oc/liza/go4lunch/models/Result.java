@@ -113,4 +113,19 @@ public class Result {
         this.photos = photos;
     }
 
+    public Result getOpening_hours() {
+        return opening_hours;
+    }
+
+    public void setOpening_hours(Result opening_hours) {
+        this.opening_hours = opening_hours;
+    }
+
+    public String getOpen_now() {
+        return open_now;
+    }
+
+    public void setOpen_now(String open_now) {
+        this.open_now = open_now;
+    }
 }
