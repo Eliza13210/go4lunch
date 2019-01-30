@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".controllers.ProfileActivity">
 
+    <include layout="@layout/toolbar" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

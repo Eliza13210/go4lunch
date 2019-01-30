@@ -13,7 +13,7 @@
         <item name="windowActionBar">false</item>
     </style>
     <!-- ProfileActivity -->
-    <style name="ProfileTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ProfileTheme" parent="AppTheme.NoTitle">
         <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryDark">@color/darkOrange</item>
     </style>
@@ -27,7 +27,7 @@
     <!-- User List -->
     <style name="cursive">
         <item name="android:textStyle">italic</item>
-        <item name="android:alpha">0.8f</item>
+        <item name="android:alpha">0.8</item>
     </style>
 
 </resources>

@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -20,6 +20,7 @@ import com.oc.liza.go4lunch.controllers.ProfileActivity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
     private FirebaseAuth mAuth;
-    private CallbackManager mCallbackManager;
-    private List<AuthUI.IdpConfig> providers;
     private FirebaseUser currentUser;
 
     @Override
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startSignInActivity() {
         // Choose authentication providers
-        providers = Arrays.asList(
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
                 new AuthUI.IdpConfig.FacebookBuilder().build());
 
@@ -82,14 +81,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 createUserInFirestore();
                 startProfileActivity();
 
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));
-                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
                     showSnackBar(this.linearLayout, getString(R.string.error_no_internet));
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
@@ -106,13 +104,23 @@ public class MainActivity extends AppCompatActivity {
     private void createUserInFirestore() {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            //Get current user info
+            String urlPicture = (currentUser.getPhotoUrl() != null)
+                    ? currentUser.getPhotoUrl().toString() : null;
+            String username = currentUser.getDisplayName();
+            String uid = currentUser.getUid();
 
-            String urlPicture = (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null)
-                    ? FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() : null;
-            String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Log.e("createMain", uid);
 
-            UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(this.onFailureListener());
+            //Check if user already exists in Firebase Database
+            if (UserHelper.getUser(uid).getResult().exists()) {
+                showSnackBar(this.linearLayout, getString(R.string.welcome_back));
+            } else {
+                //If not, create user
+                UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(this.onFailureListener());
+
+                Log.e("created", "success creating new user");
+            }
         }
     }
 

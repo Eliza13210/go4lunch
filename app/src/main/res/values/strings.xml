@@ -8,16 +8,16 @@
     <string name="facebook_application_id" translatable="false">312200446079297</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb312200446079297</string>
     <string name="title_activity_profile">ProfileActivity</string>
-    <string name="error_authentication_canceled">error_cancel</string>
-    <string name="error_no_internet">error_no_internet</string>
-    <string name="error_unknown_error">error_unknown</string>
+    <string name="error_authentication_canceled">Error authentication canceled</string>
+    <string name="error_no_internet">Error no internet</string>
+    <string name="error_unknown_error">Unknown error</string>
 
     <!-- NAVIGATION MENUS -->
     <string name="search">search</string>
 
-    <string name="title_map">MAP</string>
-    <string name="title_list">LIST</string>
-    <string name="title_users">USERS</string>
+    <string name="title_map">Map View</string>
+    <string name="title_list">List View</string>
+    <string name="title_users">Workmates</string>
 
     <string name="phone">CALL</string>
     <string name="like">LIKE</string>
@@ -25,4 +25,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="workmates">Available workmates</string>
 </resources>
