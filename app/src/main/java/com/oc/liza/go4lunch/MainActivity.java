@@ -1,17 +1,21 @@
 package com.oc.liza.go4lunch;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
 
 import java.util.Arrays;
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                createUserInFirestore();
                 startProfileActivity();
 
             } else { // ERRORS
@@ -95,5 +100,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void startProfileActivity() {
         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+    }
+
+    // 1 - Http request that create user in firestore
+    private void createUserInFirestore() {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            String urlPicture = (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null)
+                    ? FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() : null;
+            String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(this.onFailureListener());
+        }
+    }
+
+    //BaseActivity?
+    protected OnFailureListener onFailureListener() {
+        return new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
+            }
+        };
+
     }
 }

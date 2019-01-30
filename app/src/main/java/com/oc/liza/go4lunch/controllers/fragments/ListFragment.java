@@ -84,7 +84,6 @@ public class ListFragment extends Fragment {
          for(Result r:listRestaurants){
              getRestaurantDetails(r.getPlace_id());
          }
-
     }
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together

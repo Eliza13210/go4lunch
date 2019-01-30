@@ -13,4 +13,7 @@
     //Color profile activity
     <color name="darkOrange">#b50504</color>
     <color name="orange">#fc3f1b</color>
+
+    //Color Restaurant Activity
+    <color name="green">#FF50C64A</color>
 </resources>

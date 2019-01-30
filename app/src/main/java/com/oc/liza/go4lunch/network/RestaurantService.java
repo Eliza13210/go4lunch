@@ -15,7 +15,7 @@ import retrofit2.http.Url;
 public interface RestaurantService {
      String API_KEY=BuildConfig.API_KEY;
      String RADIUS="1500";
-     String TYPE="restaurant";
+     String TYPE="Restaurant";
      String NEARBY="nearbysearch";
      String PLACE_ID="placeid";
 

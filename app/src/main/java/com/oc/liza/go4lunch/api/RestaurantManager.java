@@ -97,7 +97,7 @@ public class RestaurantManager {
     }
 
     private void saveInfo(int i) {
-        //Fetch details about restaurant
+        //Fetch details about Restaurant
         phone = restaurantDetails.getPhone();
         address = restaurantDetails.getAddress();
         website = restaurantDetails.getWebsite();

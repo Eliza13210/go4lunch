@@ -4,7 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.oc.liza.go4lunch.models.User;
+import com.oc.liza.go4lunch.models.firebase.User;
 
 public class UserHelper {
 
@@ -18,8 +18,8 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, String username, String urlPicture) {
-        User userToCreate = new User(uid, username, urlPicture);
+    public static Task<Void> createUser(String uid, String username, String urlPicture, String restaurant) {
+        User userToCreate = new User(uid, username, urlPicture, restaurant);
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
@@ -33,6 +33,10 @@ public class UserHelper {
 
     public static Task<Void> updateUsername(String username, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("username", username);
+    }
+
+    public static Task<Void> updateRestaurant(String restaurant, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurant", restaurant);
     }
 
     // --- DELETE ---
