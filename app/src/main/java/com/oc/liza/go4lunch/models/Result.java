@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Result {
 
-
     @SerializedName("place_id")
     @Expose
     private String place_id;
@@ -17,6 +16,23 @@ public class Result {
     @Expose
     private String name;
 
+    @SerializedName("photos")
+    @Expose
+    private List<Photos> photos;
+
+    @SerializedName("opening_hours")
+    @Expose
+    private Result opening_hours;
+
+    @SerializedName("open_now")
+    @Expose
+    private String open_now;
+
+    @SerializedName("rating")
+    @Expose
+    private int rating;
+
+    //To get location
     @SerializedName("geometry")
     @Expose
     private Result geometry;
@@ -33,22 +49,6 @@ public class Result {
     @Expose
     private Double lng;
 
-    @SerializedName("icon")
-    @Expose
-    private String icon;
-
-    @SerializedName("photos")
-    @Expose
-    private List<Photos> photos;
-
-    @SerializedName("opening_hours")
-    @Expose
-    private Result opening_hours;
-
-    @SerializedName("open_now")
-    @Expose
-    private String open_now;
-
     public String getPlace_id() {
         return place_id;
     }
@@ -63,6 +63,15 @@ public class Result {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public Result getGeometry() {
@@ -95,14 +104,6 @@ public class Result {
 
     public void setLng(Double lng) {
         this.lng = lng;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public List<Photos> getPhotos() {

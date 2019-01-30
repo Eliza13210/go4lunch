@@ -1,5 +1,6 @@
 package com.oc.liza.go4lunch.controllers;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,16 +20,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
-import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
 import com.oc.liza.go4lunch.view.UserAdapter;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +49,9 @@ public class RestaurantActivity extends AppCompatActivity {
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-    private TextView mTextMessage;
+
     private SharedPreferences pref;
     private String restName;
-    private int restId;
     private List<User> users;
     private UserAdapter adapter;
 
@@ -61,21 +60,28 @@ public class RestaurantActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
         ButterKnife.bind(this);
+
         initRestaurant();
+        getListOfUsers();
         initMenu();
         initButton();
         initRecyclerView();
     }
 
+    private void getListOfUsers() {
+        //Create list of UID
+        DocumentSnapshot document = UserHelper.getUser("UID").getResult();
+        if (document.exists()) {
+            // convert document to POJO
+            User user = document.toObject(User.class);
+            if (user.getRestaurant().equals(restName)) {
+                users.add(user);
+                Log.e("restA", user.getRestaurant());
+            }
+        }
+    }
+
     private void initRecyclerView() {
-        String json = pref.getString("List", "Empty list");
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Result>>() {
-        }.getType();
-
-        users = gson.fromJson(json, type);
-
-
         // 3.1 - Reset list
         this.users = new ArrayList<>();
         // 3.2 - Create adapter passing the list of news
@@ -84,7 +90,6 @@ public class RestaurantActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(this.adapter);
         // 3.4 - Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     private void initRestaurant() {
@@ -105,7 +110,6 @@ public class RestaurantActivity extends AppCompatActivity {
         address.setText(pref.getString("Address", "Far away"));
 
     }
-
 
     //BaseActivity?
     protected OnFailureListener onFailureListener() {
@@ -130,7 +134,7 @@ public class RestaurantActivity extends AppCompatActivity {
     }
 
     private void initMenu() {
-        mTextMessage = (TextView) findViewById(R.id.message);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -142,16 +146,13 @@ public class RestaurantActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_phone:
-                        mTextMessage.setText(R.string.phone);
                         pref.getString("Phone", null);
                         return true;
 
                     case R.id.navigation_like:
-                        mTextMessage.setText(R.string.like);
                         return true;
 
                     case R.id.navigation_website:
-                        mTextMessage.setText(R.string.website);
                         pref.getString("Website", null);
                         return true;
                 }

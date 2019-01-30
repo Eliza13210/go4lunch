@@ -1,8 +1,6 @@
 package com.oc.liza.go4lunch.network;
 
-import android.util.Log;
-
-import com.oc.liza.go4lunch.models.Restaurants;
+import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.Result;
 
 import org.junit.AfterClass;
@@ -47,11 +45,11 @@ public class RestaurantStreamTest {
     @Test
     public void getRestaurantsStream_shouldReturnObject() {
         //1 - Get the stream
-        Observable<Restaurants> observable = RestaurantStream.fetchNearbyRestaurantsStream
+        Observable<NearbySearchObject> observable = RestaurantStream.fetchNearbyRestaurantsStream
                 (("-33.8670522,151.1957362")
                 );
         //2 - Create a new TestObserver
-        TestObserver<Restaurants> testObserver = new TestObserver<>();
+        TestObserver<NearbySearchObject> testObserver = new TestObserver<>();
         //3 - Launch observable
         observable.subscribeWith(testObserver)
                 .assertNoErrors() // 3.1 - Check if no errors
@@ -59,21 +57,21 @@ public class RestaurantStreamTest {
                 .awaitTerminalEvent(); // 3.3 - Await the stream terminated before continue
 
         // 4 - Get list of user fetched
-        Restaurants restaurants = testObserver.values().get(0);
+        NearbySearchObject nearbySearchObject = testObserver.values().get(0);
         results=new ArrayList<>();
-        results.addAll(restaurants.getResults());
+        results.addAll(nearbySearchObject.getResults());
 
-        assertEquals("OK",restaurants.getStatus());
+        assertEquals("OK", nearbySearchObject.getStatus());
     }
     @Test
     public void getDetailsStream_shouldReturnObject() {
         String place_id=results.get(0).getPlace_id();
         //1 - Get the stream
-        Observable<Restaurants> observable = RestaurantStream.fetchDetailsStream
+        Observable<NearbySearchObject> observable = RestaurantStream.fetchDetailsStream
                 ((place_id)
                 );
         //2 - Create a new TestObserver
-        TestObserver<Restaurants> testObserver = new TestObserver<>();
+        TestObserver<NearbySearchObject> testObserver = new TestObserver<>();
         //3 - Launch observable
         observable.subscribeWith(testObserver)
                 .assertNoErrors() // 3.1 - Check if no errors
@@ -81,7 +79,7 @@ public class RestaurantStreamTest {
                 .awaitTerminalEvent(); // 3.3 - Await the stream terminated before continue
 
         // 4 - Get list of user fetched
-        Restaurants restaurant = testObserver.values().get(0);
+        NearbySearchObject restaurant = testObserver.values().get(0);
         List<Result> results=new ArrayList<>();
         results=restaurant.getResults();
 

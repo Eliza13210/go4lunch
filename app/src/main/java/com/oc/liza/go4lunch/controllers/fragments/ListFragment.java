@@ -2,12 +2,10 @@ package com.oc.liza.go4lunch.controllers.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +13,8 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Restaurants;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantStream;
 import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
@@ -100,12 +98,12 @@ public class ListFragment extends Fragment {
 
     private void getRestaurantDetails(String place_id) {
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
-                .subscribeWith(new DisposableObserver<Restaurants>() {
+                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
                     @Override
-                    public void onNext(Restaurants restaurants) {
+                    public void onNext(NearbySearchObject nearbySearchObject) {
                         listOfDetails=new ArrayList<>();
-                        listOfDetails.add(restaurants.getDetails());
+                        listOfDetails.add(nearbySearchObject.getDetails());
                         adapter.notifyDataSetChanged();
                            }
 

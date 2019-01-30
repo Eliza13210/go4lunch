@@ -17,10 +17,6 @@ public class RestaurantDetails {
     @Expose
     private String website;
 
-    @SerializedName("rating")
-    @Expose
-    private int rating;
-
     public String getPhone() {
         return phone;
     }
@@ -45,11 +41,4 @@ public class RestaurantDetails {
         this.website = website;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 }

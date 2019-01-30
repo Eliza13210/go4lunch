@@ -10,9 +10,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.oc.liza.go4lunch.BuildConfig;
+import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
+import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Restaurants;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantService;
 import com.oc.liza.go4lunch.network.RestaurantStream;
@@ -56,12 +58,12 @@ public class RestaurantManager {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             marker.setTag(i);
 
+            //CHECK WITH LIST OF USERS AND CHANGE COLOR OF MARKER
             Log.e("Manager", "display");
         }
 
-
+        //User click on marker
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            private Disposable mDisposable;
 
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -76,10 +78,10 @@ public class RestaurantManager {
     private void fetchRestaurantDetails(final int position) {
         String place_id = list.get(position).getPlace_id();
 
-        this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<Restaurants>() {
+        this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<NearbySearchObject>() {
             @Override
-            public void onNext(Restaurants restaurants) {
-                restaurantDetails = restaurants.getDetails();
+            public void onNext(NearbySearchObject nearbySearchObject) {
+                restaurantDetails = nearbySearchObject.getDetails();
                 saveInfo(position);
             }
 
@@ -101,9 +103,9 @@ public class RestaurantManager {
         phone = restaurantDetails.getPhone();
         address = restaurantDetails.getAddress();
         website = restaurantDetails.getWebsite();
-        imgUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+        imgUrl = context.getString(R.string.photo_url)
                 + list.get(i).getPhotos().get(0).getPhotoRef()
-                + RestaurantService.API_KEY;
+                + BuildConfig.API_KEY;
 
         //Save detailed info so it can be accessed from activity
         SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
@@ -118,6 +120,7 @@ public class RestaurantManager {
         context.startActivity(restaurantActivity);
 
     }
+
     private void disposeWhenDestroy() {
         if (this.disposable != null && !this.disposable.isDisposed()) this.disposable.dispose();
     }
