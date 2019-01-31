@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.firebase.User;
 
 import butterknife.BindView;
@@ -42,7 +43,10 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
                     .load(defaultImg)
                     .into(photo);
         }
-        if(!user.getRestaurant().isEmpty()) {
+
+        // IS JOINING IF CONTEXT IS RESTAURANT ACTIVITY
+
+        if(user.getRestaurant()!="not selected") {
             text.setText(user.getUsername());
             text.append(" is eating ");
             text.append(user.getRestaurant());

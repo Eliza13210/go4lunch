@@ -64,24 +64,25 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_list, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        ButterKnife.bind(this, view);
         getListOfRestaurants();
         configureRecyclerView();
         return view;
     }
 
     private void getListOfRestaurants() {
-        SharedPreferences pref=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        String json = pref.getString("List", "Empty list");
+        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        String json = pref.getString("ListOfRestaurants", null);
         Gson gson = new Gson();
         Type type = new TypeToken<List<Result>>() {
         }.getType();
 
-         listRestaurants = gson.fromJson(json, type);
-         for(Result r:listRestaurants){
-             getRestaurantDetails(r.getPlace_id());
-         }
+        listRestaurants = gson.fromJson(json, type);
+        for (Result r : listRestaurants) {
+            getRestaurantDetails(r.getPlace_id());
+        }
+        adapter.notifyDataSetChanged();
     }
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
@@ -102,10 +103,9 @@ public class ListFragment extends Fragment {
 
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
-                        listOfDetails=new ArrayList<>();
+                        listOfDetails = new ArrayList<>();
                         listOfDetails.add(nearbySearchObject.getDetails());
-                        adapter.notifyDataSetChanged();
-                           }
+                    }
 
                     @Override
                     public void onError(Throwable e) {

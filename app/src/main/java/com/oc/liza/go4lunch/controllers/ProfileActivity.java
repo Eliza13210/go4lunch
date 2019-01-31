@@ -24,9 +24,14 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        initToolbar();
         initBottomMenu();
         initViewpager();
+    }
+
+    @Override
+    public int getLayoutView() {
+        return R.layout.activity_profile;
     }
 
     private void initViewpager() {

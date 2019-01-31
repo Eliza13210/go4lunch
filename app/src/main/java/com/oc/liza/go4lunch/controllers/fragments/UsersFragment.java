@@ -58,19 +58,22 @@ public class UsersFragment extends Fragment {
         getListOfUsers();
         initRecyclerView();
         return view;
-
     }
 
     private void getListOfUsers() {
         //Do list of UID
-        DocumentSnapshot document = UserHelper.getUser("UID").getResult();
-        if (document.exists()) {
-            // convert document to POJO
-            User user = document.toObject(User.class);
-            users.add(user);
+        String[] listUid = {"1", "2", "3", "4"};
+        //Create list of UID
+        for (String s : listUid) {
+            DocumentSnapshot document = UserHelper.getUser(s).getResult();
+            if (document.exists()) {
+                // convert document to POJO
+                User user = document.toObject(User.class);
+                users.add(user);
+            }
         }
-        SharedPreferences pref=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor=pref.edit();
+        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = pref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(users);
         prefsEditor.putString("ListUsers", json);
@@ -87,7 +90,6 @@ public class UsersFragment extends Fragment {
         // 3.4 - Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
 
     @Override
     public void onAttach(Context context) {

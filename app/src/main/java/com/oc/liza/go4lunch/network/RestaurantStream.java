@@ -1,5 +1,7 @@
 package com.oc.liza.go4lunch.network;
 
+import android.util.Log;
+
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 
 import java.util.concurrent.TimeUnit;
@@ -12,11 +14,14 @@ public class RestaurantStream {
 
     public static Observable<NearbySearchObject> fetchNearbyRestaurantsStream(String location) {
         RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
+//        Log.e("url", "url= " + RestaurantService.NEARBY + location + RestaurantService.RADIUS +RestaurantService.TYPE+
+        //               RestaurantService.API_KEY);
         return restaurantService.getRestaurant(RestaurantService.NEARBY, null, location, RestaurantService.RADIUS, RestaurantService.TYPE,
                 RestaurantService.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
+
     }
 
     public static Observable<NearbySearchObject> fetchDetailsStream(String place_id) {

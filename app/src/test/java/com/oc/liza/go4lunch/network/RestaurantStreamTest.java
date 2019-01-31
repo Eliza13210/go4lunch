@@ -58,14 +58,12 @@ public class RestaurantStreamTest {
 
         // 4 - Get list of user fetched
         NearbySearchObject nearbySearchObject = testObserver.values().get(0);
-        results=new ArrayList<>();
-        results.addAll(nearbySearchObject.getResults());
-
         assertEquals("OK", nearbySearchObject.getStatus());
     }
+
     @Test
     public void getDetailsStream_shouldReturnObject() {
-        String place_id=results.get(0).getPlace_id();
+        String place_id = "ChIJDTwzJEGuEmsRw4ifQGYDkww";
         //1 - Get the stream
         Observable<NearbySearchObject> observable = RestaurantStream.fetchDetailsStream
                 ((place_id)
@@ -78,12 +76,7 @@ public class RestaurantStreamTest {
                 .assertNoTimeout() // 3.2 - Check if no Timeout
                 .awaitTerminalEvent(); // 3.3 - Await the stream terminated before continue
 
-        // 4 - Get list of user fetched
-        NearbySearchObject restaurant = testObserver.values().get(0);
-        List<Result> results=new ArrayList<>();
-        results=restaurant.getResults();
-
-        assertEquals("OK",restaurant.getStatus());
+        NearbySearchObject nearbySearchObject = testObserver.values().get(0);
+        assertEquals("OK", nearbySearchObject.getStatus());
     }
-
 }

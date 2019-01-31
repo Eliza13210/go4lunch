@@ -30,7 +30,7 @@ public class Result {
 
     @SerializedName("rating")
     @Expose
-    private int rating;
+    private double rating;
 
     //To get location
     @SerializedName("geometry")
@@ -66,11 +66,11 @@ public class Result {
     }
 
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 

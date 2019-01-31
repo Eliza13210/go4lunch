@@ -9,6 +9,9 @@ import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.controllers.fragments.UsersFragment;
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+
+    static int fragmentCount=3;
+
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -29,6 +32,6 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return fragmentCount;
     }
 }

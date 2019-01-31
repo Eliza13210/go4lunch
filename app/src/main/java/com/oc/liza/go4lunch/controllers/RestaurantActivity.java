@@ -69,14 +69,17 @@ public class RestaurantActivity extends AppCompatActivity {
     }
 
     private void getListOfUsers() {
+        String[] listUid = {"1", "2", "3", "4"};
         //Create list of UID
-        DocumentSnapshot document = UserHelper.getUser("UID").getResult();
-        if (document.exists()) {
-            // convert document to POJO
-            User user = document.toObject(User.class);
-            if (user.getRestaurant().equals(restName)) {
-                users.add(user);
-                Log.e("restA", user.getRestaurant());
+        for (String s : listUid) {
+            DocumentSnapshot document = UserHelper.getUser(s).getResult();
+            if (document.exists()) {
+                // convert document to POJO
+                User user = document.toObject(User.class);
+                if (user.getRestaurant().equals(restName)) {
+                    users.add(user);
+                    Log.e("restA", user.getRestaurant());
+                }
             }
         }
     }

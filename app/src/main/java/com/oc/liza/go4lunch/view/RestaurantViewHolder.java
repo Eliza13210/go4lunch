@@ -51,7 +51,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.distance.setText(distance);
 
         //set stars depending on rating
-        getRestaurantRating(details.getRating());
+        getRestaurantRating(result.getRating());
 
         //Set photo
         try {
@@ -69,7 +69,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         showRestaurantWhenClicked(result, details, context);
     }
 
-    private void getRestaurantRating(int rating) {
+    private void getRestaurantRating(double rating) {
 
         if (rating >= 4) {
             ImageView star = new ImageView(context);

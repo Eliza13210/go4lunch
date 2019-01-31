@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if User is signed in (non-null)
-        currentUser = mAuth.getCurrentUser();
+       // currentUser = mAuth.getCurrentUser();
     }
 
     @Override
@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         startSignInActivity();
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+
     }
 
     private void startSignInActivity() {
+
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -65,7 +65,11 @@ public class MainActivity extends AppCompatActivity {
                         .setTheme(R.style.AppTheme_NoTitle)
                         .build(),
                 RC_SIGN_IN);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
+    protected Boolean isCurrentUserLogged(){ return (currentUser != null); }
 
     // Show Snack Bar with a message
     private void showSnackBar(LinearLayout linearLayout, String message) {
@@ -76,12 +80,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.e("main", "onActivityResult" + String.valueOf(requestCode));
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
+            Log.e("main", String.valueOf(response));
+
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                createUserInFirestore();
+                currentUser = mAuth.getCurrentUser();
+                Log.e("main", "success");
+              //  createUserInFirestore();
                 startProfileActivity();
 
             } else { // ERRORS
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void createUserInFirestore() {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            createFakeUserDatabase();
             //Get current user info
             String urlPicture = (currentUser.getPhotoUrl() != null)
                     ? currentUser.getPhotoUrl().toString() : null;
@@ -133,5 +143,26 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+    }
+
+    private void createFakeUserDatabase() {
+
+        Log.e("main", "create fake list");
+        UserHelper.createUser("1",
+                "Groot",
+                "https://image.dhgate.com/0x0/f2/albu/g4/M00/8F/A9/rBVaEFmb-oqAdds-AAIn5o9UqUc875.jpg",
+                "not selected");
+        UserHelper.createUser("2",
+                "Star-Lord",
+                "https://img.huffingtonpost.com/asset/5b1045a92000006505b9311c.jpeg?cache=nbn7sg2chh&ops=crop_7_43_1667_1086,scalefit_720_noupscale",
+                "not selected");
+        UserHelper.createUser("3",
+                "Gamora",
+                "https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/6/61/Gamora_AIW_Profile.jpg/revision/latest/scale-to-width-down/2000?cb=20180518212221",
+                "not selected");
+        UserHelper.createUser("4",
+                "Rocket Raccoon",
+                "https://img1.looper.com/img/gallery/untold-truth-of-rocket-raccoon/intro.jpg",
+                "not selected");
     }
 }

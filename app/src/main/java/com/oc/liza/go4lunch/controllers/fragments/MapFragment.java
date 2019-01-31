@@ -51,7 +51,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     //For google maps
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LatLng mDefaultLocation = new LatLng(48.864716, 2.349014);
+    private LatLng mDefaultLocation = new LatLng(-33.8670522,151.1957362);
     private Double mLatitude;
     private Double mLongitude;
 
@@ -292,7 +292,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             //Save the list of restaurants
             Gson gson = new Gson();
             String json = gson.toJson(results);
-            prefsEditor.putString("List", json);
+            prefsEditor.putString("ListOfRestaurants", json);
             prefsEditor.apply();
 
             displayRestaurantsOnMap();
