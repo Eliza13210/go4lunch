@@ -18,9 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
@@ -69,20 +75,31 @@ public class RestaurantActivity extends AppCompatActivity {
     }
 
     private void getListOfUsers() {
-        String[] listUid = {"1", "2", "3", "4"};
-        //Create list of UID
-        for (String s : listUid) {
-            DocumentSnapshot document = UserHelper.getUser(s).getResult();
-            if (document.exists()) {
-                // convert document to POJO
-                User user = document.toObject(User.class);
-                if (user.getRestaurant().equals(restName)) {
-                    users.add(user);
-                    Log.e("restA", user.getRestaurant());
-                }
-            }
-        }
+
+        UserHelper.getUsersCollection()
+                .whereEqualTo("restaurant", "not selected")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // convert document to POJO
+                                User user = document.toObject(User.class);
+                                if (user.getRestaurant().equals(restName)) {
+                                    users.add(user);
+                                    adapter.notifyDataSetChanged();
+                                    Log.d("RestaurantA", document.getId() + " => " + document.getData());
+                                }
+                            }
+                        } else {
+                            Log.d("RestaurantA", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
     }
+
 
     private void initRecyclerView() {
         // 3.1 - Reset list

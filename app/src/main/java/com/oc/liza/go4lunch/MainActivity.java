@@ -13,10 +13,14 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
+import com.oc.liza.go4lunch.models.firebase.User;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if User is signed in (non-null)
-       // currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
     }
 
     @Override
@@ -47,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         startSignInActivity();
-
     }
 
     private void startSignInActivity() {
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
-    protected Boolean isCurrentUserLogged(){ return (currentUser != null); }
 
     // Show Snack Bar with a message
     private void showSnackBar(LinearLayout linearLayout, String message) {
@@ -80,17 +82,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e("main", "onActivityResult" + String.valueOf(requestCode));
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            Log.e("main", String.valueOf(response));
-
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 currentUser = mAuth.getCurrentUser();
-                Log.e("main", "success");
-              //  createUserInFirestore();
+                Log.e("MainActivity", "success");
+                checkIfUserExists();
                 startProfileActivity();
 
             } else { // ERRORS
@@ -105,6 +103,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkIfUserExists(){
+        UserHelper.getUser(currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
+                createUserInFirestore();
+            }
+        });
+
+    }
+
     private void startProfileActivity() {
         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
     }
@@ -113,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     private void createUserInFirestore() {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            createFakeUserDatabase();
+//
             //Get current user info
             String urlPicture = (currentUser.getPhotoUrl() != null)
                     ? currentUser.getPhotoUrl().toString() : null;
@@ -121,29 +130,13 @@ public class MainActivity extends AppCompatActivity {
             String uid = currentUser.getUid();
 
             Log.e("createMain", uid);
+            // Access a Cloud Firestore instance from your Activity
+            UserHelper.createUser(uid, username, urlPicture, "not selected");
+            Log.e("created", "success creating new user");
 
-            //Check if user already exists in Firebase Database
-            if (UserHelper.getUser(uid).getResult().exists()) {
-                showSnackBar(this.linearLayout, getString(R.string.welcome_back));
-            } else {
-                //If not, create user
-                UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(this.onFailureListener());
-
-                Log.e("created", "success creating new user");
-            }
         }
     }
 
-    //BaseActivity?
-    protected OnFailureListener onFailureListener() {
-        return new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
-            }
-        };
-
-    }
 
     private void createFakeUserDatabase() {
 

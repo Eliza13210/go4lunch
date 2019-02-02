@@ -22,9 +22,9 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MapFragment.newInstance();
             case 1:
-                return ListFragment.newInstance();
+                return MapFragment.newInstance();
             case 2:
-                return UsersFragment.newInstance();
+                return MapFragment.newInstance();
             default:
                 return MapFragment.newInstance();
         }

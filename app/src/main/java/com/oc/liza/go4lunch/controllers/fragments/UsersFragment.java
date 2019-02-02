@@ -61,7 +61,7 @@ public class UsersFragment extends Fragment {
     }
 
     private void getListOfUsers() {
-        //Do list of UID
+      /**  //Do list of UID
         String[] listUid = {"1", "2", "3", "4"};
         //Create list of UID
         for (String s : listUid) {
@@ -77,7 +77,7 @@ public class UsersFragment extends Fragment {
         Gson gson = new Gson();
         String json = gson.toJson(users);
         prefsEditor.putString("ListUsers", json);
-        prefsEditor.apply();
+        prefsEditor.apply(); */
     }
 
     private void initRecyclerView() {

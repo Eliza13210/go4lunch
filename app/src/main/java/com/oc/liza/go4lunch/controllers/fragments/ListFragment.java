@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +39,7 @@ public class ListFragment extends Fragment {
     private ArrayList<RestaurantDetails> listOfDetails;
     private RecyclerViewAdapter adapter;
     private Disposable disposable;
+    private Disposable mDisposable;
 
     public ListFragment() {
         // Required empty public constructor
@@ -57,6 +60,13 @@ public class ListFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getListOfRestaurants();
+        configureRecyclerView();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -66,13 +76,13 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
-        getListOfRestaurants();
-        configureRecyclerView();
+        //getListOfRestaurants();
+        //configureRecyclerView();
         return view;
     }
 
     private void getListOfRestaurants() {
-        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+      /**  SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurants", null);
         Gson gson = new Gson();
         Type type = new TypeToken<List<Result>>() {
@@ -82,8 +92,42 @@ public class ListFragment extends Fragment {
         for (Result r : listRestaurants) {
             getRestaurantDetails(r.getPlace_id());
         }
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
+      SharedPreferences pref=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+      String location= pref.getString("CurrentLatitude", null)+","+pref.getString("CurrentLongitude", null);
+        this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
+                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
+                    @Override
+                    public void onNext(NearbySearchObject nearbySearchObject) {
+                        addToList(nearbySearchObject);
+                        Log.e("onNext", nearbySearchObject.getStatus());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
+
+    private void addToList(NearbySearchObject nearbySearchObject) {
+        listRestaurants = new ArrayList<>();
+
+        //Add restaurants results from fetched nearby search object to the list
+        if (nearbySearchObject.getStatus().equals("OK")) {
+            listRestaurants.addAll(nearbySearchObject.getResults());
+            Log.e("test", nearbySearchObject.getResults().get(0).getName());
+
+        } else {
+            Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView() {

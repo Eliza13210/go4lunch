@@ -24,7 +24,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,6 +43,8 @@ import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
@@ -86,7 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences("Go4Lunch", MODE_PRIVATE);
         prefsEditor = prefs.edit();
     }
 
@@ -195,8 +199,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             assert mLastKnownLocation != null;
 
                             //Get the latitude and longitude
-                            mLatitude = mLastKnownLocation.getLatitude();
-                            mLongitude = mLastKnownLocation.getLongitude();
+                            mLatitude = -33.8670522;//mLastKnownLocation.getLatitude();
+                            mLongitude = 151.1957362;//mLastKnownLocation.getLongitude();
 
                             //Add marker on map
                             mMap.addMarker(new MarkerOptions().position(new LatLng(mLatitude,
@@ -215,7 +219,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             String location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);
                             getRestaurants(location);
 
-                            Log.e("location map", "success" + location);
+                            //Log.e("location map", "success" + location);
 
                         } else {
                             Log.d("map", "Current location is null. Using defaults.");
@@ -232,6 +236,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         {
             Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    private void getRestaurants(String location) {
+        SharedPreferences prefs = getActivity().getSharedPreferences("Go4Lunch", MODE_PRIVATE);
+         this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
+                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
+                    @Override
+                    public void onNext(NearbySearchObject nearbySearchObject) {
+                        addToList(nearbySearchObject);
+                        Log.e("onNext", nearbySearchObject.getStatus());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void addToList(NearbySearchObject nearbySearchObject) {
+        results = new ArrayList<>();
+
+        //Add restaurants results from fetched nearby search object to the list
+        if (nearbySearchObject.getStatus().equals("OK")) {
+            results.addAll(nearbySearchObject.getResults());
+            Log.e("test", results.get(0).getName());
+            Log.e("test", results.get(0).getGeometry().getLocation().getLat().toString());
+
+            //Save the list of restaurants
+            Gson gson = new Gson();
+            String json = gson.toJson(results);
+            prefsEditor.putString("ListOfRestaurants", json);
+            prefsEditor.apply();
+            displayRestaurantsOnMap();
+
+        } else {
+            Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -261,50 +307,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    private void getRestaurants(String location) {
-        this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
-                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
-                    @Override
-                    public void onNext(NearbySearchObject nearbySearchObject) {
-                        addToList(nearbySearchObject);
-                        Log.e("onNext", nearbySearchObject.getStatus());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
-    private void addToList(NearbySearchObject nearbySearchObject) {
-        results = new ArrayList<>();
-
-        //Add restaurants results from fetched nearby search object to the list
-        if (nearbySearchObject.getStatus().equals("OK")) {
-            results.addAll(nearbySearchObject.getResults());
-            Log.e("test", nearbySearchObject.getResults().get(0).getName());
-
-            //Save the list of restaurants
-            Gson gson = new Gson();
-            String json = gson.toJson(results);
-            prefsEditor.putString("ListOfRestaurants", json);
-            prefsEditor.apply();
-
-            displayRestaurantsOnMap();
-
-        } else {
-            Toast.makeText(getActivity(), "Too many query today, try again tomorrow", Toast.LENGTH_LONG).show();
-        }
-    }
 
     private void displayRestaurantsOnMap() {
-        RestaurantManager manager = new RestaurantManager(getActivity(), results, mMap);
-        manager.displayOnMap();
+        RestaurantManager manager = new RestaurantManager(getActivity(), results);
+        manager.displayOnMap(this.mMap);
     }
 
 
@@ -317,4 +323,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onDestroy();
         this.disposeWhenDestroy();
     }
+
+
 }

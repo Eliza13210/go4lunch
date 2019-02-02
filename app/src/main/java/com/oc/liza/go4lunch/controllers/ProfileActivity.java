@@ -1,18 +1,32 @@
 package com.oc.liza.go4lunch.controllers;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.NearbySearchObject;
+import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.network.RestaurantStream;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -20,6 +34,9 @@ public class ProfileActivity extends BaseActivity {
     ViewPager viewPager;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
+    private Disposable mDisposable;
+    private SharedPreferences pref;
+    private MyFragmentPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +54,9 @@ public class ProfileActivity extends BaseActivity {
     private void initViewpager() {
 
         //Set adapter to be able to switch between the fragments
-        MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(1);
     }
 
 
@@ -57,9 +74,11 @@ public class ProfileActivity extends BaseActivity {
                         viewPager.setCurrentItem(0);
                         return true;
                     case R.id.navigation_list:
+                        adapter.getItem(1);
                         viewPager.setCurrentItem(1);
                         return true;
                     case R.id.navigation_users:
+                        adapter.getItem(2);
                         viewPager.setCurrentItem(2);
                         toolbar.setTitle(R.string.workmates);
                         return true;
