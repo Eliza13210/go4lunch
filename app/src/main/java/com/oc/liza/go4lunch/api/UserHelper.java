@@ -1,10 +1,12 @@
 package com.oc.liza.go4lunch.api;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.oc.liza.go4lunch.models.firebase.User;
 
 public class UserHelper {
@@ -16,7 +18,7 @@ public class UserHelper {
 
     // --- COLLECTION REFERENCE ---
 
-    public static CollectionReference getUsersCollection(){
+    public static CollectionReference getUsersCollection() {
         return db.collection(COLLECTION_NAME);
     }
 
@@ -32,10 +34,19 @@ public class UserHelper {
 
     // --- GET ---
 
-    public static Task<DocumentSnapshot> getUser(String uid){
+    public static Task<DocumentSnapshot> getUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+    public static FirestoreRecyclerOptions<User> getQuery(String field) {
+
+        Query query = getUsersCollection()
+                .orderBy(field, Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
+        return options;
+    }
     // --- UPDATE ---
 
     public static Task<Void> updateUsername(String username, String uid) {

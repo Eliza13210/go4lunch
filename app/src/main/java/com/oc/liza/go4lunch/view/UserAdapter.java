@@ -3,6 +3,7 @@ package com.oc.liza.go4lunch.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
         context=viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_item_user, viewGroup, false);
+        Log.e("adapter", "create");
         return new UserViewHolder(view);
     }
 
@@ -38,6 +40,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        Log.e("adapter", "size " + users.size());
+        return this.users.size();
     }
 }

@@ -36,11 +36,31 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private Disposable mDisposable;
     private SharedPreferences pref;
     private MyFragmentPagerAdapter adapter;
     private MenuItem prevMenuItem;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_map:
+                    viewPager.setCurrentItem(0);
+                    break;
+                case R.id.navigation_list:
+                    viewPager.setCurrentItem(1);
+                    break;
+                case R.id.navigation_users:
+                    viewPager.setCurrentItem(2);
+                    toolbar.setTitle(R.string.workmates);
+                    break;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,27 +90,6 @@ public class ProfileActivity extends BaseActivity {
     private void initBottomMenu() {
         final BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        mOnNavigationItemSelectedListener
-                = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_map:
-                        viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.navigation_list:
-                        viewPager.setCurrentItem(1);
-                        break;
-                    case R.id.navigation_users:
-                        viewPager.setCurrentItem(2);
-                        toolbar.setTitle(R.string.workmates);
-                       break;
-                }
-                return false;
-            }
-        };
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

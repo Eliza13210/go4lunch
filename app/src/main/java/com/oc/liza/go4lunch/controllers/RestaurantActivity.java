@@ -71,7 +71,7 @@ public class RestaurantActivity extends AppCompatActivity {
         initMenu();
         initButton();
         initRestaurant();
-        getListOfUsers();
+       // getListOfUsers();
     }
 
     private void getListOfUsers() {

@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 
 public class UsersFragment extends Fragment {
 
-
     @BindView(R.id.recycler_view_users)
     RecyclerView recyclerView;
 
@@ -61,8 +60,8 @@ public class UsersFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         ButterKnife.bind(this, view);
-        getListOfUsers();
-        initRecyclerView();
+        this.initRecyclerView();
+        this.getListOfUsers();
         return view;
     }
 
@@ -77,19 +76,16 @@ public class UsersFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 // convert document to POJO
                                 User user = document.toObject(User.class);
-                                {
-                                    users.add(user);
-                                    adapter.notifyDataSetChanged();
-                                    Log.d("RestaurantA", document.getId() + " => " + document.getData());
-                                    // }
-                                }
+                                users.add(user);
+                                Log.d("RestaurantA", document.getId() + " => " + document.getData());
                             }
                         } else {
                             Log.d("RestaurantA", "Error getting documents: ", task.getException());
                         }
+                        adapter.notifyDataSetChanged();
+                        Log.e("notify", "size " + users.size());
                     }
                 });
-
 
         /**String[] listUid = {"1", "2", "3", "4"};
          //Create list of UID
@@ -111,7 +107,7 @@ public class UsersFragment extends Fragment {
 
     private void initRecyclerView() {
         // 3.1 - Reset list
-        this.users = new ArrayList<>();
+        users = new ArrayList<>();
         // 3.2 - Create adapter passing the list of news
         this.adapter = new UserAdapter(this.users);
         // 3.3 - Attach the adapter to the recycler view to populate items

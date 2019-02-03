@@ -10,11 +10,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface RestaurantService {
     String API_KEY = BuildConfig.API_KEY;
-    String RADIUS = "1500";
+    String RADIUS = "20";
     String TYPE = "restaurant";
     String NEARBY = "nearbysearch";
     String DETAILS = "details";

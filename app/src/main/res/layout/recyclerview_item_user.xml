@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="7"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    >
+    android:weightSum="7">
 
     <ImageView
         android:id="@+id/user_photo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:padding="2dp"
         android:src="@drawable/ic_phone"
         />
+
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/user_photo"
         android:layout_weight="5"
-        android:orientation="vertical"
-        android:layout_toRightOf="@+id/user_photo">
-    <TextView
-        android:id="@+id/user_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I'm eating french (Le bistro)"
-        />
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="5dp"
-        android:background="?android:attr/listDivider"
-        android:visibility="visible" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="I'm eating french (Le bistro)" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="5dp"
+            android:background="?android:attr/listDivider"
+            android:visibility="visible" />
     </LinearLayout>
 </LinearLayout>
