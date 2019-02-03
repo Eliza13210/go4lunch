@@ -15,6 +15,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.fragments.ListFragment;
+import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
+import com.oc.liza.go4lunch.controllers.fragments.UsersFragment;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantStream;
@@ -37,6 +40,7 @@ public class ProfileActivity extends BaseActivity {
     private Disposable mDisposable;
     private SharedPreferences pref;
     private MyFragmentPagerAdapter adapter;
+    private MenuItem prevMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +59,16 @@ public class ProfileActivity extends BaseActivity {
 
         //Set adapter to be able to switch between the fragments
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+
+        MapFragment mapFragment = new MapFragment();
+        ListFragment listFragment = new ListFragment();
+        UsersFragment usersFragment = new UsersFragment();
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
     }
 
 
     private void initBottomMenu() {
-        BottomNavigationView navigation = findViewById(R.id.navigation);
+        final BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         mOnNavigationItemSelectedListener
@@ -72,20 +79,41 @@ public class ProfileActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.navigation_map:
                         viewPager.setCurrentItem(0);
-                        return true;
+                        break;
                     case R.id.navigation_list:
-                        adapter.getItem(1);
                         viewPager.setCurrentItem(1);
-                        return true;
+                        break;
                     case R.id.navigation_users:
-                        adapter.getItem(2);
                         viewPager.setCurrentItem(2);
                         toolbar.setTitle(R.string.workmates);
-                        return true;
+                       break;
                 }
                 return false;
             }
         };
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null)
+                    prevMenuItem.setChecked(false);
+                else
+                    navigation.getMenu().getItem(0).setChecked(false);
+
+                navigation.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = navigation.getMenu().getItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     //REMOVE?

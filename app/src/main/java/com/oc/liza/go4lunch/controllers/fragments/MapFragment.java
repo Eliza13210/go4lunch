@@ -55,7 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     //For google maps
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LatLng mDefaultLocation = new LatLng(-33.8670522,151.1957362);
+    private LatLng mDefaultLocation = new LatLng(-33.8670522, 151.1957362);
     private Double mLatitude;
     private Double mLongitude;
 
@@ -99,22 +99,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
+        getCurrentLocation();
         return rootView;
+    }
+
+    private void getCurrentLocation() {
+        try {
+            if (mLocationPermissionGranted) {
+                getDeviceLocation();
+            } else {
+                getLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap = googleMap;
-
-        // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
+        displayRestaurantsOnMap();
+        // Turn on the My Location layer and the related control on the map.
+        // updateLocationUI();
 
         // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
+        //getDeviceLocation();
     }
 
     private void updateLocationUI() {
@@ -150,7 +161,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-            updateLocationUI();
+            // updateLocationUI();
+            getDeviceLocation();
             Log.e("Permission", "granted ok");
         } else {
             ActivityCompat.requestPermissions(getActivity(),
@@ -199,18 +211,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             assert mLastKnownLocation != null;
 
                             //Get the latitude and longitude
-                            mLatitude = -33.8670522;//mLastKnownLocation.getLatitude();
-                            mLongitude = 151.1957362;//mLastKnownLocation.getLongitude();
-
-                            //Add marker on map
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(mLatitude,
-                                    mLongitude))
-                                    .title("User"));
-
-                            //Move camera
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLatitude,
-                                            mLongitude), 10));
+                            mLatitude = -33.8670522;//mLastKnownLocation.getLatitude();//
+                            mLongitude = 151.1957362;//mLastKnownLocation.getLongitude();//
 
                             //Save latitude and longitude to calculate distance in list view
                             prefsEditor.putString("CurrentLatitude", Double.toString(mLatitude)).apply();
@@ -219,13 +221,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             String location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);
                             getRestaurants(location);
 
-                            //Log.e("location map", "success" + location);
+                            Log.e("location map", "success" + location);
 
                         } else {
                             Log.d("map", "Current location is null. Using defaults.");
                             Log.e("map", "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
+                            // mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
                 });
@@ -241,7 +243,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void getRestaurants(String location) {
         SharedPreferences prefs = getActivity().getSharedPreferences("Go4Lunch", MODE_PRIVATE);
-         this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
+        this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
@@ -274,7 +276,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             String json = gson.toJson(results);
             prefsEditor.putString("ListOfRestaurants", json);
             prefsEditor.apply();
-            displayRestaurantsOnMap();
+
+
+            final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
+            assert mapFragment != null;
+
+            mapFragment.getMapAsync(this);
 
         } else {
             Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
@@ -309,6 +317,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 
     private void displayRestaurantsOnMap() {
+        //Add marker on map
+        mMap.addMarker(new MarkerOptions().position(new LatLng(mLatitude,
+                mLongitude))
+                .title("User"));
+
+        //Move camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(mLatitude,
+                        mLongitude), 10));
+
         RestaurantManager manager = new RestaurantManager(getActivity(), results);
         manager.displayOnMap(this.mMap);
     }

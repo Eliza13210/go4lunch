@@ -4,14 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
@@ -61,23 +67,46 @@ public class UsersFragment extends Fragment {
     }
 
     private void getListOfUsers() {
-      /**  //Do list of UID
-        String[] listUid = {"1", "2", "3", "4"};
-        //Create list of UID
-        for (String s : listUid) {
-            DocumentSnapshot document = UserHelper.getUser(s).getResult();
-            if (document.exists()) {
-                // convert document to POJO
-                User user = document.toObject(User.class);
-                users.add(user);
-            }
-        }
-        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = pref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(users);
-        prefsEditor.putString("ListUsers", json);
-        prefsEditor.apply(); */
+        //Do list of UID
+        UserHelper.getUsersCollection()
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // convert document to POJO
+                                User user = document.toObject(User.class);
+                                {
+                                    users.add(user);
+                                    adapter.notifyDataSetChanged();
+                                    Log.d("RestaurantA", document.getId() + " => " + document.getData());
+                                    // }
+                                }
+                            }
+                        } else {
+                            Log.d("RestaurantA", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+        /**String[] listUid = {"1", "2", "3", "4"};
+         //Create list of UID
+         for (String s : listUid) {
+         DocumentSnapshot document = UserHelper.getUser(s).getResult();
+         if (document.exists()) {
+         // convert document to POJO
+         User user = document.toObject(User.class);
+         users.add(user);
+         }
+         }
+         SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+         SharedPreferences.Editor prefsEditor = pref.edit();
+         Gson gson = new Gson();
+         String json = gson.toJson(users);
+         prefsEditor.putString("ListUsers", json);
+         prefsEditor.apply(); */
     }
 
     private void initRecyclerView() {

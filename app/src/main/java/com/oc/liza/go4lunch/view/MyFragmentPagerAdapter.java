@@ -24,7 +24,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return MapFragment.newInstance();
             case 2:
-                return MapFragment.newInstance();
+                return UsersFragment.newInstance();
             default:
                 return MapFragment.newInstance();
         }
