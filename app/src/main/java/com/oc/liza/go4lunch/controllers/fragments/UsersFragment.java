@@ -83,31 +83,13 @@ public class UsersFragment extends Fragment {
                             Log.d("RestaurantA", "Error getting documents: ", task.getException());
                         }
                         adapter.notifyDataSetChanged();
-                        Log.e("notify", "size " + users.size());
                     }
                 });
-
-        /**String[] listUid = {"1", "2", "3", "4"};
-         //Create list of UID
-         for (String s : listUid) {
-         DocumentSnapshot document = UserHelper.getUser(s).getResult();
-         if (document.exists()) {
-         // convert document to POJO
-         User user = document.toObject(User.class);
-         users.add(user);
-         }
-         }
-         SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-         SharedPreferences.Editor prefsEditor = pref.edit();
-         Gson gson = new Gson();
-         String json = gson.toJson(users);
-         prefsEditor.putString("ListUsers", json);
-         prefsEditor.apply(); */
     }
 
     private void initRecyclerView() {
         // 3.1 - Reset list
-        users = new ArrayList<>();
+        this.users = new ArrayList<>();
         // 3.2 - Create adapter passing the list of news
         this.adapter = new UserAdapter(this.users);
         // 3.3 - Attach the adapter to the recycler view to populate items

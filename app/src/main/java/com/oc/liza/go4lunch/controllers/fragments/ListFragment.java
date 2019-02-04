@@ -35,35 +35,18 @@ public class ListFragment extends Fragment {
     @BindView(R.id.recycler_view_restaurants)
     RecyclerView recyclerView;
 
-    private List<Result> listRestaurants;
-    private ArrayList<RestaurantDetails> listOfDetails;
+    private List<Result> listRestaurants = new ArrayList<>();
+    private ArrayList<RestaurantDetails> listOfDetails = new ArrayList<>();
     private RecyclerViewAdapter adapter;
     private Disposable disposable;
-    private Disposable mDisposable;
 
     public ListFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getListOfRestaurants();
-        configureRecyclerView();
     }
 
     @Override
@@ -76,63 +59,29 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
-        //getListOfRestaurants();
-        //configureRecyclerView();
+        this.getListOfRestaurants();
+        Log.e("list", "create");
         return view;
     }
 
     private void getListOfRestaurants() {
-      /**  SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurants", null);
+        Log.e("listF", json);
         Gson gson = new Gson();
         Type type = new TypeToken<List<Result>>() {
         }.getType();
 
         listRestaurants = gson.fromJson(json, type);
+
+        Log.e("listFragment", listRestaurants.get(0).getName());
         for (Result r : listRestaurants) {
             getRestaurantDetails(r.getPlace_id());
         }
-        adapter.notifyDataSetChanged();*/
-      SharedPreferences pref=getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-      String location= pref.getString("CurrentLatitude", null)+","+pref.getString("CurrentLongitude", null);
-        this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
-                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
-                    @Override
-                    public void onNext(NearbySearchObject nearbySearchObject) {
-                        addToList(nearbySearchObject);
-                        Log.e("onNext", nearbySearchObject.getStatus());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
     }
-
-    private void addToList(NearbySearchObject nearbySearchObject) {
-        listRestaurants = new ArrayList<>();
-
-        //Add restaurants results from fetched nearby search object to the list
-        if (nearbySearchObject.getStatus().equals("OK")) {
-            listRestaurants.addAll(nearbySearchObject.getResults());
-            Log.e("test", nearbySearchObject.getResults().get(0).getName());
-
-        } else {
-            Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
-        }
-    }
-
-
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView() {
-        // 3.1 - Reset list
-        this.listRestaurants = new ArrayList<>();
         // 3.2 - Create adapter passing the list of news
         this.adapter = new RecyclerViewAdapter(this.listRestaurants, this.listOfDetails);
         // 3.3 - Attach the adapter to the recycler view to populate items
@@ -147,8 +96,12 @@ public class ListFragment extends Fragment {
 
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
-                        listOfDetails = new ArrayList<>();
                         listOfDetails.add(nearbySearchObject.getDetails());
+                        if (listOfDetails.size() == listRestaurants.size()) {
+                            configureRecyclerView();
+                        }
+                        Log.e("onnext", "size " + listOfDetails.size());
+                        Log.e("ListofRest", "size" + listRestaurants.size());
                     }
 
                     @Override
@@ -158,7 +111,6 @@ public class ListFragment extends Fragment {
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
 

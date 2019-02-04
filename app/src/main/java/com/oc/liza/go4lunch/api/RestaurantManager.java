@@ -58,7 +58,7 @@ public class RestaurantManager {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             marker.setTag(i);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
-                    lng), 10));
+                    lng), 15));
 
 
             //CHECK WITH LIST OF USERS AND CHANGE COLOR OF MARKER
@@ -71,6 +71,9 @@ public class RestaurantManager {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 final int position = (int) (marker.getTag());
+                if(position==100){
+                    Log.e("manager", "user");
+                }
                 fetchRestaurantDetails(position);
                 return false;
             }

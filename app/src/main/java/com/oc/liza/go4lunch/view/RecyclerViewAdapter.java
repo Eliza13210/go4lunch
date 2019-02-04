@@ -3,6 +3,7 @@ package com.oc.liza.go4lunch.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     public RecyclerViewAdapter(List<Result> listOfRestaurants, List<RestaurantDetails> listOfDetails) {
         this.listOfRestaurants = listOfRestaurants;
-        this.listOfDetails=listOfDetails;
+        this.listOfDetails = listOfDetails;
     }
 
     @NonNull
@@ -32,7 +33,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_item_restaurant, viewGroup, false);
-
         return new RestaurantViewHolder(view);
 
     }
@@ -44,6 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     @Override
     public int getItemCount() {
+        Log.e("list adapter", "size " + listOfRestaurants.size());
         return this.listOfRestaurants.size();
     }
 }

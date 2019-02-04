@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
@@ -34,55 +35,52 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     LinearLayout rating;
     @BindView(R.id.photo)
     ImageView photo;
+
     private Context context;
 
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
+        Log.e("viewholder rest", "create");
     }
 
     public void updateWithRestaurantItem(final Result result, final RestaurantDetails details, final Context context) {
+
         this.context = context;
         this.name.setText(result.getName());
         this.address.setText(details.getAddress());
-        this.opening_hours.setText(result.getOpen_now());
-        String distance = calculateDistance(result.getLat(), result.getLng());
-        this.distance.setText(distance);
+
+        String open=String.valueOf(result.getOpening_hours().getOpen_now());
+        this.opening_hours.setText(open);
+
+               String distance = calculateDistance(result);
+            this.distance.setText(distance);
+
 
         //set stars depending on rating
-        getRestaurantRating(result.getRating());
+        //   getRestaurantRating(result.getRating());
 
         //Set photo
-        try {
-            String url = result.getPhotos().get(0).getPhotoRef();
-            Glide.with(context)
-                    .load(url)
-                    .into(photo);
-        } catch (Exception e) {
-            String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
-
-            Glide.with(context)
-                    .load(defaultImg)
-                    .into(photo);
-        }
+        getPhoto(result);
         showRestaurantWhenClicked(result, details, context);
     }
 
-    private void getRestaurantRating(double rating) {
+    public void getRestaurantRating(double note) {
 
-        if (rating >= 4) {
+        if (note >= 4) {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
             this.rating.addView(star);
             this.rating.addView(star);
             this.rating.addView(star);
-        } else if (rating >= 2) {
+        } else if (note >= 2) {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
             this.rating.addView(star);
             this.rating.addView(star);
-        } else if (rating == 1) {
+        } else if (note == 1) {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
             this.rating.addView(star);
@@ -90,7 +88,10 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private String calculateDistance(Double lat, Double lng) {
+    public String calculateDistance(Result result) {
+        Double lat=result.getGeometry().getLocation().getLng();
+        Double lng=result.getGeometry().getLocation().getLng();
+
         String distance = "";
 
         //Get current location
@@ -119,7 +120,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         return distance;
     }
 
-    private void showRestaurantWhenClicked(final Result result, final RestaurantDetails details, final Context context) {
+    public void showRestaurantWhenClicked(final Result result, final RestaurantDetails details, final Context context) {
 
         //when user click on view, open the article in a web view inside the app
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +141,28 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 context.startActivity(restaurant);
             }
         });
+    }
+
+    public void getPhoto(Result result) {
+        try {
+            String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                    + result.getPhotos().get(0).getPhotoRef()
+                    + "&key="
+                    + BuildConfig.API_KEY;
+            Glide.with(context)
+                    .load(url)
+                    .into(photo);
+        } catch (Exception e) {
+            String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
+
+            Glide.with(context)
+                    .load(defaultImg)
+                    .into(photo);
+        }
+
+    }
+    public void getUsers(){
+
     }
 
 }

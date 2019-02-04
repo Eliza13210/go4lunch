@@ -106,6 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void getCurrentLocation() {
         try {
             if (mLocationPermissionGranted) {
+                // Get the current location of the device and set the position of the map.
                 getDeviceLocation();
             } else {
                 getLocationPermission();
@@ -119,13 +120,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap = googleMap;
-        updateLocationUI();
         displayRestaurantsOnMap();
-        // Turn on the My Location layer and the related control on the map.
-        // updateLocationUI();
 
-        // Get the current location of the device and set the position of the map.
-        //getDeviceLocation();
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
     }
 
     private void updateLocationUI() {
@@ -211,8 +209,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             assert mLastKnownLocation != null;
 
                             //Get the latitude and longitude
-                            mLatitude = -33.8670522;//mLastKnownLocation.getLatitude();//
-                            mLongitude = 151.1957362;//mLastKnownLocation.getLongitude();//
+                            mLatitude = mLastKnownLocation.getLatitude();//-33.8670522;
+                            mLongitude = mLastKnownLocation.getLongitude();//151.1957362;
 
                             //Save latitude and longitude to calculate distance in list view
                             prefsEditor.putString("CurrentLatitude", Double.toString(mLatitude)).apply();
@@ -268,8 +266,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         //Add restaurants results from fetched nearby search object to the list
         if (nearbySearchObject.getStatus().equals("OK")) {
             results.addAll(nearbySearchObject.getResults());
-            Log.e("test", results.get(0).getName());
-            Log.e("test", results.get(0).getGeometry().getLocation().getLat().toString());
 
             //Save the list of restaurants
             Gson gson = new Gson();
@@ -277,11 +273,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             prefsEditor.putString("ListOfRestaurants", json);
             prefsEditor.apply();
 
-
+            //create map
             final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
             assert mapFragment != null;
-
             mapFragment.getMapAsync(this);
 
         } else {
@@ -317,16 +311,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 
     private void displayRestaurantsOnMap() {
-        //Add marker on map
+        //Add user marker on map
         mMap.addMarker(new MarkerOptions().position(new LatLng(mLatitude,
                 mLongitude))
-                .title("User"));
+                .title("User"))
+                .setTag(100);
 
         //Move camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(mLatitude,
-                        mLongitude), 10));
+                        mLongitude), 15));
 
+        //Add restaurant markers on map
         RestaurantManager manager = new RestaurantManager(getActivity(), results);
         manager.displayOnMap(this.mMap);
     }

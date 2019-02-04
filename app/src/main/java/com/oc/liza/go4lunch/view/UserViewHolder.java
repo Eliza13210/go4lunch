@@ -29,8 +29,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
     public UserViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        Log.e("viewholder", "create");
-
     }
 
     public void updateUserItem(User user, final Context context) {
