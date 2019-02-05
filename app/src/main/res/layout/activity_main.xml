@@ -4,6 +4,6 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/lunch2"
+    android:background="@drawable/main_background"
     android:orientation="horizontal"
     tools:context=".MainActivity"></LinearLayout>

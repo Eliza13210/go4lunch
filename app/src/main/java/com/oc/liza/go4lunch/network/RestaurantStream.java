@@ -14,8 +14,6 @@ public class RestaurantStream {
 
     public static Observable<NearbySearchObject> fetchNearbyRestaurantsStream(String location) {
         RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
-//        Log.e("url", "url= " + RestaurantService.NEARBY + location + RestaurantService.RADIUS +RestaurantService.TYPE+
-        //               RestaurantService.API_KEY);
         return restaurantService.getRestaurant(RestaurantService.NEARBY, null, location, RestaurantService.RADIUS, RestaurantService.TYPE,
                 RestaurantService.API_KEY)
                 .subscribeOn(Schedulers.io())
@@ -26,7 +24,8 @@ public class RestaurantStream {
 
     public static Observable<NearbySearchObject> fetchDetailsStream(String place_id) {
         RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
-        return restaurantService.getRestaurant(RestaurantService.DETAILS, place_id, null, null, null, restaurantService.API_KEY)
+        return restaurantService.getRestaurant(RestaurantService.DETAILS, place_id, null, null, null,
+                restaurantService.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);

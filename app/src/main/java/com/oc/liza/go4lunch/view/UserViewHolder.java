@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.firebase.User;
 
 import butterknife.BindView;
@@ -32,22 +33,25 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void updateUserItem(User user, final Context context) {
-        Log.e("viewholder", user.getUsername());
 
         // IS JOINING IF CONTEXT IS RESTAURANT ACTIVITY
-
-        if (!user.getRestaurant().equals("not selected")) {
+        if (context.equals(RestaurantActivity.class)) {
             this.text.setText(user.getUsername());
-            this.text.append(" is eating ");
-            this.text.append(user.getRestaurant());
+            this.text.append(" is joining! ");
         } else {
-            if (Build.VERSION.SDK_INT < 23) {
-                text.setTextAppearance(context, R.style.cursive);
+            if (!user.getRestaurant().equals("not selected")) {
+                this.text.setText(user.getUsername());
+                this.text.append(" is eating at ");
+                this.text.append(user.getRestaurant());
             } else {
-                text.setTextAppearance(R.style.cursive);
+                if (Build.VERSION.SDK_INT < 23) {
+                    text.setTextAppearance(context, R.style.cursive);
+                } else {
+                    text.setTextAppearance(R.style.cursive);
+                }
+                text.setText(user.getUsername());
+                text.append(" hasn't decided yet");
             }
-            text.setText(user.getUsername());
-            text.append(" hasn't decided yet");
         }
         //Set photo
         try {
@@ -64,4 +68,5 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
                     .into(photo);
         }
     }
+
 }

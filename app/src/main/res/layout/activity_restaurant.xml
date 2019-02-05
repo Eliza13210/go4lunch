@@ -65,6 +65,7 @@
                 app:itemIconTint="@color/orange"
                 app:itemTextColor="@color/orange"
                 app:menu="@menu/menu_restaurant"
+                android:paddingBottom="10dp"
                 />
         </LinearLayout>
 

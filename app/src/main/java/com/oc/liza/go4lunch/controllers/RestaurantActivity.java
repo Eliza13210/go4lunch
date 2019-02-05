@@ -71,13 +71,13 @@ public class RestaurantActivity extends AppCompatActivity {
         initMenu();
         initButton();
         initRestaurant();
-       // getListOfUsers();
+        getListOfUsers();
     }
 
     private void getListOfUsers() {
 
         UserHelper.getUsersCollection()
-               // .whereEqualTo("restaurant", "not selected")
+                .whereEqualTo("restaurant", restName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -86,12 +86,11 @@ public class RestaurantActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 // convert document to POJO
                                 User user = document.toObject(User.class);
-                               // if (user.getRestaurant().equals(restName)) {
-                                    users.add(user);
-                                    adapter.notifyDataSetChanged();
-                                    Log.d("RestaurantA", document.getId() + " => " + document.getData());
-                               // }
+                                users.add(user);
+                                Log.d("RestaurantA", document.getId() + " => " + document.getData());
+                                // }
                             }
+                            adapter.notifyDataSetChanged();
                         } else {
                             Log.d("RestaurantA", "Error getting documents: ", task.getException());
                         }

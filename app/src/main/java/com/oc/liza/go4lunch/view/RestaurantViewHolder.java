@@ -12,8 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
@@ -35,15 +40,16 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     LinearLayout rating;
     @BindView(R.id.photo)
     ImageView photo;
+    @BindView(R.id.number_users)
+    TextView users;
 
     private Context context;
+    private int number_users;
 
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-
-        Log.e("viewholder rest", "create");
     }
 
     public void updateWithRestaurantItem(final Result result, final RestaurantDetails details, final Context context) {
@@ -52,19 +58,46 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.name.setText(result.getName());
         this.address.setText(details.getAddress());
 
-        String open=String.valueOf(result.getOpening_hours().getOpen_now());
-        this.opening_hours.setText(open);
+        String open = result.getOpening_hours().getOpen_now();
+        if (open == "true") {
+            this.opening_hours.setText("Open");
+        } else {
+            this.opening_hours.setText("Closed");
+        }
 
-               String distance = calculateDistance(result);
-            this.distance.setText(distance);
+        String distance = calculateDistance(result);
+        this.distance.setText(distance);
 
 
         //set stars depending on rating
         //   getRestaurantRating(result.getRating());
 
+        //Check if users going
+        checkIfUser(result.getName());
         //Set photo
         getPhoto(result);
+        //Set on click listener to start Restaurant activity
         showRestaurantWhenClicked(result, details, context);
+    }
+
+    public void checkIfUser(String name) {
+        UserHelper.getUsersCollection()
+                .whereEqualTo("restaurant", name)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("manager", document.getId() + " => " + document.getData());
+                                number_users++;
+                            }
+                            users.setText("(" + number_users + ")");
+                        } else {
+                            Log.d("manager", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     public void getRestaurantRating(double note) {
@@ -89,8 +122,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     }
 
     public String calculateDistance(Result result) {
-        Double lat=result.getGeometry().getLocation().getLng();
-        Double lng=result.getGeometry().getLocation().getLng();
+        Double lat = result.getGeometry().getLocation().getLng();
+        Double lng = result.getGeometry().getLocation().getLng();
 
         String distance = "";
 
@@ -161,7 +194,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
 
     }
-    public void getUsers(){
+
+    public void getUsers() {
 
     }
 

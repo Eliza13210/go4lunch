@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.firebase.User;
 
 import java.util.List;
@@ -28,7 +29,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
         context=viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_item_user, viewGroup, false);
-        Log.e("adapter", "create");
         return new UserViewHolder(view);
     }
 

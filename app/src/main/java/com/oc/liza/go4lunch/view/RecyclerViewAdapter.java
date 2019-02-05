@@ -44,7 +44,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     @Override
     public int getItemCount() {
-        Log.e("list adapter", "size " + listOfRestaurants.size());
         return this.listOfRestaurants.size();
     }
 }
