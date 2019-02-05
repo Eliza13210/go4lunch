@@ -73,10 +73,11 @@ public class ListFragment extends Fragment {
         }.getType();
 
         listRestaurants = gson.fromJson(json, type);
-
-        Log.e("listFragment", listRestaurants.get(0).getName());
-        for (Result r : listRestaurants) {
-            getRestaurantDetails(r.getPlace_id());
+        Log.e("listF", listRestaurants.get(0).getName());
+        if (!listRestaurants.isEmpty()) {
+            for (Result r : listRestaurants) {
+                getRestaurantDetails(r.getPlace_id());
+            }
         }
     }
 

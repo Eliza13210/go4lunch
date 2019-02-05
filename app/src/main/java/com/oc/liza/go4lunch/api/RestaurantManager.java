@@ -52,6 +52,7 @@ public class RestaurantManager {
             name = list.get(i).getName();
             Double lat = list.get(i).getGeometry().getLocation().getLat();
             Double lng = list.get(i).getGeometry().getLocation().getLng();
+            checkIfUser();
             Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,
                     lng))
                     .title(name)
@@ -78,6 +79,10 @@ public class RestaurantManager {
                 return false;
             }
         });
+    }
+
+    private void checkIfUser() {
+
     }
 
     private void fetchRestaurantDetails(final int position) {
