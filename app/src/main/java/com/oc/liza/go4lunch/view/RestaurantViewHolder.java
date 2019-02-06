@@ -58,13 +58,14 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.name.setText(result.getName());
         this.address.setText(details.getAddress());
 
-        String open = result.getOpening_hours().getOpen_now();
-        if (open == "true") {
-            this.opening_hours.setText("Open");
-        } else {
-            this.opening_hours.setText("Closed");
+        if (result.getOpening_hours() != null) {
+            String open = result.getOpening_hours().getOpen_now();
+            if (open == "true") {
+                this.opening_hours.setText("Open");
+            } else {
+                this.opening_hours.setText("Closed");
+            }
         }
-
         String distance = calculateDistance(result);
         this.distance.setText(distance);
 
@@ -106,12 +107,9 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
             this.rating.addView(star);
-            this.rating.addView(star);
-            this.rating.addView(star);
         } else if (note >= 2) {
             ImageView star = new ImageView(context);
             star.setImageResource(R.drawable.ic_star);
-            this.rating.addView(star);
             this.rating.addView(star);
         } else if (note == 1) {
             ImageView star = new ImageView(context);
@@ -194,9 +192,4 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
 
     }
-
-    public void getUsers() {
-
-    }
-
 }

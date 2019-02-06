@@ -203,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
                             assert mLastKnownLocation != null;
 
                             //Get the latitude and longitude
-                            Double mLatitude = -33.8670522;//mLastKnownLocation.getLatitude();
-                            Double mLongitude = 151.1957362;//mLastKnownLocation.getLongitude();
+                            Double mLatitude = mLastKnownLocation.getLatitude();//-33.8670522;
+                            Double mLongitude = mLastKnownLocation.getLongitude();//151.1957362;
 
                             //Save latitude and longitude to calculate distance in list view
                              location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);

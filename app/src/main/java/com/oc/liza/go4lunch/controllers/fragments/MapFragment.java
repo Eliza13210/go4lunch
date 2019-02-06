@@ -90,6 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         displayRestaurantsOnMap();
 
         // Turn on the My Location layer and the related control on the map.
@@ -157,8 +158,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         results = gson.fromJson(json, type);
 
-        RestaurantManager manager = new RestaurantManager(getActivity(), results);
-        manager.displayOnMap(this.mMap);
+        RestaurantManager manager = new RestaurantManager(getActivity(), results, mMap);
+        manager.showUser();
+        manager.checkIfUser();
     }
 
 }

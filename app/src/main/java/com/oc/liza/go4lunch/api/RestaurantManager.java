@@ -33,8 +33,11 @@ import io.reactivex.observers.DisposableObserver;
 
 public class RestaurantManager {
 
+    //info from fragment or activity
+    private GoogleMap map;
     private Context context;
     private List<Result> list;
+
     //For api request
     private RestaurantDetails restaurantDetails;
     private Disposable disposable;
@@ -49,15 +52,14 @@ public class RestaurantManager {
     private BitmapDescriptor colored_marker;
     private boolean userGoing;
 
-    public RestaurantManager(Context context, List<Result> list) {
+    public RestaurantManager(Context context, List<Result> list, GoogleMap map) {
         this.context = context;
         this.list = list;
-        Log.e("manager", "list length=" + list.size());
+        this.map = map;
     }
 
-    public void displayOnMap(GoogleMap map) {
-
-        //display user
+    public void showUser() {
+        //Get latitude and longitude
         SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         Double mLatitude = Double.valueOf(prefs.getString("CurrentLatitude", null));
         Double mLongitude = Double.valueOf(prefs.getString("CurrentLongitude", null));
@@ -68,74 +70,89 @@ public class RestaurantManager {
                 .title("User"))
                 .setTag(100);
 
-        for (int i = 0; i < list.size(); i++) {
-            name = list.get(i).getName();
-            checkIfUser(name);
-            Double lat = list.get(i).getGeometry().getLocation().getLat();
-            Double lng = list.get(i).getGeometry().getLocation().getLng();
-            //Set color on marker depending if user has chosen this restaurant
-            if (userGoing) {
-                Log.e("manager", "user going true "+name);
-                colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_green);
-            } else {
-                colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_orange);
-            }
-            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,
-                    lng))
-                    .title(name)
-                    .icon(colored_marker));
-            marker.setTag(i);
-            Log.e("manager", "marker" + i);
-
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
-                    lng), 15));
-        }
-
-        //User click on marker
+        //User click on marker will start function that fetch details about restaurant and start new activity
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                final int position = (int) (marker.getTag());
-                if (position == 100) {
+                final int i = (int) (marker.getTag());
+                Log.e("click", "get tag " + i);
+                if (i == 100) {
                     Log.e("manager", "user");
                 } else {
-                    fetchRestaurantDetails(position);
+                    fetchRestaurantDetails(i);
                 }
                 return false;
             }
         });
     }
 
-    public void checkIfUser(final String name) {
-        UserHelper.getUsersCollection()
-                .whereEqualTo("restaurant", name)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.e("checkifuser", "rest" +name +task.getResult().size());
-                            if (task.getResult().size()>0) {
-                                userGoing = true;
-                            } else {
-                                userGoing = false;
-                            }
-                        } else {
-                            Log.d("manager", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+    /**
+     * This function will check if user is going to the restaurant and add a marker to the map
+     * The marker will be green if a user is going
+     * or orange if not
+     */
 
+    public void checkIfUser() {
+        for (int i = 0; i < list.size(); i++) {
+            final int finalI = i;
+            //Fetch information from Firestore; user going to the restaurant
+            UserHelper.getUsersCollection()
+                    .whereEqualTo("restaurant", list.get(i).getName())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                //If there is at least one person going, the marker will be green
+                                if (task.getResult().size() > 0) {
+                                    userGoing = true;
+                                    //create marker and add it to the map
+                                    displayOnMap(list.get(finalI), finalI);
+                                } else {
+                                    userGoing = false;
+                                    //create marker and add it to the map
+                                    displayOnMap(list.get(finalI), finalI);
+                                }
+                            } else {
+                                Log.d("manager", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
     }
 
-    private void fetchRestaurantDetails(final int position) {
-        String place_id = list.get(position).getPlace_id();
-        Log.e("manager", list.get(position).getName() + position);
+    //Show restaurant object as a marker on map
+    private void displayOnMap(Result result, int i) {
+        name = result.getName();
+
+        Double lat = result.getGeometry().getLocation().getLat();
+        Double lng = result.getGeometry().getLocation().getLng();
+        //Set color on marker depending if user has chosen this restaurant
+        if (userGoing) {
+            Log.e("manager", "user going true " + name);
+            colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_green);
+        } else {
+            colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_orange);
+        }
+        Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,
+                lng))
+                .title(name)
+                .icon(colored_marker));
+        marker.setTag(i);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
+                lng), 15));
+    }
+
+    //Fetch details about the restaurant
+    private void fetchRestaurantDetails(final int pos) {
+        String place_id = list.get(pos).getPlace_id();
+        Log.e("manager", list.get(pos).getName() + pos);
         this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<NearbySearchObject>() {
             @Override
             public void onNext(NearbySearchObject nearbySearchObject) {
                 restaurantDetails = nearbySearchObject.getDetails();
-                saveInfo(position);
+                saveInfo(pos);
             }
 
             @Override
@@ -150,9 +167,16 @@ public class RestaurantManager {
         });
     }
 
+    /**
+     * Save info about the restaurant so that it will be showed in restaurant activity
+     *
+     * @param i is the position in the list of restaurants
+     */
+
     private void saveInfo(int i) {
         //Fetch details about Restaurant
         name = list.get(i).getName();
+        Log.e("saving ", "save name " + name);
         phone = restaurantDetails.getPhone();
         address = restaurantDetails.getAddress();
         website = restaurantDetails.getWebsite();
@@ -171,7 +195,7 @@ public class RestaurantManager {
 
     private void startRestaurantActivity() {
         disposeWhenDestroy();
-        //Using position get Value from arraylist
+
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
 
