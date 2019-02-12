@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.controllers.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -30,10 +31,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.RestaurantManager;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantStream;
@@ -51,6 +55,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener {
+
     //For google maps
     private GoogleMap mMap;
     private boolean mLocationPermissionGranted;

@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.firebase.User;
@@ -146,6 +149,7 @@ public class RestaurantActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+
                 UserHelper.updateRestaurant(restName, FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .addOnFailureListener(onFailureListener());
             }

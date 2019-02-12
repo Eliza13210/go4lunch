@@ -20,9 +20,11 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.Gson;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
@@ -51,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     //For user location
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 123;
-    private boolean mLocationPermissionGranted;
+    private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     //For saving
     private SharedPreferences pref;
     private Disposable mDisposable;
-    private String location="";
-    private  List<Result> results = new ArrayList<>();
+    private String location = "";
+    private List<Result> results = new ArrayList<>();
 
 
     @Override
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .setTheme(R.style.AppTheme_NoTitle)
+                        .setTheme(R.style.MainTheme)
                         .build(),
                 RC_SIGN_IN);
 
@@ -174,12 +176,15 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
+                    pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted);
+                    Log.e("Perm granted", "updating ok");
                     getCurrentLocation();
+                } else {
+                    getLocationPermission();
                 }
             }
         }
-        pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted);
-        Log.e("Perm granted", "updating ok");
+
     }
 
     private void getDeviceLocation() {
@@ -200,15 +205,21 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = (Location) task.getResult();
-                            assert mLastKnownLocation != null;
 
-                            //Get the latitude and longitude
-                            Double mLatitude = mLastKnownLocation.getLatitude();//-33.8670522;
-                            Double mLongitude = mLastKnownLocation.getLongitude();//151.1957362;
+                            Double mLatitude;
+                            Double mLongitude;
+                            if (mLastKnownLocation != null) {
 
+                                //Get the latitude and longitude
+                                mLatitude = mLastKnownLocation.getLatitude();//-33.8670522;
+                                mLongitude = mLastKnownLocation.getLongitude();//151.1957362;
+                            } else {
+                                mLatitude = 43.7845096;
+                                mLongitude = 4.846242;
+                            }
                             //Save latitude and longitude to calculate distance in list view
-                             location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);
-                          //  pref.edit().putString("CurrentLocation", location).apply();
+                            location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);
+                            //  pref.edit().putString("CurrentLocation", location).apply();
                             pref.edit().putString("CurrentLatitude", Double.toString(mLatitude)).apply();
                             pref.edit().putString("CurrentLongitude", Double.toString(mLongitude)).apply();
 
@@ -217,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Log.d("map", "Current location is null. Using defaults.");
                             Log.e("map", "Exception: %s", task.getException());
-                            //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
+                            // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
                             // mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
@@ -231,20 +242,29 @@ public class MainActivity extends AppCompatActivity {
 
     // Create user in firestore
     private void createUserInFirestore() {
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//
-            //Get current user info
-            String urlPicture = (currentUser.getPhotoUrl() != null)
-                    ? currentUser.getPhotoUrl().toString() : null;
-            String username = currentUser.getDisplayName();
-            String uid = currentUser.getUid();
 
-            // Access the Cloud Firestore instance from the Activity
-            UserHelper.createUser(uid, username, urlPicture, "not selected");
-            Log.e("created", "success creating new user");
+            UserHelper.getUser(currentUser.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.getId() == currentUser.getUid()) {
+                        //Get current user info
+                        String urlPicture = (currentUser.getPhotoUrl() != null)
+                                ? currentUser.getPhotoUrl().toString() : null;
+                        String username = currentUser.getDisplayName();
+                        String uid = currentUser.getUid();
+
+                        // Access the Cloud Firestore instance from the Activity
+                        UserHelper.createUser(uid, username, urlPicture, "not selected");
+                        Log.e("created", "success creating new user");
+                    }
+                }
+            });
+
+
         }
     }
+
     private void getRestaurants() {
         this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
@@ -279,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-            private void startProfileActivity() {
+    private void startProfileActivity() {
         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
     }
 

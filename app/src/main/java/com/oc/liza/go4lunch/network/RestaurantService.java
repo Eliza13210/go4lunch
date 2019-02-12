@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 
 public interface RestaurantService {
     String API_KEY = BuildConfig.API_KEY;
-    String RADIUS = "100";
+    String RADIUS = "1500";
     String TYPE = "restaurant";
     String NEARBY = "nearbysearch";
     String DETAILS = "details";

@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoTitle"
         >
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <meta-data
@@ -27,7 +27,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoTitle">
+            android:theme="@style/MainTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +39,8 @@
             android:label="I&apos;m hungry!"
             android:theme="@style/ProfileTheme" />
         <activity android:name=".controllers.RestaurantActivity"
-       android:theme="@style/RestaurantTheme"></activity>
+       android:theme="@style/RestaurantTheme">
+        </activity>
     </application>
 
 </manifest>

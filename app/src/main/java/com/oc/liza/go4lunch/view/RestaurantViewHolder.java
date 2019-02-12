@@ -42,6 +42,12 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     ImageView photo;
     @BindView(R.id.number_users)
     TextView users;
+    @BindView(R.id.star_one)
+    ImageView star_one;
+    @BindView(R.id.star_two)
+    ImageView star_two;
+    @BindView(R.id.star_three)
+    ImageView star_three;
 
     private Context context;
     private int number_users;
@@ -71,7 +77,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
 
         //set stars depending on rating
-        //   getRestaurantRating(result.getRating());
+        getRestaurantRating(result.getRating());
 
         //Check if users going
         checkIfUser(result.getName());
@@ -93,7 +99,10 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                                 Log.d("manager", document.getId() + " => " + document.getData());
                                 number_users++;
                             }
-                            users.setText("(" + number_users + ")");
+                            if (number_users > 0) {
+                                users.setVisibility(View.VISIBLE);
+                                users.setText("(" + number_users + ")");
+                            }
                         } else {
                             Log.d("manager", "Error getting documents: ", task.getException());
                         }
@@ -104,19 +113,19 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     public void getRestaurantRating(double note) {
 
         if (note >= 4) {
-            ImageView star = new ImageView(context);
-            star.setImageResource(R.drawable.ic_star);
-            this.rating.addView(star);
-        } else if (note >= 2) {
-            ImageView star = new ImageView(context);
-            star.setImageResource(R.drawable.ic_star);
-            this.rating.addView(star);
-        } else if (note == 1) {
-            ImageView star = new ImageView(context);
-            star.setImageResource(R.drawable.ic_star);
-            this.rating.addView(star);
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+            star_three.setVisibility(View.VISIBLE);
 
+        } else if (note >= 2) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+
+        } else if (note == 1) {
+            star_one.setVisibility(View.VISIBLE);
         }
+
+        Log.e("Viewholder", rating.toString());
     }
 
     public String calculateDistance(Result result) {
@@ -144,10 +153,16 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         long i = (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
+        if (i < 500) {
+            distance = String.valueOf(i) + " m";
 
-        distance = String.valueOf(i) + " m";
+        } else {
+            i = i / 1000;
+            distance = String.valueOf(i) + " km";
+        }
 
         Log.e("calculate", "result:" + distance);
+
         return distance;
     }
 
@@ -160,8 +175,13 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 //store the articles web url in shared preferences
                 SharedPreferences sharedPref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
+
+                String imgUrl = context.getString(R.string.photo_url)
+                        + result.getPhotos().get(0).getPhotoRef()
+                        + "&key="
+                        + BuildConfig.API_KEY;
                 editor.putString("Name", result.getName())
-                        .putString("Img", result.getPhotos().get(0).getPhotoRef())
+                        .putString("Img", imgUrl)
                         .putString("Address", details.getAddress())
                         .putString("Phone", details.getPhone())
                         .putString("Website", details.getWebsite());

@@ -1,16 +1,20 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.NoTitle" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/orange</item>
-    </style>
-    <!-- MainActivity -->
-    <style name="AppTheme.NoTitle" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+    </style>
+
+    <!-- MainActivity -->
+    <style name="MainTheme" parent="AppTheme.NoTitle">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@drawable/main_background</item>
     </style>
     <!-- ProfileActivity -->
     <style name="ProfileTheme" parent="AppTheme.NoTitle">
