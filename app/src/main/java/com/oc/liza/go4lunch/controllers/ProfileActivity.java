@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -95,15 +96,19 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                 R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        navigationView.setNavigationItemSelectedListener(this);
         initDrawerHeader();
+        navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     private void initDrawerHeader() {
-        ImageView user_photo = navigationView.findViewById(R.id.photo);
-        TextView user_name = navigationView.findViewById(R.id.user_name);
-        TextView user_email = navigationView.findViewById(R.id.user_email);
+        //Inflate header layout
+        View navView =  navigationView.inflateHeaderView(R.layout.drawer_nav_header);
+
+        //Find views in header
+        ImageView user_photo = navView.findViewById(R.id.photo);
+        TextView user_name = navView.findViewById(R.id.user_name);
+        TextView user_email = navView.findViewById(R.id.user_email);
         //Set photo
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         try {

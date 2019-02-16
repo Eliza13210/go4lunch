@@ -51,10 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
     //For user location
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 123;
     private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
     //For saving
     private SharedPreferences pref;
     private Disposable mDisposable;
@@ -76,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         pref = getSharedPreferences("Go4Lunch", MODE_PRIVATE);
         startSignInActivity();
     }
@@ -106,12 +107,14 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.make(linearLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
+    //Result when started sign in with Google or Facebook
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
+
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 currentUser = mAuth.getCurrentUser();
@@ -134,9 +137,10 @@ public class MainActivity extends AppCompatActivity {
     private void getCurrentLocation() {
         try {
             if (mLocationPermissionGranted) {
-                // Get the current location of the device and set the position of the map.
+                // Get the current location of the device if permission granted
                 getDeviceLocation();
             } else {
+                // Permission not granted
                 getLocationPermission();
             }
         } catch (SecurityException e) {
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-            pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted);
+            pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted).apply();
             getDeviceLocation();
             Log.e("Permission", "granted ok");
         } else {
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
-                    pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted);
+                    pref.edit().putBoolean("LocationGranted", mLocationPermissionGranted).apply();
                     Log.e("Perm granted", "updating ok");
                     getCurrentLocation();
                 } else {
@@ -184,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     private void getDeviceLocation() {
@@ -205,31 +208,30 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = (Location) task.getResult();
-
                             Double mLatitude;
                             Double mLongitude;
-                            if (mLastKnownLocation != null) {
 
+                            if (mLastKnownLocation != null) {
                                 //Get the latitude and longitude
-                                mLatitude = mLastKnownLocation.getLatitude();//-33.8670522;
-                                mLongitude = mLastKnownLocation.getLongitude();//151.1957362;
+                                mLatitude = mLastKnownLocation.getLatitude();
+                                mLongitude = mLastKnownLocation.getLongitude();
                             } else {
+                                //Set default location
                                 mLatitude = 43.7845096;
                                 mLongitude = 4.846242;
                             }
-                            //Save latitude and longitude to calculate distance in list view
+
+                            // Set location to use when fetching nearby restaurants
                             location = Double.toString(mLatitude) + "," + Double.toString(mLongitude);
-                            //  pref.edit().putString("CurrentLocation", location).apply();
+                            //Save latitude and longitude to calculate distance in list view
                             pref.edit().putString("CurrentLatitude", Double.toString(mLatitude)).apply();
                             pref.edit().putString("CurrentLongitude", Double.toString(mLongitude)).apply();
 
                             getRestaurants();
+
                             Log.e("location map", "success" + location);
                         } else {
-                            Log.d("map", "Current location is null. Using defaults.");
                             Log.e("map", "Exception: %s", task.getException());
-                            // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
-                            // mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
                 });
@@ -240,14 +242,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Create user in firestore
+    // Create user in firestore database
     private void createUserInFirestore() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
             UserHelper.getUser(currentUser.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.getId() == currentUser.getUid()) {
+                    //If the user id doesn't already exist
+                    if (!documentSnapshot.getId().equals(currentUser.getUid())) {
                         //Get current user info
                         String urlPicture = (currentUser.getPhotoUrl() != null)
                                 ? currentUser.getPhotoUrl().toString() : null;
@@ -260,11 +263,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
         }
     }
 
+    //Search for nearby restaurants and start Profile activity when complete
     private void getRestaurants() {
         this.mDisposable = RestaurantStream.fetchNearbyRestaurantsStream((location))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
@@ -276,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.e("Main", "Error fetching restaurants " + e);
                     }
 
                     @Override
@@ -289,14 +291,11 @@ public class MainActivity extends AppCompatActivity {
     private void addToList(NearbySearchObject nearbySearchObject) {
 
         //Add restaurants results from fetched nearby search object to the list
-        if (nearbySearchObject.getStatus().equals("OK")) {
-            results.addAll(nearbySearchObject.getResults());
-            //Save the list of restaurants
-            Gson gson = new Gson();
-            String json = gson.toJson(results);
-            pref.edit().putString("ListOfRestaurants", json).apply();
-            Log.e("main", json);
-        }
+        results.addAll(nearbySearchObject.getResults());
+        //Save the list of restaurants
+        Gson gson = new Gson();
+        String json = gson.toJson(results);
+        pref.edit().putString("ListOfRestaurants", json).apply();
     }
 
     private void startProfileActivity() {
@@ -312,5 +311,4 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         this.disposeWhenDestroy();
     }
-
 }

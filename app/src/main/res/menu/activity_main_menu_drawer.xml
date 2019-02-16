@@ -3,18 +3,22 @@
     <group
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
-
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search"
-        android:title="search"
-
-        />
-    <item
-        android:id="@+id/action_signout"
-        android:icon="@drawable/ic_star"
-        android:orderInCategory="100"
-        android:title="SIGNOUT" />
+        
+        <item
+            android:id="@+id/action_lunch"
+            android:icon="@drawable/ic_action_lunch"
+            android:orderInCategory="100"
+            android:title="YOUR LUNCH" />
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_action_settings"
+            android:orderInCategory="100"
+            android:title="SETTINGS" />
+        <item
+            android:id="@+id/action_signout"
+            android:icon="@drawable/ic_action_signout"
+            android:orderInCategory="100"
+            android:title="LOG OUT" />
     </group>
 
 </menu>

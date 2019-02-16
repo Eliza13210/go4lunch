@@ -88,6 +88,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void checkIfUser(String name) {
+        number_users=0;
         UserHelper.getUsersCollection()
                 .whereEqualTo("restaurant", name)
                 .get()
