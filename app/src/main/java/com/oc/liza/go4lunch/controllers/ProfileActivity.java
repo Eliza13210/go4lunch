@@ -1,6 +1,8 @@
 package com.oc.liza.go4lunch.controllers;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -18,11 +20,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.api.RestaurantManager;
+import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +53,8 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     NavigationView navigationView;
 
     private MyFragmentPagerAdapter adapter;
-    private final FirebaseAuth currentUser=FirebaseAuth.getInstance();
+    private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
+    User user;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -103,7 +120,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
     private void initDrawerHeader() {
         //Inflate header layout
-        View navView =  navigationView.inflateHeaderView(R.layout.drawer_nav_header);
+        View navView = navigationView.inflateHeaderView(R.layout.drawer_nav_header);
 
         //Find views in header
         ImageView user_photo = navView.findViewById(R.id.photo);
@@ -164,11 +181,13 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.search:
-                //User chose the "Search" item
+            case R.id.action_lunch:
+                currentLunch();
+                break;
+            case R.id.action_settings:
                 break;
             case R.id.action_signout:
-                FirebaseAuth.getInstance().signOut();
+                currentUser.signOut();
                 Log.e("drawer", "signed out");
                 //startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                 break;
@@ -181,7 +200,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     private void initFirebase() {
-         currentUser.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        currentUser.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (currentUser != null) {
@@ -192,6 +211,53 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                 }
             }
         });
+    }
+
+    private void currentLunch() {
+        //Fetch list of restaurants
+        final SharedPreferences pref = this.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        final String json = pref.getString("ListOfRestaurants", null);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Result>>() {
+        }.getType();
+
+        final List<Result> results = gson.fromJson(json, type);
+        //Create a restaurant manager to get restaurant info and launch restaurant activity
+        final RestaurantManager manager = new RestaurantManager(this, results);
+
+        //Fetch current user in database
+        FirebaseUser firebase = currentUser.getCurrentUser();
+        String current = firebase.getUid();
+
+        UserHelper.getUser(current).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    // convert document to POJO
+                    user = document.toObject(User.class);
+                    Log.e("drawer", user.getRestaurant());
+
+                    if (!user.getRestaurant().isEmpty()) {
+                        Log.e("drawer", "not empty");
+
+
+                        for (int i = 0; i < results.size(); i++) {
+                            Log.e("drawer", results.get(i).getName());
+                            if (results.get(i).getName().equals(user.getRestaurant())) {
+                                Log.e("drawer", results.get(i).getName());
+                                //Fetch info about restaurant, save it and start restaurant activity
+
+                                manager.fetchRestaurantDetails(i);
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+
     }
 
 

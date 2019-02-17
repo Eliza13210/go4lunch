@@ -20,11 +20,9 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.Gson;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
@@ -246,24 +244,17 @@ public class MainActivity extends AppCompatActivity {
     private void createUserInFirestore() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-            UserHelper.getUser(currentUser.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    //If the user id doesn't already exist
-                    if (!documentSnapshot.getId().equals(currentUser.getUid())) {
-                        //Get current user info
-                        String urlPicture = (currentUser.getPhotoUrl() != null)
-                                ? currentUser.getPhotoUrl().toString() : null;
-                        String username = currentUser.getDisplayName();
-                        String uid = currentUser.getUid();
+                //Get current user info
+                String urlPicture = (currentUser.getPhotoUrl() != null)
+                        ? currentUser.getPhotoUrl().toString() : null;
+                String username = currentUser.getDisplayName();
+                String uid = currentUser.getUid();
 
-                        // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture, "not selected");
-                        Log.e("created", "success creating new user");
-                    }
-                }
-            });
-        }
+                // Access the Cloud Firestore instance from the Activity
+                UserHelper.createUser(uid, username, urlPicture, "not selected");
+                Log.e("created", "success creating new user");
+            }
+
     }
 
     //Search for nearby restaurants and start Profile activity when complete

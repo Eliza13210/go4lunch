@@ -163,9 +163,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         results = gson.fromJson(json, type);
 
-        RestaurantManager manager = new RestaurantManager(getActivity(), results, mMap);
-        manager.showUser();
-        manager.checkIfUser();
+        RestaurantManager manager = new RestaurantManager(getActivity(), results);
+        manager.showUser(mMap);
+        manager.checkIfUser(mMap);
     }
 
 }

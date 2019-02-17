@@ -34,7 +34,6 @@ import io.reactivex.observers.DisposableObserver;
 public class RestaurantManager {
 
     //info from fragment or activity
-    private GoogleMap map;
     private Context context;
     private List<Result> list;
 
@@ -52,13 +51,12 @@ public class RestaurantManager {
     private BitmapDescriptor colored_marker;
     private boolean userGoing;
 
-    public RestaurantManager(Context context, List<Result> list, GoogleMap map) {
+    public RestaurantManager(Context context, List<Result> list) {
         this.context = context;
         this.list = list;
-        this.map = map;
     }
 
-    public void showUser() {
+    public void showUser(GoogleMap map) {
         //Get latitude and longitude
         SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         Double mLatitude = Double.valueOf(prefs.getString("CurrentLatitude", null));
@@ -92,7 +90,7 @@ public class RestaurantManager {
      * or orange if not
      */
 
-    public void checkIfUser() {
+    public void checkIfUser(final GoogleMap map) {
         for (int i = 0; i < list.size(); i++) {
             final int finalI = i;
             //Fetch information from Firestore; user going to the restaurant
@@ -107,11 +105,11 @@ public class RestaurantManager {
                                 if (task.getResult().size() > 0) {
                                     userGoing = true;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI);
+                                    displayOnMap(list.get(finalI), finalI,map);
                                 } else {
                                     userGoing = false;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI);
+                                    displayOnMap(list.get(finalI), finalI,map);
                                 }
                             } else {
                                 Log.d("manager", "Error getting documents: ", task.getException());
@@ -122,7 +120,7 @@ public class RestaurantManager {
     }
 
     //Show restaurant object as a marker on map
-    private void displayOnMap(Result result, int i) {
+    private void displayOnMap(Result result, int i, GoogleMap map) {
         name = result.getName();
 
         Double lat = result.getGeometry().getLocation().getLat();
@@ -145,7 +143,7 @@ public class RestaurantManager {
     }
 
     //Fetch details about the restaurant
-    private void fetchRestaurantDetails(final int pos) {
+    public void fetchRestaurantDetails(final int pos) {
         String place_id = list.get(pos).getPlace_id();
         Log.e("manager", list.get(pos).getName() + pos);
         this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<NearbySearchObject>() {
@@ -193,7 +191,7 @@ public class RestaurantManager {
         startRestaurantActivity();
     }
 
-    private void startRestaurantActivity() {
+    public void startRestaurantActivity() {
         disposeWhenDestroy();
 
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);

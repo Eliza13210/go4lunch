@@ -38,15 +38,7 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
-    public static FirestoreRecyclerOptions<User> getQuery(String field) {
 
-        Query query = getUsersCollection()
-                .orderBy(field, Query.Direction.ASCENDING);
-        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
-                .build();
-        return options;
-    }
     // --- UPDATE ---
 
     public static Task<Void> updateUsername(String username, String uid) {
