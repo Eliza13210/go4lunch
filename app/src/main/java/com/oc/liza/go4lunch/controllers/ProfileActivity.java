@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -186,9 +187,16 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
             case R.id.action_settings:
                 break;
             case R.id.action_signout:
-                currentUser.signOut();
-                Log.e("drawer", "signed out");
-                //startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                AuthUI.getInstance()
+                        .signOut(ProfileActivity.this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                            }
+                        });
+
                 break;
 
             default:

@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="@drawable/img_drawer"
+    android:background="@drawable/drawer_header"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"
     android:orientation="vertical"
     android:weightSum="2">
 
