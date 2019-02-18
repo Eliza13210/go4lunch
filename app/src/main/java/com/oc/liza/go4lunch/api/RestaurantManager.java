@@ -193,7 +193,7 @@ public class RestaurantManager {
 
     public void startRestaurantActivity() {
         disposeWhenDestroy();
-//Start
+
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
 
