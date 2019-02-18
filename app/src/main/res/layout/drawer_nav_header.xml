@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@drawable/drawer_header"
-    android:adjustViewBounds="true"
-    android:scaleType="centerCrop"
     android:orientation="vertical"
     android:weightSum="2">
 
@@ -23,12 +21,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <ImageView
             android:id="@+id/photo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:padding="10dp"
             android:src="@drawable/coffe_cup" />
@@ -36,9 +35,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/user_name"
