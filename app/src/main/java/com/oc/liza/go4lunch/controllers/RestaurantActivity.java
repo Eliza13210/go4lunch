@@ -1,7 +1,5 @@
 package com.oc.liza.go4lunch.controllers;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
@@ -19,19 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.firebase.User;
@@ -39,6 +32,7 @@ import com.oc.liza.go4lunch.view.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,11 +52,11 @@ public class RestaurantActivity extends AppCompatActivity {
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-
     private SharedPreferences pref;
     private String restName;
     private List<User> users;
     private UserAdapter adapter;
+    private Boolean isClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +64,14 @@ public class RestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant);
         ButterKnife.bind(this);
 
+        initRestaurant();
         initRecyclerView();
         initMenu();
         initButton();
-        initRestaurant();
         getListOfUsers();
     }
 
+    //Check if users are going to this restaurant
     private void getListOfUsers() {
 
         UserHelper.getUsersCollection()
@@ -86,12 +81,10 @@ public class RestaurantActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 // convert document to POJO
                                 User user = document.toObject(User.class);
                                 users.add(user);
-                                Log.d("RestaurantA", document.getId() + " => " + document.getData());
-                                // }
                             }
                             adapter.notifyDataSetChanged();
                         } else {
@@ -114,10 +107,12 @@ public class RestaurantActivity extends AppCompatActivity {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //Show restaurant photo, name and adress
     private void initRestaurant() {
+        //Get restaurant info saved in shared preferences
         pref = getSharedPreferences("Go4Lunch", MODE_PRIVATE);
+        //Photo
         String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
-        restName = pref.getString("Name", "No name");
         try {
             String url = pref.getString("Img", defaultImg);
             Glide.with(this)
@@ -128,12 +123,13 @@ public class RestaurantActivity extends AppCompatActivity {
                     .load(defaultImg)
                     .into(photo);
         }
+        //Name
+        restName = pref.getString("Name", "No name");
         name.setText(restName);
+        //Address
         address.setText(pref.getString("Address", "Far away"));
-
     }
 
-    //BaseActivity?
     protected OnFailureListener onFailureListener() {
         return new OnFailureListener() {
             @Override
@@ -144,13 +140,40 @@ public class RestaurantActivity extends AppCompatActivity {
 
     }
 
+    //Change color to green if user has clicked the button and chosen this restaurant
     private void initButton() {
+        //CHECK IF USER GOING
+        String uid = FirebaseAuth.getInstance().getUid();
+        UserHelper.getUser(uid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                assert user != null;
+                if (user.getRestaurant().equals(restName)) {
+                    isClicked = true;
+                    fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                }
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
 
-                UserHelper.updateRestaurant(restName, FirebaseAuth.getInstance().getCurrentUser().getUid())
+                if (isClicked) {
+                    isClicked = false;
+                    fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
+                    //Update firestore with selected restaurant
+                    UserHelper.updateRestaurant("Not selected", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                            .addOnFailureListener(onFailureListener());
+                } else {
+                    fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                    isClicked = true;
+                }
+                pref.edit().putBoolean("Fab", isClicked).apply();
+
+                //Update firestore with selected restaurant
+                UserHelper.updateRestaurant(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                         .addOnFailureListener(onFailureListener());
             }
         });
@@ -158,9 +181,8 @@ public class RestaurantActivity extends AppCompatActivity {
 
     private void initMenu() {
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
 
         mOnNavigationItemSelectedListener
                 = new BottomNavigationView.OnNavigationItemSelectedListener() {
