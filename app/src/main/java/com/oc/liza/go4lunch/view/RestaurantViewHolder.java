@@ -48,6 +48,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     ImageView star_two;
     @BindView(R.id.star_three)
     ImageView star_three;
+    @BindView(R.id.ic_user)
+    ImageView ic_user;
 
     private Context context;
     private int number_users;
@@ -101,6 +103,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                                 number_users++;
                             }
                             if (number_users > 0) {
+                                ic_user.setVisibility(View.VISIBLE);
                                 users.setVisibility(View.VISIBLE);
                                 users.setText("(" + number_users + ")");
                             }
@@ -113,20 +116,18 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     public void getRestaurantRating(double note) {
 
-        if (note >= 4) {
+        if (note >= 4.5) {
             star_one.setVisibility(View.VISIBLE);
             star_two.setVisibility(View.VISIBLE);
             star_three.setVisibility(View.VISIBLE);
 
-        } else if (note >= 2) {
+        } else if (note > 2) {
             star_one.setVisibility(View.VISIBLE);
             star_two.setVisibility(View.VISIBLE);
 
-        } else if (note == 1) {
+        } else if (note < 2) {
             star_one.setVisibility(View.VISIBLE);
         }
-
-        Log.e("Viewholder", rating.toString());
     }
 
     public String calculateDistance(Result result) {
@@ -185,7 +186,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                         .putString("Img", imgUrl)
                         .putString("Address", details.getAddress())
                         .putString("Phone", details.getPhone())
-                        .putString("Website", details.getWebsite());
+                        .putString("Website", details.getWebsite())
+                        .putString("Rating", String.valueOf(result.getRating()));
                 editor.apply();
 
                 //Start web view activity

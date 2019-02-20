@@ -1,7 +1,9 @@
 package com.oc.liza.go4lunch.controllers;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -49,14 +51,19 @@ public class RestaurantActivity extends AppCompatActivity {
     FloatingActionButton fab;
     @BindView(R.id.recycler_view_users)
     RecyclerView recyclerView;
+    @BindView(R.id.star_one)
+    ImageView star_one;
+    @BindView(R.id.star_two)
+    ImageView star_two;
+    @BindView(R.id.star_three)
+    ImageView star_three;
 
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private SharedPreferences pref;
     private String restName;
     private List<User> users;
     private UserAdapter adapter;
-    private Boolean isClicked;
+    private Boolean isClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +135,25 @@ public class RestaurantActivity extends AppCompatActivity {
         name.setText(restName);
         //Address
         address.setText(pref.getString("Address", "Far away"));
+        getRestaurantRating();
+    }
+
+    private void getRestaurantRating() {
+        String restaurantRating = pref.getString("Rating", "0");
+        Double rating = Double.valueOf(restaurantRating);
+
+        if (rating >= 5) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+            star_three.setVisibility(View.VISIBLE);
+
+        } else if (rating >= 2) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+
+        } else if (rating == 1) {
+            star_one.setVisibility(View.VISIBLE);
+        }
     }
 
     protected OnFailureListener onFailureListener() {
@@ -166,15 +192,17 @@ public class RestaurantActivity extends AppCompatActivity {
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant("Not selected", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
+                    adapter.notifyDataSetChanged();
                 } else {
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                     isClicked = true;
-                }
-                pref.edit().putBoolean("Fab", isClicked).apply();
 
-                //Update firestore with selected restaurant
-                UserHelper.updateRestaurant(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                        .addOnFailureListener(onFailureListener());
+                    //Update firestore with selected restaurant
+                    UserHelper.updateRestaurant(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                            .addOnFailureListener(onFailureListener());
+                    adapter.notifyDataSetChanged();
+                }
+
             }
         });
     }
@@ -182,27 +210,34 @@ public class RestaurantActivity extends AppCompatActivity {
     private void initMenu() {
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        mOnNavigationItemSelectedListener
+        BottomNavigationView.OnNavigationItemSelectedListener
+                mOnNavigationItemSelectedListener
                 = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_phone:
-                        pref.getString("Phone", null);
+                        //Call restaurant
+                        String phone = pref.getString("Phone", null);
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                        startActivity(intent);
                         return true;
 
                     case R.id.navigation_like:
                         return true;
 
                     case R.id.navigation_website:
-                        pref.getString("Website", null);
+
+                        //Start web view activity
+                        Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
+                        startActivity(startWebview);
                         return true;
                 }
                 return false;
             }
         };
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 }
