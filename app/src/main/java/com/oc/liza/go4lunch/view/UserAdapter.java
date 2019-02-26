@@ -19,14 +19,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     private List<User> users;
     private Context context;
 
-    public UserAdapter(List<User> users){
-        this.users=users;
+    public UserAdapter(List<User> users) {
+        this.users = users;
     }
 
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        context=viewGroup.getContext();
+        context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recyclerview_item_user, viewGroup, false);
         return new UserViewHolder(view);

@@ -39,6 +39,7 @@ public class ListFragment extends Fragment {
     private ArrayList<RestaurantDetails> listOfDetails = new ArrayList<>();
     private RecyclerViewAdapter adapter;
     private Disposable disposable;
+    private SharedPreferences pref;
 
     public ListFragment() {
         // Required empty public constructor
@@ -60,12 +61,11 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
         this.getListOfRestaurants();
-        Log.e("list", "create");
         return view;
     }
 
     private void getListOfRestaurants() {
-        SharedPreferences pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        pref = getActivity().getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurants", null);
         Log.e("listF", json);
         Gson gson = new Gson();
@@ -73,7 +73,6 @@ public class ListFragment extends Fragment {
         }.getType();
 
         listRestaurants = gson.fromJson(json, type);
-        Log.e("listF", listRestaurants.get(0).getName());
         if (!listRestaurants.isEmpty()) {
             for (Result r : listRestaurants) {
                 getRestaurantDetails(r.getPlace_id());
@@ -97,7 +96,8 @@ public class ListFragment extends Fragment {
 
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
-                        listOfDetails.add(nearbySearchObject.getDetails());
+                        //  listOfDetails.add(nearbySearchObject.getDetails());
+                        addToList(nearbySearchObject);
                         if (listOfDetails.size() == listRestaurants.size()) {
                             configureRecyclerView();
                         }
@@ -115,6 +115,16 @@ public class ListFragment extends Fragment {
                     }
                 });
 
+    }
+
+    private void addToList(NearbySearchObject nearbySearchObject) {
+
+        //Add restaurants results from fetched nearby search object to the list
+        listOfDetails.add(nearbySearchObject.getDetails());
+        //Save the list of restaurants
+        Gson gson = new Gson();
+        String json = gson.toJson(listOfDetails);
+        pref.edit().putString("ListOfDetails", json).apply();
     }
 
 

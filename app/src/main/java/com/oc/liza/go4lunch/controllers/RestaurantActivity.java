@@ -202,6 +202,7 @@ public class RestaurantActivity extends AppCompatActivity {
                             .addOnFailureListener(onFailureListener());
                     adapter.notifyDataSetChanged();
                 }
+                startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
 
             }
         });

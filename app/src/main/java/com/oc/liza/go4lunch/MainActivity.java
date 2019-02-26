@@ -216,8 +216,9 @@ public class MainActivity extends AppCompatActivity {
                                 mLongitude = mLastKnownLocation.getLongitude();
                             } else {
                                 //Set default location
-                                mLatitude = 43.7845096;
-                                mLongitude = 4.846242;
+
+                                mLatitude = 43.7839551;
+                                mLongitude = 4.8505099;
                             }
 
                             // Set location to use when fetching nearby restaurants

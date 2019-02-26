@@ -19,13 +19,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
+import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
 import com.oc.liza.go4lunch.view.UserAdapter;
 import com.oc.liza.go4lunch.view.UserViewHolder;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -12,11 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.BuildConfig;
+import com.oc.liza.go4lunch.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
@@ -25,6 +27,10 @@ import com.oc.liza.go4lunch.models.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
@@ -90,7 +96,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void checkIfUser(String name) {
-        number_users=0;
+        number_users = 0;
         UserHelper.getUsersCollection()
                 .whereEqualTo("restaurant", name)
                 .get()
@@ -131,41 +137,30 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     }
 
     public String calculateDistance(Result result) {
-        Double lat = result.getGeometry().getLocation().getLng();
+        Double lat = result.getGeometry().getLocation().getLat();
         Double lng = result.getGeometry().getLocation().getLng();
-
-        String distance = "";
+        LatLng latLng1 = new LatLng(lat, lng);
 
         //Get current location
         SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         Double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
         Double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
+        LatLng latLng2 = new LatLng(currentLat, currentLng);
 
-        final double AVERAGE_RADIUS_OF_EARTH = 6371;
+        //Calculate distance in meter
+        DistanceCalculator calculator = new DistanceCalculator();
+        double distanceDouble = calculator.greatCircleInMeters(latLng1, latLng2);
+        String distance = "";
+        //If distance is more than 900 m, convert to km
+        if (distanceDouble > 900) {
+            distanceDouble = distanceDouble / 1000;
 
-        double latDistance = Math.toRadians(currentLat - lat);
-        double lngDistance = Math.toRadians(currentLng - lng);
-
-        double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
-                (Math.cos(Math.toRadians(currentLat))) *
-                        (Math.cos(Math.toRadians(lat))) *
-                        (Math.sin(lngDistance / 2)) *
-                        (Math.sin(lngDistance / 2));
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        long i = (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
-        if (i < 500) {
-            distance = String.valueOf(i) + " m";
-
+            distance = String.valueOf(calculator.roundOneDecimale(distanceDouble) + "km");
         } else {
-            i = i / 1000;
-            distance = String.valueOf(i) + " km";
+            distance = String.valueOf(Math.round(distanceDouble)) + "m";
         }
-
-        Log.e("calculate", "result:" + distance);
-
         return distance;
+
     }
 
     public void showRestaurantWhenClicked(final Result result, final RestaurantDetails details, final Context context) {

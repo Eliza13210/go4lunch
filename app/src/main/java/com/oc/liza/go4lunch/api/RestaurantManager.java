@@ -26,7 +26,9 @@ import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantService;
 import com.oc.liza.go4lunch.network.RestaurantStream;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
@@ -50,6 +52,7 @@ public class RestaurantManager {
 
     private BitmapDescriptor colored_marker;
     private boolean userGoing;
+    private List<Marker> listMarkers = new ArrayList<>();
 
     public RestaurantManager(Context context, List<Result> list) {
         this.context = context;
@@ -105,11 +108,11 @@ public class RestaurantManager {
                                 if (task.getResult().size() > 0) {
                                     userGoing = true;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI,map);
+                                    displayOnMap(list.get(finalI), finalI, map);
                                 } else {
                                     userGoing = false;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI,map);
+                                    displayOnMap(list.get(finalI), finalI, map);
                                 }
                             } else {
                                 Log.d("manager", "Error getting documents: ", task.getException());
@@ -120,11 +123,13 @@ public class RestaurantManager {
     }
 
     //Show restaurant object as a marker on map
-    private void displayOnMap(Result result, int i, GoogleMap map) {
+    private void displayOnMap(Result result, int tag, GoogleMap map) {
+
         name = result.getName();
 
         Double lat = result.getGeometry().getLocation().getLat();
         Double lng = result.getGeometry().getLocation().getLng();
+     
         //Set color on marker depending if user has chosen this restaurant
         if (userGoing) {
             Log.e("manager", "user going true " + name);
@@ -132,11 +137,14 @@ public class RestaurantManager {
         } else {
             colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_orange);
         }
+
+        //Add marker to map
         Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat,
                 lng))
                 .title(name)
                 .icon(colored_marker));
-        marker.setTag(i);
+        marker.setTag(tag);
+        listMarkers.add(marker);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
                 lng), 15));
@@ -202,4 +210,5 @@ public class RestaurantManager {
     private void disposeWhenDestroy() {
         if (this.disposable != null && !this.disposable.isDisposed()) this.disposable.dispose();
     }
+
 }
