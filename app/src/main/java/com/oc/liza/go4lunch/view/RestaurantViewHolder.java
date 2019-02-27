@@ -95,7 +95,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         showRestaurantWhenClicked(result, details, context);
     }
 
-    public void checkIfUser(String name) {
+    public void checkIfUser(final String name) {
         number_users = 0;
         UserHelper.getUsersCollection()
                 .whereEqualTo("restaurant", name)
@@ -105,13 +105,18 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("manager", document.getId() + " => " + document.getData());
+                                Log.e("manager", document.getId() + " => " + document.getData());
                                 number_users++;
                             }
                             if (number_users > 0) {
                                 ic_user.setVisibility(View.VISIBLE);
                                 users.setVisibility(View.VISIBLE);
                                 users.setText("(" + number_users + ")");
+                                Log.e("query", name + number_users);
+                            } else {
+                                ic_user.setVisibility(View.INVISIBLE);
+                                users.setVisibility(View.INVISIBLE);
+
                             }
                         } else {
                             Log.d("manager", "Error getting documents: ", task.getException());
