@@ -34,4 +34,8 @@
         <item name="android:alpha">0.8</item>
     </style>
 
+    <style name="AppTheme.NoTitle.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoTitle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

@@ -31,4 +31,8 @@
     <string name="hungry">I\'m hungry!</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
+    <string name="search_title">search title</string>
+    <string name="search_hint">Search restaurants</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="no_result">No search result</string>
 </resources>

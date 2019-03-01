@@ -39,11 +39,23 @@
         <activity
             android:name=".controllers.ProfileActivity"
             android:label="I&apos;m hungry!"
-            android:theme="@style/ProfileTheme" />
+            android:theme="@style/ProfileTheme">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:name=".controllers.RestaurantActivity"
-            android:theme="@style/RestaurantTheme"></activity>
-        <activity android:name=".controllers.WebviewActivity"></activity>
+            android:theme="@style/RestaurantTheme" />
+        <activity android:name=".controllers.WebviewActivity" />
+        <activity
+            android:name=".controllers.SearchResultsActivity"
+            android:label="@string/title_activity_search_results"
+            android:theme="@style/RestaurantTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

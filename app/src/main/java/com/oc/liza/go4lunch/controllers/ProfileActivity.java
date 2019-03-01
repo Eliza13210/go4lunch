@@ -21,14 +21,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.RestaurantManager;
@@ -38,6 +50,7 @@ import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,6 +64,12 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     DrawerLayout drawerLayout;
     @BindView(R.id.activity_profile_nav_view)
     NavigationView navigationView;
+
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
+
+    // Set the fields to specify which types of place data to
+// return after the user has made a selection.
+    List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 
     private MyFragmentPagerAdapter adapter;
     private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
@@ -83,6 +102,11 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        // Initialize Places.
+        Places.initialize(getApplicationContext(), BuildConfig.API_KEY);
+
+// Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
         initViewpager();
         initBottomMenu();
         configureDrawerLayout();
@@ -93,6 +117,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     public int getLayoutView() {
         return R.layout.activity_profile;
     }
+
 
     private void initViewpager() {
 
@@ -159,8 +184,43 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button
-        //SEARCHFUNCTION
-        return true;
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.search:
+               /** try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder
+                            (PlaceAutocomplete.MODE_OVERLAY)
+                            .build(this);
+                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException |
+                        GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }*/
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                //SharedPreferences pref=getSharedPreferences("Go4Lunch", MODE_PRIVATE);
+               // pref.edit().putString("Search", place.getName()).apply();
+             //   startActivity(new Intent(ProfileActivity.this, SearchResultsActivity.class));
+                Log.e("profile search", "Place: " + place.getName() + ", " + place.getId());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.e("profile search", status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
     }
 
     /**
