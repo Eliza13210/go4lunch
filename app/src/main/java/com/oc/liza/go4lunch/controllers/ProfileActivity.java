@@ -64,6 +64,8 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     DrawerLayout drawerLayout;
     @BindView(R.id.activity_profile_nav_view)
     NavigationView navigationView;
+    @BindView(R.id.navigation_bottom)
+    BottomNavigationView bottomNavigationView;
 
     int AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -73,7 +75,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
     private MyFragmentPagerAdapter adapter;
     private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
-    User user;
+    private User user;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -105,8 +107,9 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         // Initialize Places.
         Places.initialize(getApplicationContext(), BuildConfig.API_KEY);
 
-// Create a new Places client instance.
+        // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(this);
+
         initViewpager();
         initBottomMenu();
         configureDrawerLayout();
@@ -120,7 +123,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
 
     private void initViewpager() {
-
         //Set adapter to be able to switch between the fragments
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -128,8 +130,27 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
     private void initBottomMenu() {
         //Initialise the bottom navigation menu
-        final BottomNavigationView navigation = findViewById(R.id.navigation_bottom);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_map:
+                        viewPager.setCurrentItem(0);
+                        toolbar.setTitle(R.string.hungry);
+                        return true;
+                    case R.id.navigation_list:
+                        viewPager.setCurrentItem(1);
+                        toolbar.setTitle(R.string.hungry);
+                        return true;
+                    case R.id.navigation_users:
+                        viewPager.setCurrentItem(2);
+                        toolbar.setTitle(R.string.workmates);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     // Configure Drawer Layout
@@ -188,15 +209,15 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
         switch (id) {
             case R.id.search:
-               /** try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder
-                            (PlaceAutocomplete.MODE_OVERLAY)
-                            .build(this);
-                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException |
-                        GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }*/
+                /** try {
+                 Intent intent = new PlaceAutocomplete.IntentBuilder
+                 (PlaceAutocomplete.MODE_OVERLAY)
+                 .build(this);
+                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                 } catch (GooglePlayServicesRepairableException |
+                 GooglePlayServicesNotAvailableException e) {
+                 e.printStackTrace();
+                 }*/
 
                 return true;
         }
@@ -210,8 +231,8 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 //SharedPreferences pref=getSharedPreferences("Go4Lunch", MODE_PRIVATE);
-               // pref.edit().putString("Search", place.getName()).apply();
-             //   startActivity(new Intent(ProfileActivity.this, SearchResultsActivity.class));
+                // pref.edit().putString("Search", place.getName()).apply();
+                //   startActivity(new Intent(ProfileActivity.this, SearchResultsActivity.class));
                 Log.e("profile search", "Place: " + place.getName() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.

@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
@@ -26,6 +28,7 @@ import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantService;
 import com.oc.liza.go4lunch.network.RestaurantStream;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +40,7 @@ public class RestaurantManager {
 
     //info from fragment or activity
     private Context context;
-    private List<Result> list;
+    private List<Result> listOfRestaurants;
 
     //For api request
     private RestaurantDetails restaurantDetails;
@@ -54,9 +57,22 @@ public class RestaurantManager {
     private boolean userGoing;
     private List<Marker> listMarkers = new ArrayList<>();
 
-    public RestaurantManager(Context context, List<Result> list) {
+    public RestaurantManager(Context context) {
         this.context = context;
-        this.list = list;
+        getRestaurantList();
+    }
+
+    private void getRestaurantList(){
+        //Add restaurant markers on map
+        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        String json = pref.getString("ListOfRestaurants", null);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Result>>() {
+        }.getType();
+
+        listOfRestaurants = gson.fromJson(json, type);
+
+
     }
 
     public void showUser(GoogleMap map) {
@@ -94,11 +110,11 @@ public class RestaurantManager {
      */
 
     public void checkIfUser(final GoogleMap map) {
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < listOfRestaurants.size(); i++) {
             final int finalI = i;
             //Fetch information from Firestore; user going to the restaurant
             UserHelper.getUsersCollection()
-                    .whereEqualTo("restaurant", list.get(i).getName())
+                    .whereEqualTo("restaurant", listOfRestaurants.get(i).getName())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -108,11 +124,11 @@ public class RestaurantManager {
                                 if (task.getResult().size() > 0) {
                                     userGoing = true;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI, map);
+                                    displayOnMap(listOfRestaurants.get(finalI), finalI, map);
                                 } else {
                                     userGoing = false;
                                     //create marker and add it to the map
-                                    displayOnMap(list.get(finalI), finalI, map);
+                                    displayOnMap(listOfRestaurants.get(finalI), finalI, map);
                                 }
                             } else {
                                 Log.d("manager", "Error getting documents: ", task.getException());
@@ -152,8 +168,8 @@ public class RestaurantManager {
 
     //Fetch details about the restaurant
     public void fetchRestaurantDetails(final int pos) {
-        String place_id = list.get(pos).getPlace_id();
-        Log.e("manager", list.get(pos).getName() + pos);
+        String place_id = listOfRestaurants.get(pos).getPlace_id();
+        Log.e("manager", listOfRestaurants.get(pos).getName() + pos);
         this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<NearbySearchObject>() {
             @Override
             public void onNext(NearbySearchObject nearbySearchObject) {
@@ -181,13 +197,13 @@ public class RestaurantManager {
 
     private void saveInfo(int i) {
         //Fetch details about Restaurant
-        name = list.get(i).getName();
+        name = listOfRestaurants.get(i).getName();
         Log.e("saving ", "save name " + name);
         phone = restaurantDetails.getPhone();
         address = restaurantDetails.getAddress();
         website = restaurantDetails.getWebsite();
         imgUrl = context.getString(R.string.photo_url)
-                + list.get(i).getPhotos().get(0).getPhotoRef()
+                + listOfRestaurants.get(i).getPhotos().get(0).getPhotoRef()
                 + "&key="
                 + BuildConfig.API_KEY;
 
