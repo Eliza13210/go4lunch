@@ -71,8 +71,9 @@ public class RestaurantManager {
         }.getType();
 
         listOfRestaurants = gson.fromJson(json, type);
-
-
+    }
+    public List<Result> getListOfRestaurants(){
+        return listOfRestaurants;
     }
 
     public void showUser(GoogleMap map) {

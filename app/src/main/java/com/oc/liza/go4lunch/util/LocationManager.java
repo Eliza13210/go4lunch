@@ -65,6 +65,7 @@ public class LocationManager {
                 Toast.makeText(context, "You need to grant permission to access your location", Toast.LENGTH_LONG).show();
             } else {
                 Task locationResult = fusedLocationProviderClient.getLastLocation();
+
                 locationResult.addOnCompleteListener((MainActivity) context, new OnCompleteListener() {
                     Location mLastKnownLocation;
 
@@ -75,6 +76,7 @@ public class LocationManager {
                             mLastKnownLocation = (Location) task.getResult();
                             Double mLatitude;
                             Double mLongitude;
+                            Log.e("Location Manager", "last known location= " + mLastKnownLocation);
 
                             if (mLastKnownLocation != null) {
                                 //Get the latitude and longitude
