@@ -1,7 +1,6 @@
-package com.oc.liza.go4lunch.api;
+package com.oc.liza.go4lunch.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,72 +14,34 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.controllers.RestaurantActivity;
-import com.oc.liza.go4lunch.models.NearbySearchObject;
-import com.oc.liza.go4lunch.models.RestaurantDetails;
+import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.Result;
-import com.oc.liza.go4lunch.network.RestaurantService;
-import com.oc.liza.go4lunch.network.RestaurantStream;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
+public class MapManager {
 
-public class RestaurantManager {
-
-    //info from fragment or activity
     private Context context;
-    private List<Result> listOfRestaurants;
+    private RestaurantManager restaurantManager;
 
-    //For api request
-    private RestaurantDetails restaurantDetails;
-    private Disposable disposable;
-
-    //This will be saved and showed in activity
-    private String name = "";
-    private String website = "";
-    private String phone = "";
-    private String address = "";
-    private String imgUrl = "";
-
-    private BitmapDescriptor colored_marker;
     private boolean userGoing;
     private List<Marker> listMarkers = new ArrayList<>();
+    private List<Result> listOfRestaurants;
 
-    public RestaurantManager(Context context) {
-        this.context = context;
-        getRestaurantList();
-    }
-
-    private void getRestaurantList(){
-        //Add restaurant markers on map
-        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        String json = pref.getString("ListOfRestaurants", null);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Result>>() {
-        }.getType();
-
-        listOfRestaurants = gson.fromJson(json, type);
-    }
-    public List<Result> getListOfRestaurants(){
-        return listOfRestaurants;
+    public MapManager(Context context){
+        this.context=context;
+        restaurantManager=new RestaurantManager(context);
     }
 
     public void showUser(GoogleMap map) {
         //Get latitude and longitude
         SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        Double mLatitude = Double.valueOf(prefs.getString("CurrentLatitude", null));
-        Double mLongitude = Double.valueOf(prefs.getString("CurrentLongitude", null));
+        Double mLatitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
+        Double mLongitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLongitude", null)));
         //Add user marker on map
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(mLatitude,
@@ -95,9 +56,9 @@ public class RestaurantManager {
                 final int i = (int) (marker.getTag());
                 Log.e("click", "get tag " + i);
                 if (i == 100) {
-                    Log.e("manager", "user");
+                    Log.e("Manager", "Clicked on user");
                 } else {
-                    fetchRestaurantDetails(i);
+                    restaurantManager.saveInfoToRestaurantActivity( marker.getTitle());
                 }
                 return false;
             }
@@ -111,6 +72,8 @@ public class RestaurantManager {
      */
 
     public void checkIfUser(final GoogleMap map) {
+        listOfRestaurants= restaurantManager.getListOfRestaurants();
+
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             final int finalI = i;
             //Fetch information from Firestore; user going to the restaurant
@@ -122,7 +85,7 @@ public class RestaurantManager {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 //If there is at least one person going, the marker will be green
-                                if (task.getResult().size() > 0) {
+                                if (Objects.requireNonNull(task.getResult()).size() > 0) {
                                     userGoing = true;
                                     //create marker and add it to the map
                                     displayOnMap(listOfRestaurants.get(finalI), finalI, map);
@@ -142,12 +105,13 @@ public class RestaurantManager {
     //Show restaurant object as a marker on map
     private void displayOnMap(Result result, int tag, GoogleMap map) {
 
-        name = result.getName();
+        String name = result.getName();
 
         Double lat = result.getGeometry().getLocation().getLat();
         Double lng = result.getGeometry().getLocation().getLng();
-     
+
         //Set color on marker depending if user has chosen this restaurant
+        BitmapDescriptor colored_marker;
         if (userGoing) {
             Log.e("manager", "user going true " + name);
             colored_marker = BitmapDescriptorFactory.fromResource(R.drawable.marker_green);
@@ -165,67 +129,6 @@ public class RestaurantManager {
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
                 lng), 15));
-    }
-
-    //Fetch details about the restaurant
-    public void fetchRestaurantDetails(final int pos) {
-        String place_id = listOfRestaurants.get(pos).getPlace_id();
-        Log.e("manager", listOfRestaurants.get(pos).getName() + pos);
-        this.disposable = RestaurantStream.fetchDetailsStream(place_id).subscribeWith(new DisposableObserver<NearbySearchObject>() {
-            @Override
-            public void onNext(NearbySearchObject nearbySearchObject) {
-                restaurantDetails = nearbySearchObject.getDetails();
-                saveInfo(pos);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
-
-    /**
-     * Save info about the restaurant so that it will be showed in restaurant activity
-     *
-     * @param i is the position in the list of restaurants
-     */
-
-    private void saveInfo(int i) {
-        //Fetch details about Restaurant
-        name = listOfRestaurants.get(i).getName();
-        Log.e("saving ", "save name " + name);
-        phone = restaurantDetails.getPhone();
-        address = restaurantDetails.getAddress();
-        website = restaurantDetails.getWebsite();
-        imgUrl = context.getString(R.string.photo_url)
-                + listOfRestaurants.get(i).getPhotos().get(0).getPhotoRef()
-                + "&key="
-                + BuildConfig.API_KEY;
-
-        //Save detailed info so it can be accessed from activity
-        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        pref.edit().putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
-                .putString("Address", address).apply();
-
-        startRestaurantActivity();
-    }
-
-    public void startRestaurantActivity() {
-        disposeWhenDestroy();
-
-        Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
-        context.startActivity(restaurantActivity);
-
-    }
-
-    private void disposeWhenDestroy() {
-        if (this.disposable != null && !this.disposable.isDisposed()) this.disposable.dispose();
     }
 
 }

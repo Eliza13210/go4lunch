@@ -24,6 +24,9 @@ import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.util.RestaurantManager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,7 +95,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         //Set photo
         getPhoto(result);
         //Set on click listener to start Restaurant activity
-        showRestaurantWhenClicked(result, details, context);
+        showRestaurantWhenClicked(result, context);
     }
 
     public void checkIfUser(final String name) {
@@ -168,31 +171,17 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void showRestaurantWhenClicked(final Result result, final RestaurantDetails details, final Context context) {
-
-        //when user click on view, open the article in a web view inside the app
+    public void showRestaurantWhenClicked(final Result result, final Context context) {
+        final RestaurantManager manager = new RestaurantManager(context);
+        final List<Result> listOfRestaurants = manager.getListOfRestaurants();
+        //when user click on view, start restaurant activity
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //store the articles web url in shared preferences
-                SharedPreferences sharedPref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
 
-                String imgUrl = context.getString(R.string.photo_url)
-                        + result.getPhotos().get(0).getPhotoRef()
-                        + "&key="
-                        + BuildConfig.API_KEY;
-                editor.putString("Name", result.getName())
-                        .putString("Img", imgUrl)
-                        .putString("Address", details.getAddress())
-                        .putString("Phone", details.getPhone())
-                        .putString("Website", details.getWebsite())
-                        .putString("Rating", String.valueOf(result.getRating()));
-                editor.apply();
+                //Fetch info about restaurant, save it and start restaurant activity
+                manager.saveInfoToRestaurantActivity(result.getName());
 
-                //Start web view activity
-                Intent restaurant = new Intent(context, RestaurantActivity.class);
-                context.startActivity(restaurant);
             }
         });
     }

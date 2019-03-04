@@ -16,7 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.api.RestaurantManager;
+import com.oc.liza.go4lunch.util.MapManager;
 
 import java.util.Objects;
 
@@ -93,7 +93,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void displayRestaurantsOnMap() {
         //Use Restaurant Manager to display markers on map
-        RestaurantManager manager = new RestaurantManager(getActivity());
+        MapManager manager = new MapManager(getActivity());
         manager.showUser(mMap);
         manager.checkIfUser(mMap);
     }

@@ -20,9 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.api.RestaurantManager;
 import com.oc.liza.go4lunch.api.UserHelper;
-import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 
@@ -34,7 +32,7 @@ public class DrawerManager {
     private Context context;
     private User user;
     private FirebaseUser currentUser;
-    private List<Result> results;
+    private List<Result> listOfRestaurants;
     private RestaurantManager manager;
 
     public DrawerManager(Context context) {
@@ -99,7 +97,7 @@ public class DrawerManager {
         //Create a restaurant manager
         manager = new RestaurantManager(context);
         //Fetch list of restaurants
-        results = manager.getListOfRestaurants();
+        listOfRestaurants = manager.getListOfRestaurants();
         //Get information about witch restaurant user has chosen
         String current = currentUser.getUid();
         UserHelper.getUser(current).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -113,13 +111,8 @@ public class DrawerManager {
                     assert user != null;
                     //Find the chosen restaurant in list
                     if (!user.getRestaurant().isEmpty()) {
-                        for (int i = 0; i < results.size(); i++) {
-                            if (results.get(i).getName().equals(user.getRestaurant())) {
-                                //Fetch info about restaurant, save it and start restaurant activity
-                                manager.fetchRestaurantDetails(i);
-                                context.startActivity(new Intent(context, RestaurantActivity.class));
-                            }
-                        }
+                        //Fetch info about restaurant, save it and start restaurant activity
+                        manager.saveInfoToRestaurantActivity(user.getRestaurant());
                     } else {
                         Log.e("Drawer", "user hasn't chosen any restaurant");
                     }

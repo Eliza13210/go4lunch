@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.util.LocationManager;
-import com.oc.liza.go4lunch.util.RestaurantRequest;
+import com.oc.liza.go4lunch.api.RestaurantRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 //Get nearby restaurants and launch Profile Activity
                 RestaurantRequest restaurantRequest = new RestaurantRequest(this);
                 restaurantRequest.getRestaurants();
-                // getCurrentLocation();
-
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));

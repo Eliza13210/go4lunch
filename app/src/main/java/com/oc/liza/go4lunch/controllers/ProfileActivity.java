@@ -125,6 +125,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            startActivity(new Intent(ProfileActivity.this,ProfileActivity.class));
         }
     }
 

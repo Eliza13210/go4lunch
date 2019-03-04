@@ -22,6 +22,7 @@ import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
+import com.oc.liza.go4lunch.util.RestaurantManager;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -90,50 +91,8 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-
-                //Fetch restaurant information and save in shared pref
-                sharedPref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                String json = sharedPref.getString("ListOfRestaurants", null);
-
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<Result>>() {
-                }.getType();
-
-                List<Result> listRestaurants;
-                listRestaurants = gson.fromJson(json, type);
-
-                //Fetch restaurant information and save in shared pref
-                String jsonDetails = sharedPref.getString("ListOfDetails", null);
-
-                Gson gsonDetails = new Gson();
-                Type typeDetails = new TypeToken<List<RestaurantDetails>>() {
-                }.getType();
-
-                List<RestaurantDetails> listDetails;
-                listDetails = gsonDetails.fromJson(jsonDetails, typeDetails);
-
-                for (int i = 0; i < listRestaurants.size(); i++) {
-                    Log.e("match", listRestaurants.get(i).getName() +"="+restaurant );
-                    if (listRestaurants.get(i).getName().equals(restaurant)) {
-
-                        String imgUrl = context.getString(R.string.photo_url)
-                                + listRestaurants.get(i).getPhotos().get(0).getPhotoRef()
-                                + "&key="
-                                + BuildConfig.API_KEY;
-                        editor.putString("Name", listRestaurants.get(i).getName())
-                                .putString("Img", imgUrl)
-                                .putString("Address", listDetails.get(i).getAddress())
-                                .putString("Phone", listDetails.get(i).getPhone())
-                                .putString("Website", listDetails.get(i).getWebsite())
-                                .putString("Rating", String.valueOf(listRestaurants.get(i).getRating()));
-                        editor.apply();
-                    }
-                }
-                //Start web view activity
-                Intent restaurant = new Intent(context, RestaurantActivity.class);
-                context.startActivity(restaurant);
+                RestaurantManager manager = new RestaurantManager(context);
+                manager.saveInfoToRestaurantActivity(restaurant);
             }
         });
     }

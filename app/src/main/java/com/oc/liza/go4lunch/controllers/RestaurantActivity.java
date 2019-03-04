@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -192,7 +192,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant("Not selected", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
-                    adapter.notifyDataSetChanged();
+                    getListOfUsers();
                 } else {
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                     isClicked = true;
@@ -200,9 +200,8 @@ public class RestaurantActivity extends AppCompatActivity {
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
-                    adapter.notifyDataSetChanged();
+                    getListOfUsers();
                 }
-                startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
 
             }
         });
@@ -229,7 +228,6 @@ public class RestaurantActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.navigation_website:
-
                         //Start web view activity
                         Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
                         startActivity(startWebview);
@@ -240,5 +238,12 @@ public class RestaurantActivity extends AppCompatActivity {
         };
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+        startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
     }
 }

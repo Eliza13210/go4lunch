@@ -1,8 +1,6 @@
 package com.oc.liza.go4lunch.controllers.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,23 +13,16 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
-import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
-import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
 import com.oc.liza.go4lunch.view.UserAdapter;
-import com.oc.liza.go4lunch.view.UserViewHolder;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +40,7 @@ public class UsersFragment extends Fragment {
     }
 
     public static UsersFragment newInstance() {
-        UsersFragment fragment = new UsersFragment();
-        return fragment;
+        return new UsersFragment();
     }
 
     @Override
@@ -59,7 +49,7 @@ public class UsersFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
@@ -77,14 +67,13 @@ public class UsersFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 // convert document to POJO
                                 User user = document.toObject(User.class);
                                 users.add(user);
-                                Log.d("RestaurantA", document.getId() + " => " + document.getData());
                             }
                         } else {
-                            Log.d("RestaurantA", "Error getting documents: ", task.getException());
+                            Log.d("User fragment", "Error getting documents: ", task.getException());
                         }
                         adapter.notifyDataSetChanged();
                     }
