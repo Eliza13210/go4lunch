@@ -2,22 +2,27 @@ package com.oc.liza.go4lunch.models.firebase;
 
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class User {
 
     private String uid;
     private String restaurant;
     private String username;
+
+    private ArrayList<String> like;
     @Nullable
     private String urlPicture;
 
     public User() {
     }
 
-    public User(String uid, String username, String urlPicture, String restaurant) {
+    public User(String uid, String username, String urlPicture, String restaurant, ArrayList<String> like) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
         this.restaurant = restaurant;
+        this.like=like;
     }
 
     // --- GETTERS ---
@@ -33,6 +38,11 @@ public class User {
         return username;
     }
 
+    public ArrayList<String> getLike() {
+        return like;
+    }
+
+
     public String getUrlPicture() {
         return urlPicture;
     }
@@ -44,6 +54,10 @@ public class User {
 
     public void setRestaurant(String restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void setLike(ArrayList<String> like) {
+        this.like = like;
     }
 
     public void setUid(String uid) {

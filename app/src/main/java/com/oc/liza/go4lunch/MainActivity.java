@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         String uid = currentUser.getUid();
 
                         // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture, "not selected");
+                        UserHelper.createUser(uid, username, urlPicture, "not selected", null);
                         Log.e("MainActivity", "Success creating new user in Firestore");
                     }
                 }

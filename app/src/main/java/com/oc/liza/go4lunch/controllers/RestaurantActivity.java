@@ -225,6 +225,8 @@ public class RestaurantActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.navigation_like:
+                        UserHelper.updateLike(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                .addOnFailureListener(onFailureListener());
                         return true;
 
                     case R.id.navigation_website:
