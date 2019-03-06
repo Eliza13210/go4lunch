@@ -93,6 +93,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 RestaurantManager manager = new RestaurantManager(context);
                 manager.saveInfoToRestaurantActivity(restaurant);
+                manager.startRestaurantActivity();
             }
         });
     }

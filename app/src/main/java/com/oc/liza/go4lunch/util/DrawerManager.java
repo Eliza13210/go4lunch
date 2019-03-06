@@ -113,6 +113,7 @@ public class DrawerManager {
                     if (!user.getRestaurant().isEmpty()) {
                         //Fetch info about restaurant, save it and start restaurant activity
                         manager.saveInfoToRestaurantActivity(user.getRestaurant());
+                        manager.startRestaurantActivity();
                     } else {
                         Log.e("Drawer", "user hasn't chosen any restaurant");
                     }

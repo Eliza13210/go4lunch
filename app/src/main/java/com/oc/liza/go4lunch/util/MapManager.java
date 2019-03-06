@@ -59,6 +59,7 @@ public class MapManager {
                     Log.e("Manager", "Clicked on user");
                 } else {
                     restaurantManager.saveInfoToRestaurantActivity( marker.getTitle());
+                    restaurantManager.startRestaurantActivity();
                 }
                 return false;
             }

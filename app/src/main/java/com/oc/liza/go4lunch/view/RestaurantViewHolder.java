@@ -181,6 +181,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
                 //Fetch info about restaurant, save it and start restaurant activity
                 manager.saveInfoToRestaurantActivity(result.getName());
+                manager.startRestaurantActivity();
 
             }
         });

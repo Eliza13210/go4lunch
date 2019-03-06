@@ -31,7 +31,6 @@ public class RestaurantManager {
         listOfDetails = getListOfDetails();
     }
 
-
     public List<RestaurantDetails> getListOfDetails() {
 
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
@@ -57,6 +56,18 @@ public class RestaurantManager {
         return listOfRestaurants;
     }
 
+    public String getRestaurantAddress(String restaurant) {
+        String address = "";
+        for (int i = 0; i < listOfRestaurants.size(); i++) {
+            if (listOfRestaurants.get(i).getName().equals(restaurant)) {
+                //Fetch info about restaurant
+                address = listOfDetails.get(i).getAddress();
+            }
+        }
+        Log.e("Manager", address);
+        return address;
+    }
+
     public void saveInfoToRestaurantActivity(String query) {
         //Fetch details about Restaurant
         for (int i = 0; i < listOfRestaurants.size(); i++) {
@@ -76,14 +87,11 @@ public class RestaurantManager {
                 SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                 pref.edit().putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
                         .putString("Address", address).apply();
-
-                //Start restaurant Activity
-                startRestaurantActivity();
             }
         }
     }
 
-    private void startRestaurantActivity() {
+    public void startRestaurantActivity() {
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
     }
