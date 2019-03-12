@@ -26,7 +26,7 @@ public class Result {
 
     @SerializedName("open_now")
     @Expose
-    private String open_now;
+    private boolean open_now;
 
     @SerializedName("rating")
     @Expose
@@ -122,11 +122,11 @@ public class Result {
         this.opening_hours = opening_hours;
     }
 
-    public String getOpen_now() {
+    public boolean getOpen_now() {
         return open_now;
     }
 
-    public void setOpen_now(String open_now) {
+    public void setOpen_now(boolean open_now) {
         this.open_now = open_now;
     }
 }

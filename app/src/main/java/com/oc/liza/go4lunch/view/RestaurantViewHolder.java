@@ -22,10 +22,17 @@ import com.oc.liza.go4lunch.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
+import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.util.OpeningHoursManager;
 import com.oc.liza.go4lunch.util.RestaurantManager;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,13 +82,9 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.name.setText(result.getName());
         this.address.setText(details.getAddress());
 
-        if (result.getOpening_hours() != null) {
-            String open = result.getOpening_hours().getOpen_now();
-            if (open == "true") {
-                this.opening_hours.setText("Open");
-            } else {
-                this.opening_hours.setText("Closed");
-            }
+        if (details.getOpening_hours() != null) {
+                OpeningHoursManager openingHoursManager=new OpeningHoursManager(details, opening_hours);
+                openingHoursManager.checkOpening();
         }
         String distance = calculateDistance(result);
         this.distance.setText(distance);

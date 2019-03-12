@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -135,7 +136,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         int id = item.getItemId();
         switch (id) {
             case R.id.search:
-                //Start Autocomplete Search Widget
+                /**Start Autocomplete Search Widget
                 try {
                     Intent intent = new PlaceAutocomplete.IntentBuilder
                             (PlaceAutocomplete.MODE_OVERLAY)
@@ -144,10 +145,16 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                 } catch (GooglePlayServicesRepairableException |
                         GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
-                }
+                }*/
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
     }
 
     @Override

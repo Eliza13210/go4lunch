@@ -3,6 +3,9 @@ package com.oc.liza.go4lunch.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RestaurantDetails {
 
     @SerializedName("international_phone_number")
@@ -16,6 +19,18 @@ public class RestaurantDetails {
     @SerializedName("website")
     @Expose
     private String website;
+
+    @SerializedName("periods")
+    @Expose
+    List<OpeningHours> periods;
+
+    @SerializedName("opening_hours")
+    @Expose
+    private RestaurantDetails opening_hours;
+
+    @SerializedName("open_now")
+    @Expose
+    private boolean open_now;
 
     public String getPhone() {
         return phone;
@@ -41,4 +56,28 @@ public class RestaurantDetails {
         this.website = website;
     }
 
+
+    public List<OpeningHours> getPeriods() {
+        return periods;
+    }
+
+    public void setPeriods(List<OpeningHours> periods) {
+        this.periods = periods;
+    }
+
+    public RestaurantDetails getOpening_hours() {
+        return opening_hours;
+    }
+
+    public void setOpening_hours(RestaurantDetails opening_hours) {
+        this.opening_hours = opening_hours;
+    }
+
+    public boolean getOpen_now() {
+        return open_now;
+    }
+
+    public void setOpen_now(boolean open_now) {
+        this.open_now = open_now;
+    }
 }
