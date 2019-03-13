@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
-    <string name="sign_in_google">Login with Google</string>
-    <string name="sign_in_facebook">Login with Facebook</string>
+    <string name="sign_in_google">Connexion avec Google</string>
+    <string name="sign_in_facebook">Connexion avec Facebook</string>
     <string name="client_id_google">770258625538-kjca2s5damch1of190puatlmub7uuet5.apps.googleusercontent.com</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">312200446079297</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb312200446079297</string>
     <string name="title_activity_profile">ProfileActivity</string>
-    <string name="error_authentication_canceled">Error authentication canceled</string>
-    <string name="error_no_internet">Error no Internet</string>
-    <string name="error_unknown_error">Unknown error</string>
+    <string name="error_authentication_canceled">Authentification annulé</string>
+    <string name="error_no_internet">Pas de reseau</string>
+    <string name="error_unknown_error">Erreur inconnue</string>
 
     <!-- NAVIGATION MENUS -->
-    <string name="search">Search</string>
+    <string name="search">Rechercher</string>
 
-    <string name="title_map">Map view</string>
-    <string name="title_list">List view</string>
-    <string name="title_users">Workmates</string>
+    <string name="title_map">Carte</string>
+    <string name="title_list">Liste de restaurants</string>
+    <string name="title_users">Collègues</string>
 
-    <string name="phone">PHONE</string>
-    <string name="like">LIKE</string>
-    <string name="website">WEBSITE</string>
+    <string name="phone">TEL</string>
+    <string name="like">AIMER</string>
+    <string name="website">SITE WEB</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_back">Welcome back!</string>
-    <string name="workmates">Workmates</string>
+    <string name="workmates">Kollegor</string>
     <string name="photo_url">https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=</string>
-    <string name="hungry">I\'m hungry!</string>
+    <string name="hungry">Jag är hungrig!</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
     <string name="search_title">search title</string>
-    <string name="search_hint">Search restaurant</string>
+    <string name="search_hint">Sök efter en restaurang</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
-    <string name="no_result">No result</string>
+    <string name="no_result">Inget resultat</string>
     <string name="channel_name">go lunch</string>
     <string name="channel_description">get info restaurant</string>
-    <string name="notification_title">It\'s time for lunch!</string>
+    <string name="notification_title">Det är dags för lunch!</string>
     <string name="default_notification_channel_id">default</string>
 </resources>

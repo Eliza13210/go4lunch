@@ -40,9 +40,6 @@
             android:name=".controllers.ProfileActivity"
             android:label="I&apos;m hungry!"
             android:theme="@style/ProfileTheme">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".controllers.RestaurantActivity"
