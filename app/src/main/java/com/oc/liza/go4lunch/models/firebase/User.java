@@ -9,6 +9,7 @@ public class User {
     private String uid;
     private String restaurant;
     private String username;
+    private boolean isMentor;
 
     private ArrayList<String> like;
     @Nullable
@@ -66,5 +67,13 @@ public class User {
 
     public void setUrlPicture(String urlPicture) {
         this.urlPicture = urlPicture;
+    }
+
+    public boolean getIsMentor() {
+        return isMentor;
+    }
+
+    public void setIsMentor(boolean isMentor) {
+        this.isMentor = isMentor;
     }
 }

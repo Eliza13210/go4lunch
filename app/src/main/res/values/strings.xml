@@ -40,4 +40,10 @@
     <string name="channel_description">get info restaurant</string>
     <string name="notification_title">It\'s time for lunch!</string>
     <string name="default_notification_channel_id">default</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="chat_error">chat error</string>
+    <string name="your_lunch">YOUR LUNCH</string>
+    <string name="chat">CHAT</string>
+    <string name="settings">SETTINGS</string>
+    <string name="log_out">LOG OUT</string>
 </resources>

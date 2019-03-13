@@ -40,4 +40,12 @@
     <string name="channel_description">get info restaurant</string>
     <string name="notification_title">Det är dags för lunch!</string>
     <string name="default_notification_channel_id">default</string>
+
+    <!--DRAWER-->
+    <string name="title_activity_chat">Chat</string>
+    <string name="chat_error">Felmeddelande</string>
+    <string name="your_lunch">DIN LUNCH</string>
+    <string name="chat">CHAT</string>
+    <string name="settings">INSTÄLLNINGAR</string>
+    <string name="log_out">LOGGA UT</string>
 </resources>

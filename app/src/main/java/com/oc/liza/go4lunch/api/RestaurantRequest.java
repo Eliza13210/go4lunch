@@ -57,9 +57,6 @@ public class RestaurantRequest {
                     @Override
                     public void onError(Throwable e) {
                         Log.e("Main", "Error fetching restaurants " + e);
-                        if (e.equals("java.util.concurrent.TimeoutException")) {
-                            getRestaurants();
-                        }
                     }
                     @Override
                     public void onComplete() {

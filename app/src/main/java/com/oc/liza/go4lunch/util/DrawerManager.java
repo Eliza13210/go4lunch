@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.controllers.ChatActivity;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 
@@ -77,6 +78,8 @@ public class DrawerManager {
                 //Show the restaurant that the user has chosen
                 currentLunch();
                 break;
+            case R.id.action_chat:
+                context.startActivity(new Intent(context, ChatActivity.class));
             case R.id.action_settings:
                 break;
             case R.id.action_signout:
