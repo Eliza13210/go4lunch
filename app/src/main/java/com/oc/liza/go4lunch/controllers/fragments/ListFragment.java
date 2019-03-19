@@ -29,7 +29,6 @@ public class ListFragment extends Fragment {
     RecyclerView recyclerView;
 
     private List<Result> listRestaurants = new ArrayList<>();
-    private List<RestaurantDetails> listOfDetails = new ArrayList<>();
     private RestaurantManager restaurantManager;
 
     public ListFragment() {
@@ -58,17 +57,14 @@ public class ListFragment extends Fragment {
         //Fetch list of nearby restaurants
         restaurantManager = new RestaurantManager(Objects.requireNonNull(getActivity()));
         listRestaurants = restaurantManager.getListOfRestaurants();
-        //Fetch details about the restaurants
-        listOfDetails = restaurantManager.getListOfDetails();
-        Log.e("ListF", "List size" + listOfDetails.size() + listRestaurants.size());
-        //Show in recycler view
+         //Show in recycler view
         configureRecyclerView();
     }
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView() {
         // 3.2 - Create adapter passing the list of news
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.listRestaurants, this.listOfDetails);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.listRestaurants);
         // 3.3 - Attach the adapter to the recycler view to populate items
         this.recyclerView.setAdapter(adapter);
         // 3.4 - Set layout manager to position the items

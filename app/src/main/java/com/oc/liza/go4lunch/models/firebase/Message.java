@@ -8,9 +8,13 @@ public class Message {
     private Date dateCreated;
     private String urlImage;
 
+    public Message() {
+    }
 
-    public Message(){
-
+    public Message(String message, User userSender, Date dateCreated) {
+        this.message = message;
+        this.userSender = userSender;
+        this.dateCreated = dateCreated;
     }
 
     public User getUserSender() {

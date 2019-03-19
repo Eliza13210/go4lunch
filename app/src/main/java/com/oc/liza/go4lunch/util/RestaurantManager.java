@@ -21,28 +21,14 @@ public class RestaurantManager {
     //info from fragment or activity
     private Context context;
     private List<Result> listOfRestaurants;
-    private List<RestaurantDetails> listOfDetails;
+   // private List<RestaurantDetails> listOfDetails;
     private SharedPreferences pref;
 
 
     public RestaurantManager(Context context) {
         this.context = context;
         listOfRestaurants = getListOfRestaurants();
-        listOfDetails = getListOfDetails();
-    }
-
-    public List<RestaurantDetails> getListOfDetails() {
-
-        pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        String json = pref.getString("ListOfDetails", null);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<RestaurantDetails>>() {
-        }.getType();
-
-        listOfDetails = gson.fromJson(json, type);
-        return listOfDetails;
-    }
-
+     }
 
     public List<Result> getListOfRestaurants() {
 
@@ -61,7 +47,7 @@ public class RestaurantManager {
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             if (listOfRestaurants.get(i).getName().equals(restaurant)) {
                 //Fetch info about restaurant
-                address = listOfDetails.get(i).getAddress();
+                address = listOfRestaurants.get(i).getDetails().getAddress();
             }
         }
         Log.e("Manager", address);
@@ -75,9 +61,9 @@ public class RestaurantManager {
                 //Fetch info about restaurant
                 String name = listOfRestaurants.get(i).getName();
                 Log.e("saving ", "save name " + name);
-                String phone = listOfDetails.get(i).getPhone();
-                String address = listOfDetails.get(i).getAddress();
-                String website = listOfDetails.get(i).getWebsite();
+                String phone = listOfRestaurants.get(i).getDetails().getPhone();
+                String address = listOfRestaurants.get(i).getDetails().getAddress();
+                String website = listOfRestaurants.get(i).getDetails().getWebsite();
                 String imgUrl = context.getString(R.string.photo_url)
                         + listOfRestaurants.get(i).getPhotos().get(0).getPhotoRef()
                         + "&key="

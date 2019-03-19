@@ -49,6 +49,17 @@ public class Result {
     @Expose
     private Double lng;
 
+    private RestaurantDetails details;
+
+
+    public RestaurantDetails getDetails() {
+        return details;
+    }
+
+    public void setDetails(RestaurantDetails details) {
+        this.details = details;
+    }
+
     public String getPlace_id() {
         return place_id;
     }

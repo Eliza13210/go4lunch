@@ -18,12 +18,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     // FOR DATA
     private List<Result> listOfRestaurants;
-    private List<RestaurantDetails> listOfDetails;
     private Context context;
 
-    public RecyclerViewAdapter(List<Result> listOfRestaurants, List<RestaurantDetails> listOfDetails) {
+    public RecyclerViewAdapter(List<Result> listOfRestaurants) {
         this.listOfRestaurants = listOfRestaurants;
-        this.listOfDetails = listOfDetails;
+       // this.listOfDetails = listOfDetails;
     }
 
     @NonNull
@@ -39,7 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder restaurantViewHolder, int i) {
-        restaurantViewHolder.updateWithRestaurantItem(this.listOfRestaurants.get(i), this.listOfDetails.get(i), context);
+        restaurantViewHolder.updateWithRestaurantItem(this.listOfRestaurants.get(i), context);
     }
 
     @Override

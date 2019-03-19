@@ -78,16 +78,18 @@ public class LocationManager {
                             Double mLongitude;
                             Log.e("Location Manager", "last known location= " + mLastKnownLocation);
 
-                            //if (mLastKnownLocation != null) {
+                            if (mLastKnownLocation != null) {
                                 //Get the latitude and longitude
-                             //   mLatitude = mLastKnownLocation.getLatitude();
-                               // mLongitude = mLastKnownLocation.getLongitude();
-                           // } else {
+                                mLatitude = mLastKnownLocation.getLatitude();
+                                mLongitude = mLastKnownLocation.getLongitude();
+                            } else {
                                 //Set default location
                                 mLatitude = 43.7839551;
                                 mLongitude = 4.8505099;
                                 Log.e("location map", "Using default location");
-                           // }
+
+                                Toast.makeText(context, "Error defining location, using default location", Toast.LENGTH_LONG).show();
+                            }
 
                             //Save latitude and longitude
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);

@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:name=".controllers.ProfileActivity"
-            android:label="I&apos;m hungry!"
+            android:label="@string/hungry"
             android:theme="@style/ProfileTheme"></activity>
         <activity
             android:name=".controllers.RestaurantActivity"

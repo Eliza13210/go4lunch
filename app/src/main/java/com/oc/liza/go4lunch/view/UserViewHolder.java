@@ -49,11 +49,11 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         // IS JOINING IF CONTEXT IS RESTAURANT ACTIVITY
         if (context.equals(RestaurantActivity.class)) {
             this.text.setText(user.getUsername());
-            this.text.append(" is joining! ");
+            this.text.append(context.getString(R.string.is_joining));
         } else {
             if (!user.getRestaurant().equals("not selected")) {
                 this.text.setText(user.getUsername());
-                this.text.append(" is eating at ");
+                this.text.append(context.getString(R.string.is_eating_at));
                 this.text.append(user.getRestaurant());
 
                 //Set on click listener to start Restaurant activity
@@ -65,7 +65,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
                     text.setTextAppearance(R.style.cursive);
                 }
                 text.setText(user.getUsername());
-                text.append(" hasn't decided yet");
+                text.append(context.getString(R.string.hasn_not_decided));
             }
         }
         //Set photo

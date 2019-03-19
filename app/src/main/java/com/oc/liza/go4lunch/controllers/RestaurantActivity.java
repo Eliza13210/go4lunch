@@ -246,6 +246,11 @@ public class RestaurantActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         super.onBackPressed();
-        startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+
+            startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
+        }
     }
 }

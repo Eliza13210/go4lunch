@@ -2,15 +2,11 @@ package com.oc.liza.go4lunch.controllers;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,46 +24,62 @@ import com.oc.liza.go4lunch.chat.ChatAdapter;
 import com.oc.liza.go4lunch.models.firebase.Message;
 import com.oc.liza.go4lunch.models.firebase.User;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ChatActivity extends AppCompatActivity implements ChatAdapter.Listener {
+public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
     // FOR DESIGN
     // 1 - Getting all views needed
     @BindView(R.id.recycler_view_chat)
     RecyclerView recyclerView;
-    @BindView(R.id.activity_mentor_chat_text_view_recycler_view_empty)
+    @BindView(R.id.chat_text_view_recycler_view_empty)
     TextView textViewRecyclerViewEmpty;
-    @BindView(R.id.activity_mentor_chat_message_edit_text)
+    @BindView(R.id.chat_message_edit_text)
     TextInputEditText editTextMessage;
-    @BindView(R.id.activity_mentor_chat_image_chosen_preview)
+    @BindView(R.id.chat_image_chosen_preview)
     ImageView imageViewPreview;
 
     // FOR DATA
     // 2 - Declaring Adapter and data
-    private ChatAdapter mentorChatAdapter;
+    private ChatAdapter ChatAdapter;
     @Nullable
     private User modelCurrentUser;
-    private String currentChatName;
     FirebaseUser currentUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_chat);
-        this.configureRecyclerView();
         this.getCurrentUserFromFirestore();
+        this.configureRecyclerView();
     }
 
- // --------------------
+    @Override
+    public int getLayoutView() {
+        return R.layout.activity_chat;
+    }
+
+    // --------------------
     // ACTIONS
     // --------------------
 
-    @OnClick(R.id.activity_mentor_chat_send_button)
-    public void onClickSendMessage() { }
+    @OnClick(R.id.chat_send_button)
+    public void onClickSendMessage() {
+        Calendar c=Calendar.getInstance();
+        Date date=c.getTime();
+            // 1 - Check if text field is not empty and current user properly downloaded from Firestore
+            if (!TextUtils.isEmpty(editTextMessage.getText()) && modelCurrentUser != null){
+                // 2 - Create a new Message to Firestore
+                MessageHelper.createMessageForChat(editTextMessage.getText().toString(), modelCurrentUser, date)
+                        .addOnFailureListener(this.onFailureListener());
+                // 3 - Reset text field
+                this.editTextMessage.setText("");
+            }
+    }
 
 
     @OnClick(R.id.activity_mentor_chat_add_file_button)
@@ -80,6 +92,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.Liste
     private void getCurrentUserFromFirestore(){
         currentUser=FirebaseAuth.getInstance().getCurrentUser();
 
+        assert currentUser != null;
         UserHelper.getUser(currentUser.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -94,16 +107,16 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.Liste
     // 5 - Configure RecyclerView with a Query
     private void configureRecyclerView(){
         //Configure Adapter & RecyclerView
-        this.mentorChatAdapter = new ChatAdapter(generateOptionsForAdapter(MessageHelper.getAllMessageForChat(this.currentChatName)),
+        this.ChatAdapter = new ChatAdapter(generateOptionsForAdapter(MessageHelper.getAllMessageForChat()),
                 Glide.with(this), this, this.currentUser.getUid());
-        mentorChatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        ChatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                recyclerView.smoothScrollToPosition(mentorChatAdapter.getItemCount()); // Scroll to bottom on new messages
+                recyclerView.smoothScrollToPosition(ChatAdapter.getItemCount()); // Scroll to bottom on new messages
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.mentorChatAdapter);
+        recyclerView.setAdapter(this.ChatAdapter);
     }
 
     // 6 - Create options for RecyclerView from a Query
@@ -121,7 +134,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.Liste
     @Override
     public void onDataChanged() {
         // 7 - Show TextView in case RecyclerView is empty
-        textViewRecyclerViewEmpty.setVisibility(this.mentorChatAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        textViewRecyclerViewEmpty.setVisibility(this.ChatAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 
     }
 

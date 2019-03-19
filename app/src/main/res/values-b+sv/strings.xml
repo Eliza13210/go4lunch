@@ -25,8 +25,6 @@
     <string name="website">SITE WEB</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="welcome_back">Welcome back!</string>
     <string name="workmates">Kollegor</string>
     <string name="photo_url">https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=</string>
     <string name="hungry">Jag är hungrig!</string>
@@ -48,4 +46,17 @@
     <string name="chat">CHAT</string>
     <string name="settings">INSTÄLLNINGAR</string>
     <string name="log_out">LOGGA UT</string>
+
+    <!-- CHAT-->
+    <string name="img_description_photo">photo</string>
+    <string name="img_description_add_file_button">Joindre fichier</string>
+    <string name="write_your_message_here">Ecrire ici…</string>
+    <string name="send_button">Envoyer</string>
+    <string name="profile_image">photo utilisateur</string>
+    <string name="img_description_cardview">cardview</string>
+
+    <!-- RESTAURANT -->
+    <string name="is_eating_at">\u0020äter lunch pâ\u0020</string>
+    <string name="is_joining">\u0020hänger med!</string>
+    <string name="hasn_not_decided">\u0020Har inte bestämt sig </string>
 </resources>

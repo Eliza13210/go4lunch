@@ -18,16 +18,24 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.util.DrawerManager;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +55,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
     // Set the fields to specify which types of place data to
 // return after the user has made a selection.
-    //List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+    List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 
     private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
     private DrawerManager manager;
@@ -60,7 +68,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         Places.initialize(getApplicationContext(), BuildConfig.API_KEY);
 
         // Create a new Places client instance.
-        // PlacesClient placesClient = Places.createClient(this);
+        PlacesClient placesClient = Places.createClient(this);
 
         initViewpager();
         initBottomMenu();
@@ -126,7 +134,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            startActivity(new Intent(ProfileActivity.this,ProfileActivity.class));
+            startActivity(new Intent(ProfileActivity.this, ProfileActivity.class));
         }
     }
 
@@ -136,20 +144,20 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         int id = item.getItemId();
         switch (id) {
             case R.id.search:
-                /**Start Autocomplete Search Widget
-                try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder
-                            (PlaceAutocomplete.MODE_OVERLAY)
-                            .build(this);
-                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException |
-                        GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }*/
+                //Start Autocomplete Search Widget
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                        .setLocationBias(RectangularBounds.newInstance(
+                                new LatLng(-33.880490, 151.184363),
+                                new LatLng(-33.858754, 151.229596)))
+                        .build(this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

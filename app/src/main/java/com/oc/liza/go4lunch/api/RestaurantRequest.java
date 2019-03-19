@@ -26,15 +26,14 @@ public class RestaurantRequest {
     private Disposable disposable;
     private StringBuilder builder;
     private List<Result> results;
-    private List<RestaurantDetails> listOfDetails;
-
+    private Result restaurant;
 
     public RestaurantRequest(Context context) {
         this.context = context;
         results = new ArrayList<>();
-        listOfDetails = new ArrayList<>();
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
     }
+
 
     private void setLocationString() {
         //Build location string to fetch nearby restaurants
@@ -58,9 +57,10 @@ public class RestaurantRequest {
                     public void onError(Throwable e) {
                         Log.e("Main", "Error fetching restaurants " + e);
                     }
+
                     @Override
                     public void onComplete() {
-                        fetchRestaurantDetails();
+
                     }
                 });
     }
@@ -69,51 +69,43 @@ public class RestaurantRequest {
 
         //Add restaurants results from fetched nearby search object to the list
         results.addAll(nearbySearchObject.getResults());
-        //Save the list of restaurants
-        Gson gson = new Gson();
-        String json = gson.toJson(results);
-        pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        pref.edit().putString("ListOfRestaurants", json).apply();
+        for (Result r : results) {
+            fetchRestaurantDetails(r, r.getPlace_id());
+        }
 
-        Log.e("Restaurant Request", "Number of restaurants " + results.size());
+        startProfileActivity();
     }
 
-    private void fetchRestaurantDetails() {
-        for (Result r : results) {
-            String place_id = r.getPlace_id();
+    private void fetchRestaurantDetails(final Result result, String place_id) {
 
             this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                     .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
                         @Override
                         public void onNext(NearbySearchObject nearbySearchObject) {
-                            listOfDetails.add(nearbySearchObject.getDetails());
-                            if (listOfDetails.size() == results.size()) {
-                                saveListDetails();
-                                startProfileActivity();
-                            }
-                            Log.e("onnext", "size " + listOfDetails.size());
-                            Log.e("ListofRest", "size" + results.size());
+                            result.setDetails(nearbySearchObject.getDetails());
+                            Log.e("ListofRest", "detail " + result.getDetails().getAddress());
                         }
 
                         @Override
                         public void onError(Throwable e) {
 
+                            Log.e("Main", "Error fetching details " + e);
                         }
 
                         @Override
                         public void onComplete() {
+                            //Save the list of restaurants
+                            Gson gson = new Gson();
+                            String json = gson.toJson(results);
+                            pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+                            pref.edit().putString("ListOfRestaurants", json).apply();
+
+                            Log.e("Restaurant Request", "Number of restaurants " + results.size());
                         }
                     });
-        }
-    }
 
 
-    private void saveListDetails() {
-        //Save the list of restaurants
-        Gson gson = new Gson();
-        String json = gson.toJson(listOfDetails);
-        pref.edit().putString("ListOfDetails", json).apply();
     }
 
     private void startProfileActivity() {

@@ -25,8 +25,6 @@
     <string name="website">WEBSITE</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="welcome_back">Welcome back!</string>
     <string name="workmates">Workmates</string>
     <string name="photo_url">https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=</string>
     <string name="hungry">I\'m hungry!</string>
@@ -40,10 +38,25 @@
     <string name="channel_description">get info restaurant</string>
     <string name="notification_title">It\'s time for lunch!</string>
     <string name="default_notification_channel_id">default</string>
-    <string name="title_activity_chat">ChatActivity</string>
-    <string name="chat_error">chat error</string>
+
+    <!--DRAWER-->
     <string name="your_lunch">YOUR LUNCH</string>
     <string name="chat">CHAT</string>
     <string name="settings">SETTINGS</string>
     <string name="log_out">LOG OUT</string>
+
+    <!--CHAT-->
+    <string name="img_description_photo">photo</string>
+    <string name="img_description_add_file_button">Add file button</string>
+    <string name="write_your_message_here">Write your message here…</string>
+    <string name="send_button">Send</string>
+    <string name="profile_image">profile_image</string>
+    <string name="img_description_cardview">cardview image</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="chat_error">chat error</string>
+
+    <!--RESTAURANT-->
+    <string name="is_eating_at">\u0020is eating at</string>
+    <string name="is_joining">\u0020is joining!</string>
+    <string name="hasn_not_decided">\u0020hasn\'t decided yet</string>
 </resources>

@@ -19,6 +19,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -101,7 +102,16 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 currentUser = mAuth.getCurrentUser();
-                createUserInFirestore();
+                //If not - get current user info
+                String urlPicture = (currentUser.getPhotoUrl() != null)
+                        ? currentUser.getPhotoUrl().toString() : null;
+                String username = currentUser.getDisplayName();
+                String uid = currentUser.getUid();
+
+                // Access the Cloud Firestore instance from the Activity
+                UserHelper.createUser(uid, username, urlPicture, "not selected", null);
+                Log.e("MainActivity", "Success creating new user in Firestore");
+               // createUserInFirestore();
                 //Get user location
                 locationManager = new LocationManager(this);
                 locationManager.checkLocationPermission();
@@ -140,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("MainActivity", "Success creating new user in Firestore");
                     }
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("main", "failure firebase "+ e); }
             });
 
         }

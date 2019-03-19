@@ -44,7 +44,9 @@
                     android:paddingTop="10dp"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -83,6 +85,8 @@
                     android:layout_below="@id/rest_name"
                     android:background="@color/orange"
                     android:paddingStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/white" />
             </RelativeLayout>
 
