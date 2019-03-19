@@ -72,38 +72,39 @@ public class RestaurantRequest {
         for (Result r : results) {
             fetchRestaurantDetails(r, r.getPlace_id());
         }
-
-        startProfileActivity();
     }
 
-    private void fetchRestaurantDetails(final Result result, String place_id) {
+    private void fetchRestaurantDetails(final Result result, final String place_id) {
 
-            this.disposable = RestaurantStream.fetchDetailsStream((place_id))
-                    .subscribeWith(new DisposableObserver<NearbySearchObject>() {
+        this.disposable = RestaurantStream.fetchDetailsStream((place_id))
+                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
-                        @Override
-                        public void onNext(NearbySearchObject nearbySearchObject) {
-                            result.setDetails(nearbySearchObject.getDetails());
-                            Log.e("ListofRest", "detail " + result.getDetails().getAddress());
-                        }
+                    @Override
+                    public void onNext(NearbySearchObject nearbySearchObject) {
+                        result.setDetails(nearbySearchObject.getDetails());
+                        Log.e("ListofRest", "detail " + result.getDetails().getAddress());
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                            Log.e("Main", "Error fetching details " + e);
-                        }
+                        Log.e("Main", "Error fetching details " + e);
+                    }
 
-                        @Override
-                        public void onComplete() {
+                    @Override
+                    public void onComplete() {
+                        if (place_id.equals(results.get(results.size()-1).getPlace_id())) {
                             //Save the list of restaurants
                             Gson gson = new Gson();
                             String json = gson.toJson(results);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("ListOfRestaurants", json).apply();
 
+                            startProfileActivity();
                             Log.e("Restaurant Request", "Number of restaurants " + results.size());
                         }
-                    });
+                    }
+                });
 
 
     }

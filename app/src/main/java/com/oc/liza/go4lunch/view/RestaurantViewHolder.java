@@ -76,15 +76,14 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithRestaurantItem(final Result result, final Context context) {
-
+    public void updateWithRestaurantItem(Result result, Context context) {
         this.context = context;
         this.name.setText(result.getName());
         this.address.setText(result.getDetails().getAddress());
 
         if (result.getDetails().getOpening_hours() != null) {
-                OpeningHoursManager openingHoursManager=new OpeningHoursManager(result.getDetails(), opening_hours);
-                openingHoursManager.checkOpening();
+            OpeningHoursManager openingHoursManager = new OpeningHoursManager(result.getDetails(), opening_hours);
+            openingHoursManager.checkOpening();
         }
         String distance = calculateDistance(result);
         this.distance.setText(distance);

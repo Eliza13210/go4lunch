@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHold
 
     public RecyclerViewAdapter(List<Result> listOfRestaurants) {
         this.listOfRestaurants = listOfRestaurants;
-       // this.listOfDetails = listOfDetails;
     }
 
     @NonNull
