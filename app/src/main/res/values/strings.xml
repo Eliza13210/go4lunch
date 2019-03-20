@@ -56,7 +56,8 @@
     <string name="chat_error">chat error</string>
 
     <!--RESTAURANT-->
-    <string name="is_eating_at">\u0020is eating at</string>
+    <string name="is_eating_at">\u0020is eating at\u0020</string>
     <string name="is_joining">\u0020is joining!</string>
     <string name="hasn_not_decided">\u0020hasn\'t decided yet</string>
+    <string name="drawer_lunch">You haven\'t chosen any restaurant yet!</string>
 </resources>

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -22,6 +23,7 @@ import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ChatActivity;
+import com.oc.liza.go4lunch.controllers.SettingsActivity;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 
@@ -80,7 +82,9 @@ public class DrawerManager {
                 break;
             case R.id.action_chat:
                 context.startActivity(new Intent(context, ChatActivity.class));
+                break;
             case R.id.action_settings:
+                context.startActivity(new Intent(context, SettingsActivity.class));
                 break;
             case R.id.action_signout:
                 //Sign out user from Firebase and return to Main Activity
@@ -113,12 +117,13 @@ public class DrawerManager {
                     user = document.toObject(User.class);
                     assert user != null;
                     //Find the chosen restaurant in list
-                    if (!user.getRestaurant().isEmpty()) {
+                    if (!user.getRestaurant().equals("not selected")) {
                         //Fetch info about restaurant, save it and start restaurant activity
                         manager.saveInfoToRestaurantActivity(user.getRestaurant());
                         manager.startRestaurantActivity();
                     } else {
-                        Log.e("Drawer", "user hasn't chosen any restaurant");
+                        String text = context.getResources().getString(R.string.drawer_lunch);
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

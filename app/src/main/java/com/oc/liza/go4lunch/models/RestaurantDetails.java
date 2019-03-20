@@ -32,6 +32,16 @@ public class RestaurantDetails {
     @Expose
     private boolean open_now;
 
+
+    @SerializedName("types")
+    @Expose
+    List<String> types;
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+
     public String getPhone() {
         return phone;
     }
@@ -79,5 +89,26 @@ public class RestaurantDetails {
 
     public void setOpen_now(boolean open_now) {
         this.open_now = open_now;
+    }
+
+
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<String> types) {
+        this.types = types;
+    }
+
+    public boolean isOpen_now() {
+        return open_now;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

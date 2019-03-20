@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.oc.liza.go4lunch.MainActivity;
@@ -109,4 +110,12 @@ public class LocationManager {
         }
     }
 
+    public LatLng getCurrentLatLng() {
+        //Get current location
+        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        Double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
+        Double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
+        LatLng latLng = new LatLng(currentLat, currentLng);
+        return latLng;
+    }
 }

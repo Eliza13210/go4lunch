@@ -5,8 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
@@ -16,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoTitle">
+        <activity android:name=".controllers.SettingsActivity"></activity>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -39,7 +40,7 @@
         <activity
             android:name=".controllers.ProfileActivity"
             android:label="@string/hungry"
-            android:theme="@style/ProfileTheme"></activity>
+            android:theme="@style/ProfileTheme" />
         <activity
             android:name=".controllers.RestaurantActivity"
             android:theme="@style/RestaurantTheme" />
@@ -51,8 +52,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-        </activity>
-        <!-- NOTIFICATION SERVICE -->
+        </activity> <!-- NOTIFICATION SERVICE -->
         <service android:name=".notifications.NotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -62,7 +62,7 @@
         <activity
             android:name=".controllers.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoTitle"></activity>
+            android:theme="@style/AppTheme.NoTitle" />
     </application>
 
 </manifest>

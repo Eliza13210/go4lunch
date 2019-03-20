@@ -25,6 +25,7 @@ import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.util.LocationManager;
 import com.oc.liza.go4lunch.util.OpeningHoursManager;
 import com.oc.liza.go4lunch.util.RestaurantManager;
 
@@ -152,10 +153,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         LatLng latLng1 = new LatLng(lat, lng);
 
         //Get current location
-        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        Double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
-        Double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
-        LatLng latLng2 = new LatLng(currentLat, currentLng);
+        LocationManager locationManager=new LocationManager(context);
+        LatLng latLng2 = locationManager.getCurrentLatLng();
 
         //Calculate distance in meter
         DistanceCalculator calculator = new DistanceCalculator();
