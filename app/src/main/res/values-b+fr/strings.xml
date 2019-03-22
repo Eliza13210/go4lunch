@@ -60,4 +60,5 @@
     <string name="is_joining">\u0020vous rejoint!\u0020</string>
     <string name="hasn_not_decided">\u0020Ne s\'est pas encore decidé\u0020</string>
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
+    <string name="navigation_icon">Navigation icon</string>
 </resources>

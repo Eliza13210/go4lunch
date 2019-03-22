@@ -4,37 +4,47 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.controllers.fragments.ListFragment;
 import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.controllers.fragments.UsersFragment;
 
+import java.util.List;
 import java.util.Map;
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+    private Fragment mCurrentFragment;
+    private List<Fragment> listFragments;
+    static int fragmentCount = 3;
 
-    static int fragmentCount=3;
-
-    public MyFragmentPagerAdapter(FragmentManager fm) {
+    public MyFragmentPagerAdapter(FragmentManager fm, List<Fragment> listFragments) {
         super(fm);
+        this.listFragments = listFragments;
+    }
+
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
     }
 
     @Override
-    public Fragment getItem(int i) {
-        switch (i) {
-            case 0:
-                Log.e("adapter", "map instance");
-                return MapFragment.newInstance();
-            case 1:
-                Log.e("adapter", "listfragment instance"+i);
-                return ListFragment.newInstance();
-            case 2:
-                Log.e("adapter", "user instance");
-                return UsersFragment.newInstance();
-            default:
-                Log.e("adapter", "default instance");
-                return MapFragment.newInstance();
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        if (getCurrentFragment() != object) {
+            mCurrentFragment = ((Fragment) object);
         }
+        super.setPrimaryItem(container, position, object);
+    }
+
+
+    @Override
+    public Fragment getItem(int i) {
+        return this.listFragments.get(i);
+    }
+
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     @Override

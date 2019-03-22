@@ -16,8 +16,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.util.MapManager;
+import com.oc.liza.go4lunch.util.RestaurantManager;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
@@ -92,12 +95,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void displayRestaurantsOnMap() {
+        RestaurantManager restaurantManager=new RestaurantManager(getContext());
+        List<Result> listOfRestaurants= restaurantManager.getListOfRestaurants();
         //Use Restaurant Manager to display markers on map
         MapManager manager = new MapManager(getActivity());
         manager.showUser(mMap);
-        manager.checkIfUser(mMap);
+        manager.checkIfUser(mMap, listOfRestaurants);
     }
-
+    public void updateAfterSearch(List<Result> list) {
+       // this.listRestaurants = list;
+        //adapter.notifyDataSetChanged();
+    }
     @Override
     public boolean onMyLocationButtonClick() {
         // (the camera animates to the user's current position).

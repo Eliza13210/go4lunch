@@ -93,12 +93,18 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
-                        if (place_id.equals(results.get(results.size()-1).getPlace_id())) {
+                        if (place_id.equals(results.get(results.size() - 1).getPlace_id())) {
                             //Save the list of restaurants
                             Gson gson = new Gson();
                             String json = gson.toJson(results);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("ListOfRestaurants", json).apply();
+
+                            //Save a back up of the list of restaurants
+                            gson = new Gson();
+                            json = gson.toJson(results);
+                            pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+                            pref.edit().putString("ListOfRestaurantsBackUp", json).apply();
 
                             startProfileActivity();
                             Log.e("Restaurant Request", "Number of restaurants " + results.size());

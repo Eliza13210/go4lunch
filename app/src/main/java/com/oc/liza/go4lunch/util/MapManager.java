@@ -32,9 +32,9 @@ public class MapManager {
     private List<Marker> listMarkers = new ArrayList<>();
     private List<Result> listOfRestaurants;
 
-    public MapManager(Context context){
-        this.context=context;
-        restaurantManager=new RestaurantManager(context);
+    public MapManager(Context context) {
+        this.context = context;
+        restaurantManager = new RestaurantManager(context);
     }
 
     public void showUser(GoogleMap map) {
@@ -58,7 +58,7 @@ public class MapManager {
                 if (i == 100) {
                     Log.e("Manager", "Clicked on user");
                 } else {
-                    restaurantManager.saveInfoToRestaurantActivity( marker.getTitle());
+                    restaurantManager.saveInfoToRestaurantActivity(marker.getTitle());
                     restaurantManager.startRestaurantActivity();
                 }
                 return false;
@@ -72,9 +72,9 @@ public class MapManager {
      * or orange if not
      */
 
-    public void checkIfUser(final GoogleMap map) {
+    public void checkIfUser(final GoogleMap map, List<Result> list) {
         listOfRestaurants= restaurantManager.getListOfRestaurants();
-
+        this.listOfRestaurants = list;
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             final int finalI = i;
             //Fetch information from Firestore; user going to the restaurant

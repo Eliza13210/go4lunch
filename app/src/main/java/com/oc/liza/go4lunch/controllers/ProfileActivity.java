@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -46,6 +47,9 @@ import com.google.maps.android.SphericalUtil;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.controllers.fragments.ListFragment;
+import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
+import com.oc.liza.go4lunch.controllers.fragments.UsersFragment;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
@@ -53,12 +57,14 @@ import com.oc.liza.go4lunch.network.RestaurantService;
 import com.oc.liza.go4lunch.network.RestaurantStream;
 import com.oc.liza.go4lunch.util.DrawerManager;
 import com.oc.liza.go4lunch.util.LocationManager;
+import com.oc.liza.go4lunch.util.RestaurantManager;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
 import com.oc.liza.go4lunch.view.PlaceAutocompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,9 +94,12 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     AutocompleteSessionToken token;
     PlacesClient placesClient;
     SearchView textview;
+    SharedPreferences pref;
 
     private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
     private DrawerManager manager;
+    //Viewpager
+    private MyFragmentPagerAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,14 +119,20 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     private void initSearch(SearchView view) {
-        this.textview=view;
+        pref = getSharedPreferences("Go4Lunch", MODE_PRIVATE);
+        this.textview = view;
         placesClient = Places.createClient(this);
         token = AutocompleteSessionToken.newInstance();
         setBounds();
         textview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                RestaurantManager restaurantManager = new RestaurantManager(getApplicationContext());
+                restaurantManager.updateListAfterSearch(results);
+                fragmentAdapter.notifyDataSetChanged();
+                results.clear();
+                adapter.notifyDataSetChanged();
+                return true;
             }
 
             @Override
@@ -162,9 +177,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                                                         results.add(nearbySearchObject.getDetails());
                                                     }
                                                 }
-
                                                 Log.e("result", " result " + nearbySearchObject.toString() + " " + results.size());
-                                                adapter.notifyDataSetChanged();
                                             }
 
                                             @Override
@@ -208,7 +221,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     }
 
 
-
     public void setBounds() {
         // Create a RectangularBounds object.
         LocationManager locationManager = new LocationManager(this);
@@ -242,9 +254,16 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     private void initViewpager() {
+        // Creation of the list of fragments
+        List<Fragment> fragments = new Vector<>();
+
+        // Add Fragments in a list
+        fragments.add(Fragment.instantiate(this, MapFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, ListFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, UsersFragment.class.getName()));
         //Set adapter to be able to switch between the fragments
-        MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+        fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(fragmentAdapter);
     }
 
     private void initBottomMenu() {

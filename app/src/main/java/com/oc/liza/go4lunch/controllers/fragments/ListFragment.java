@@ -5,15 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.util.RestaurantManager;
-import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.util.RestaurantManager;
 import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ public class ListFragment extends Fragment {
 
     private List<Result> listRestaurants = new ArrayList<>();
     private RestaurantManager restaurantManager;
+    private RecyclerViewAdapter adapter;
 
     public ListFragment() {
         // Required empty public constructor
@@ -57,20 +56,24 @@ public class ListFragment extends Fragment {
         //Fetch list of nearby restaurants
         restaurantManager = new RestaurantManager(Objects.requireNonNull(getActivity()));
         listRestaurants = restaurantManager.getListOfRestaurants();
-         //Show in recycler view
+        //Show in recycler view
         configureRecyclerView();
     }
 
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView() {
         // 3.2 - Create adapter passing the list of news
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.listRestaurants);
+        adapter = new RecyclerViewAdapter(this.listRestaurants);
         // 3.3 - Attach the adapter to the recycler view to populate items
         this.recyclerView.setAdapter(adapter);
         // 3.4 - Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    public void updateAfterSearch(List<Result> list) {
+        this.listRestaurants = list;
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onDestroy() {

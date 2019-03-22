@@ -3,7 +3,6 @@ package com.oc.liza.go4lunch.util;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,10 +23,8 @@ import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.controllers.ChatActivity;
 import com.oc.liza.go4lunch.controllers.SettingsActivity;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 
-import java.util.List;
 import java.util.Objects;
 
 public class DrawerManager {
@@ -35,7 +32,6 @@ public class DrawerManager {
     private Context context;
     private User user;
     private FirebaseUser currentUser;
-    private List<Result> listOfRestaurants;
     private RestaurantManager manager;
 
     public DrawerManager(Context context) {
@@ -104,7 +100,6 @@ public class DrawerManager {
         //Create a restaurant manager
         manager = new RestaurantManager(context);
         //Fetch list of restaurants
-        listOfRestaurants = manager.getListOfRestaurants();
         //Get information about witch restaurant user has chosen
         String current = currentUser.getUid();
         UserHelper.getUser(current).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

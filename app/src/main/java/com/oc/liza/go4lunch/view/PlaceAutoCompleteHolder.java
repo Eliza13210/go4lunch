@@ -12,14 +12,14 @@ import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 class PlaceAutoCompleteHolder extends RecyclerView.ViewHolder {
 
-    TextView name;
+    private TextView name;
 
-    public PlaceAutoCompleteHolder(@NonNull View itemView) {
+    PlaceAutoCompleteHolder(@NonNull View itemView) {
         super(itemView);
         name = itemView.findViewById(R.id.name);
     }
 
-    public void updateView(final RestaurantDetails result, final Context context) {
+    void updateView(final RestaurantDetails result, final Context context) {
         Log.e("Holder", "result" + result.toString() + result.getName());
         name.setText(result.getName());
     }

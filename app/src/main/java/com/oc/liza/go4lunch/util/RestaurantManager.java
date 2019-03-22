@@ -14,6 +14,7 @@ import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantManager {
@@ -80,6 +81,28 @@ public class RestaurantManager {
     public void startRestaurantActivity() {
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
+    }
+
+    public void updateListAfterSearch(List<RestaurantDetails> listSearch){
+        List<Result> updatedList=new ArrayList<>();
+
+        Log.e("search list", listOfRestaurants.get(0).getName());
+        for(int i=0;i<listOfRestaurants.size();i++){
+            Log.e("search list", listOfRestaurants.get(i).getName());
+            for(int j=0;j<listSearch.size();j++){
+                Log.e("search list", listSearch.get(j).getName());
+                if(listOfRestaurants.get(i).getName().equals(listSearch.get(j).getName())){
+                    updatedList.add(listOfRestaurants.get(i));
+                    //Save the list of restaurants
+                    Gson gson = new Gson();
+                    String json = gson.toJson(updatedList);
+                    pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+                    pref.edit().putString("ListOfRestaurants", json).apply();
+                    Log.e("Restaurant Search", "Number of restaurants " + updatedList.size());
+                }
+            }
+        }
+
     }
 
 }
