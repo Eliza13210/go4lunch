@@ -3,23 +3,22 @@ package com.oc.liza.go4lunch.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.models.Result;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     // FOR DATA
-    private List<Result> listOfRestaurants;
+    private List<RestaurantDetails> listOfRestaurants;
     private Context context;
 
-    public RecyclerViewAdapter(List<Result> listOfRestaurants) {
+    public RecyclerViewAdapter(List<RestaurantDetails> listOfRestaurants) {
         this.listOfRestaurants = listOfRestaurants;
     }
 

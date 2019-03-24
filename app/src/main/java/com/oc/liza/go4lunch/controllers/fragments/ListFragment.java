@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.util.RestaurantManager;
 import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
@@ -26,7 +27,7 @@ public class ListFragment extends Fragment {
     @BindView(R.id.recycler_view_restaurants)
     RecyclerView recyclerView;
 
-    private List<Result> listRestaurants = new ArrayList<>();
+    private List<RestaurantDetails> listRestaurants = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private RecyclerViewAdapter adapter;
 
@@ -68,11 +69,6 @@ public class ListFragment extends Fragment {
         this.recyclerView.setAdapter(adapter);
         // 3.4 - Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
-
-    public void updateAfterSearch(List<Result> list) {
-        this.listRestaurants = list;
-        adapter.notifyDataSetChanged();
     }
 
     @Override

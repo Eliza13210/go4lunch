@@ -25,12 +25,13 @@ public class RestaurantRequest {
     private SharedPreferences pref;
     private Disposable disposable;
     private StringBuilder builder;
-    private List<Result> results;
-    private Result restaurant;
+    private List<NearbySearchObject> results;
+    private List<RestaurantDetails> listOfRestaurants;
 
     public RestaurantRequest(Context context) {
         this.context = context;
         results = new ArrayList<>();
+        listOfRestaurants=new ArrayList<>();
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
     }
 
@@ -69,25 +70,26 @@ public class RestaurantRequest {
 
         //Add restaurants results from fetched nearby search object to the list
         results.addAll(nearbySearchObject.getResults());
-        for (Result r : results) {
+        for (NearbySearchObject r : results) {
             fetchRestaurantDetails(r, r.getPlace_id());
         }
     }
 
-    private void fetchRestaurantDetails(final Result result, final String place_id) {
+    private void fetchRestaurantDetails(final NearbySearchObject result, final String place_id) {
 
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
-                        result.setDetails(nearbySearchObject.getDetails());
-                        Log.e("ListofRest", "detail " + result.getDetails().getAddress());
+                        listOfRestaurants.add(nearbySearchObject.getDetails());
+
+                        //result.setDetails(nearbySearchObject.getDetails());
+                        Log.e("ListofRest", "detail " + nearbySearchObject.getDetails().getAddress());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
                         Log.e("Main", "Error fetching details " + e);
                     }
 
@@ -96,13 +98,13 @@ public class RestaurantRequest {
                         if (place_id.equals(results.get(results.size() - 1).getPlace_id())) {
                             //Save the list of restaurants
                             Gson gson = new Gson();
-                            String json = gson.toJson(results);
+                            String json = gson.toJson(listOfRestaurants);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("ListOfRestaurants", json).apply();
 
                             //Save a back up of the list of restaurants
                             gson = new Gson();
-                            json = gson.toJson(results);
+                            json = gson.toJson(listOfRestaurants);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("ListOfRestaurantsBackUp", json).apply();
 

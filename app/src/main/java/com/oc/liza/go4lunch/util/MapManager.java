@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class MapManager {
 
     private boolean userGoing;
     private List<Marker> listMarkers = new ArrayList<>();
-    private List<Result> listOfRestaurants;
+    private List<RestaurantDetails> listOfRestaurants;
 
     public MapManager(Context context) {
         this.context = context;
@@ -72,8 +73,8 @@ public class MapManager {
      * or orange if not
      */
 
-    public void checkIfUser(final GoogleMap map, List<Result> list) {
-        listOfRestaurants= restaurantManager.getListOfRestaurants();
+    public void checkIfUser(final GoogleMap map, List<RestaurantDetails> list) {
+        listOfRestaurants = restaurantManager.getListOfRestaurants();
         this.listOfRestaurants = list;
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             final int finalI = i;
@@ -104,7 +105,7 @@ public class MapManager {
     }
 
     //Show restaurant object as a marker on map
-    private void displayOnMap(Result result, int tag, GoogleMap map) {
+    private void displayOnMap(RestaurantDetails result, int tag, GoogleMap map) {
 
         String name = result.getName();
 
@@ -131,5 +132,4 @@ public class MapManager {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
                 lng), 15));
     }
-
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public class Result {
+    /**
 
     @SerializedName("place_id")
     @Expose
@@ -140,4 +141,5 @@ public class Result {
     public void setOpen_now(boolean open_now) {
         this.open_now = open_now;
     }
+    */
 }

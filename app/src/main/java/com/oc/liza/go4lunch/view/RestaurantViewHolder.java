@@ -77,13 +77,13 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithRestaurantItem(Result result, Context context) {
+    public void updateWithRestaurantItem(RestaurantDetails result, Context context) {
         this.context = context;
         this.name.setText(result.getName());
-        this.address.setText(result.getDetails().getAddress());
+        this.address.setText(result.getAddress());
 
-        if (result.getDetails().getOpening_hours() != null) {
-            OpeningHoursManager openingHoursManager = new OpeningHoursManager(result.getDetails(), opening_hours);
+        if (result.getOpening_hours() != null) {
+            OpeningHoursManager openingHoursManager = new OpeningHoursManager(result, opening_hours);
             openingHoursManager.checkOpening();
         }
         String distance = calculateDistance(result);
@@ -147,13 +147,13 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public String calculateDistance(Result result) {
+    public String calculateDistance(RestaurantDetails result) {
         Double lat = result.getGeometry().getLocation().getLat();
         Double lng = result.getGeometry().getLocation().getLng();
         LatLng latLng1 = new LatLng(lat, lng);
 
         //Get current location
-        LocationManager locationManager=new LocationManager(context);
+        LocationManager locationManager = new LocationManager(context);
         LatLng latLng2 = locationManager.getCurrentLatLng();
 
         //Calculate distance in meter
@@ -172,9 +172,9 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void showRestaurantWhenClicked(final Result result, final Context context) {
+    public void showRestaurantWhenClicked(final RestaurantDetails result, final Context context) {
         final RestaurantManager manager = new RestaurantManager(context);
-        final List<Result> listOfRestaurants = manager.getListOfRestaurants();
+
         //when user click on view, start restaurant activity
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +188,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void getPhoto(Result result) {
+    public void getPhoto(RestaurantDetails result) {
         try {
             String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                     + result.getPhotos().get(0).getPhotoRef()

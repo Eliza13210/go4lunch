@@ -21,22 +21,21 @@ public class RestaurantManager {
 
     //info from fragment or activity
     private Context context;
-    private List<Result> listOfRestaurants;
-   // private List<RestaurantDetails> listOfDetails;
+    private List<RestaurantDetails> listOfRestaurants;
     private SharedPreferences pref;
 
 
     public RestaurantManager(Context context) {
         this.context = context;
         listOfRestaurants = getListOfRestaurants();
-     }
+    }
 
-    public List<Result> getListOfRestaurants() {
+    public List<RestaurantDetails> getListOfRestaurants() {
 
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurants", null);
         Gson gson = new Gson();
-        Type type = new TypeToken<List<Result>>() {
+        Type type = new TypeToken<List<RestaurantDetails>>() {
         }.getType();
 
         listOfRestaurants = gson.fromJson(json, type);
@@ -48,7 +47,7 @@ public class RestaurantManager {
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             if (listOfRestaurants.get(i).getName().equals(restaurant)) {
                 //Fetch info about restaurant
-                address = listOfRestaurants.get(i).getDetails().getAddress();
+                address = listOfRestaurants.get(i).getAddress();
             }
         }
         Log.e("Manager", address);
@@ -62,9 +61,9 @@ public class RestaurantManager {
                 //Fetch info about restaurant
                 String name = listOfRestaurants.get(i).getName();
                 Log.e("saving ", "save name " + name);
-                String phone = listOfRestaurants.get(i).getDetails().getPhone();
-                String address = listOfRestaurants.get(i).getDetails().getAddress();
-                String website = listOfRestaurants.get(i).getDetails().getWebsite();
+                String phone = listOfRestaurants.get(i).getPhone();
+                String address = listOfRestaurants.get(i).getAddress();
+                String website = listOfRestaurants.get(i).getWebsite();
                 String imgUrl = context.getString(R.string.photo_url)
                         + listOfRestaurants.get(i).getPhotos().get(0).getPhotoRef()
                         + "&key="
@@ -83,26 +82,14 @@ public class RestaurantManager {
         context.startActivity(restaurantActivity);
     }
 
-    public void updateListAfterSearch(List<RestaurantDetails> listSearch){
-        List<Result> updatedList=new ArrayList<>();
+    public void updateListAfterSearch(List<RestaurantDetails> listSearch) {
 
-        Log.e("search list", listOfRestaurants.get(0).getName());
-        for(int i=0;i<listOfRestaurants.size();i++){
-            Log.e("search list", listOfRestaurants.get(i).getName());
-            for(int j=0;j<listSearch.size();j++){
-                Log.e("search list", listSearch.get(j).getName());
-                if(listOfRestaurants.get(i).getName().equals(listSearch.get(j).getName())){
-                    updatedList.add(listOfRestaurants.get(i));
-                    //Save the list of restaurants
-                    Gson gson = new Gson();
-                    String json = gson.toJson(updatedList);
-                    pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                    pref.edit().putString("ListOfRestaurants", json).apply();
-                    Log.e("Restaurant Search", "Number of restaurants " + updatedList.size());
-                }
-            }
-        }
-
+        //Save the updated list of restaurants
+        Gson gson = new Gson();
+        String json = gson.toJson(listSearch);
+        pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        pref.edit().putString("ListOfRestaurants", json).apply();
+        Log.e("Restaurant Search", "Number of restaurants " + listSearch.size());
     }
 
 }

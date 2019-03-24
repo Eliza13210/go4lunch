@@ -14,11 +14,15 @@ public class NearbySearchObject {
 
     @SerializedName("results")
     @Expose
-    private List<Result> results;
+    private List<NearbySearchObject> results;
 
     @SerializedName("status")
     @Expose
     private String status;
+
+    @SerializedName("place_id")
+    @Expose
+    private String place_id;
 
     public RestaurantDetails getDetails() {
         return details;
@@ -28,11 +32,11 @@ public class NearbySearchObject {
         this.details = result;
     }
 
-    public List<Result> getResults() {
+    public List<NearbySearchObject> getResults() {
         return results;
     }
 
-    public void setResults(ArrayList<Result> results) {
+    public void setResults(ArrayList<NearbySearchObject> results) {
         this.results = results;
     }
 
@@ -43,4 +47,13 @@ public class NearbySearchObject {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
+    }
+
 }
