@@ -1,7 +1,5 @@
 package com.oc.liza.go4lunch.network;
 
-import android.util.Log;
-
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 
 import java.util.concurrent.TimeUnit;

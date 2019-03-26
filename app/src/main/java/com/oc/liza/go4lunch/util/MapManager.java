@@ -18,7 +18,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
@@ -27,11 +28,14 @@ public class RestaurantRequest {
     private StringBuilder builder;
     private List<NearbySearchObject> results;
     private List<RestaurantDetails> listOfRestaurants;
+    private int progressStatus = 0;
+    private ProgressBar progressBar;
 
-    public RestaurantRequest(Context context) {
+    public RestaurantRequest(Context context, ProgressBar progressBar) {
         this.context = context;
+        this.progressBar = progressBar;
         results = new ArrayList<>();
-        listOfRestaurants=new ArrayList<>();
+        listOfRestaurants = new ArrayList<>();
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
     }
 
@@ -47,6 +51,8 @@ public class RestaurantRequest {
     //Search for nearby restaurants
     public void getRestaurants() {
         setLocationString();
+        // - Update UI
+        this.updateUIWhenStartingHTTPRequest();
         disposable = RestaurantStream.fetchNearbyRestaurantsStream((builder.toString()))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
                     @Override
@@ -76,15 +82,12 @@ public class RestaurantRequest {
     }
 
     private void fetchRestaurantDetails(final NearbySearchObject result, final String place_id) {
-
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
                         listOfRestaurants.add(nearbySearchObject.getDetails());
-
-                        //result.setDetails(nearbySearchObject.getDetails());
                         Log.e("ListofRest", "detail " + nearbySearchObject.getDetails().getAddress());
                     }
 
@@ -95,6 +98,7 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
+                        updateUIWhenStopingHTTPRequest();
                         if (place_id.equals(results.get(results.size() - 1).getPlace_id())) {
                             //Save the list of restaurants
                             Gson gson = new Gson();
@@ -115,6 +119,23 @@ public class RestaurantRequest {
                 });
 
 
+    }
+
+    private void updateUIWhenStartingHTTPRequest() {
+        while (progressStatus < 100) {
+            progressStatus += 1;
+            progressBar.setProgress(progressStatus);
+            try {
+                // Sleep for 200 milliseconds.
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void updateUIWhenStopingHTTPRequest() {
+        progressStatus = 100;
     }
 
     private void startProfileActivity() {

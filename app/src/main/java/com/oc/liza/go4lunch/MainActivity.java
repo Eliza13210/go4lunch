@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.activity_main)
     LinearLayout linearLayout;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private static final String CHANNEL_ID = "NOTIFICATION CHANNEL";
 
@@ -111,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
                 // Access the Cloud Firestore instance from the Activity
                 UserHelper.createUser(uid, username, urlPicture, "not selected", null);
                 Log.e("MainActivity", "Success creating new user in Firestore");
-               // createUserInFirestore();
+
                 //Get user location
                 locationManager = new LocationManager(this);
                 locationManager.checkLocationPermission();
                 //Get nearby restaurants and launch Profile Activity
-                RestaurantRequest restaurantRequest = new RestaurantRequest(this);
+                RestaurantRequest restaurantRequest = new RestaurantRequest(this, progressBar);
                 restaurantRequest.getRestaurants();
             } else { // ERRORS
                 if (response == null) {
@@ -129,36 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-    // Create user in Firestore database
-    private void createUserInFirestore() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            UserHelper.getUser(currentUser.getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    //Check if user exists in database
-                    if (task.getResult() == null) {
-
-                        //If not - get current user info
-                        String urlPicture = (currentUser.getPhotoUrl() != null)
-                                ? currentUser.getPhotoUrl().toString() : null;
-                        String username = currentUser.getDisplayName();
-                        String uid = currentUser.getUid();
-
-                        // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture, "not selected", null);
-                        Log.e("MainActivity", "Success creating new user in Firestore");
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("main", "failure firebase "+ e); }
-            });
-
-        }
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
