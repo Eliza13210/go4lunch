@@ -79,48 +79,57 @@ public class OpeningHoursManager {
 
         for (int i = 0; i < openHours.size(); i++) {
             //Find the corresponding open hours object in list depending on weekday
-            if (openHours.get(i).getOpen().getDay() == dayOfWeek) {
+            try {
+                if (openHours.get(i).getOpen().getDay() == dayOfWeek) {
 
-                openMorning = openHours.get(i).getOpen().getTime();
-                closingLunch = openHours.get(i).getClose().getTime();
-                Log.e("open", "open time" + openMorning + "close" + closingLunch + " localtime " + localTime);
-                int closingLunchInt = Integer.parseInt(closingLunch);
-                int openMorningInt = Integer.parseInt(openMorning);
+                    openMorning = openHours.get(i).getOpen().getTime();
+                    closingLunch = openHours.get(i).getClose().getTime();
+                    Log.e("open", "open time" + openMorning + "close" + closingLunch + " localtime " + localTime);
+                    int closingLunchInt = Integer.parseInt(closingLunch);
+                    int openMorningInt = Integer.parseInt(openMorning);
 
-                //If restaurant is open
-                //If restaurant is closing in 30 minutes
-                if ((localTime - closingLunchInt) < 30 && (localTime - closingLunchInt) > 0) {
-                    opening_hours.setText("Closing soon");
+                    //If restaurant is open
+                    //If restaurant is closing in 30 minutes
+                    if ((localTime - closingLunchInt) < 30 && (localTime - closingLunchInt) > 0) {
+                        opening_hours.setText("Closing soon");
+                    }
+                    //If restaurant is closed
+                    else if (localTime > closingLunchInt) {
+                        opening_hours.setText("Closed");
+                        Log.e("closed", " closed " + localTime + " " + closingLunchInt);
+                    }
+                    //If restaurant is not yet open for lunch
+                    else if (localTime < openMorningInt) {
+
+                        Log.e("closed", " closed " + localTime + " " + openMorningInt);
+                        String str = Integer.toString(openMorningInt);
+                        str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
+                        // String isOpening = String.valueOf(openMorningInt);
+                        opening_hours.setText("Opens at " + str + "pm");
+                    } else if (localTime < closingLunchInt) {
+
+                        String str = Integer.toString(closingLunchInt);
+
+                        str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
+                        Log.e("stringbuilder", "string " + str);
+                        opening_hours.setText("Open until " + str + "pm");
+
+                    } else if (details.getOpening_hours().isOpen_now()) {
+                        opening_hours.setText("Open");
+
+                        Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
+                    } else if (!details.getOpening_hours().isOpen_now()) {
+                        opening_hours.setText("Closed");
+                        Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
+
+                    }
                 }
-                //If restaurant is closed
-                else if (localTime > closingLunchInt) {
-                    opening_hours.setText("Closed");
-                    Log.e("closed", " closed " + localTime + " " + closingLunchInt);
-                }
-                //If restaurant is not yet open for lunch
-                else if (localTime < openMorningInt) {
-
-                    Log.e("closed", " closed " + localTime + " " + openMorningInt);
-                    String str = Integer.toString(openMorningInt);
-                    str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
-                    // String isOpening = String.valueOf(openMorningInt);
-                    opening_hours.setText("Opens at " + str + "pm");
-                } else if (localTime < closingLunchInt) {
-
-                    String str = Integer.toString(closingLunchInt);
-
-                    str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
-                    Log.e("stringbuilder", "string " + str);
-                    opening_hours.setText("Open until " + str + "pm");
-
-                } else if (details.getOpening_hours().isOpen_now()) {
+            } catch (Exception e) {
+                if (details.getOpening_hours().isOpen_now()) {
                     opening_hours.setText("Open");
 
-                    Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
                 } else if (!details.getOpening_hours().isOpen_now()) {
                     opening_hours.setText("Closed");
-                    Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
-
                 }
             }
         }

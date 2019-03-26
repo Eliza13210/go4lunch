@@ -130,7 +130,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                 RestaurantManager restaurantManager = new RestaurantManager(getApplicationContext());
                 restaurantManager.updateListAfterSearch(results);
                 fragmentAdapter.notifyDataSetChanged();
-                results.clear();
+                textview.onActionViewCollapsed();
                 adapter.notifyDataSetChanged();
                 return true;
             }
@@ -236,13 +236,10 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     private void configureRecyclerView() {
-
-        results = new ArrayList<>();
         adapter = new PlaceAutocompleteAdapter(this, results);
         // 3.3 - Attach the adapter to the recycler view to populate items
         recyclerView.setAdapter(adapter);
         // 3.4 - Set layout manager to position the items
-        //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(adapter);

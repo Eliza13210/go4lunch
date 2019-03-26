@@ -23,19 +23,6 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         this.listFragments = listFragments;
     }
 
-    public Fragment getCurrentFragment() {
-        return mCurrentFragment;
-    }
-
-    @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        if (getCurrentFragment() != object) {
-            mCurrentFragment = ((Fragment) object);
-        }
-        super.setPrimaryItem(container, position, object);
-    }
-
-
     @Override
     public Fragment getItem(int i) {
         return this.listFragments.get(i);

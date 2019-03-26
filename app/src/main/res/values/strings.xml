@@ -61,4 +61,6 @@
     <string name="hasn_not_decided">\u0020hasn\'t decided yet</string>
     <string name="drawer_lunch">You haven\'t chosen any restaurant yet!</string>
     <string name="navigation_icon">Navigation icon</string>
+    <string name="delete_user">Delete user</string>
+    <string name="update_username">Update username</string>
 </resources>

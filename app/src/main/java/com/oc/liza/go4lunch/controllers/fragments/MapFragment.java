@@ -96,17 +96,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void displayRestaurantsOnMap() {
-        RestaurantManager restaurantManager=new RestaurantManager(getContext());
-        List<RestaurantDetails> listOfRestaurants= restaurantManager.getListOfRestaurants();
+        RestaurantManager restaurantManager = new RestaurantManager(getContext());
+        List<RestaurantDetails> listOfRestaurants = restaurantManager.getListOfRestaurants();
         //Use Restaurant Manager to display markers on map
         MapManager manager = new MapManager(getActivity());
         manager.showUser(mMap);
         manager.checkIfUser(mMap, listOfRestaurants);
     }
-    public void updateAfterSearch(List<RestaurantDetails> list) {
-       // this.listRestaurants = list;
-        //adapter.notifyDataSetChanged();
-    }
+
     @Override
     public boolean onMyLocationButtonClick() {
         // (the camera animates to the user's current position).

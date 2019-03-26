@@ -74,6 +74,8 @@ public class MapManager {
      */
 
     public void checkIfUser(final GoogleMap map, List<RestaurantDetails> list) {
+        map.clear();
+        showUser(map);
         listOfRestaurants = restaurantManager.getListOfRestaurants();
         this.listOfRestaurants = list;
         for (int i = 0; i < listOfRestaurants.size(); i++) {
