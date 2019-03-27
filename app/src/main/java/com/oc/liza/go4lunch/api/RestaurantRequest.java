@@ -52,7 +52,6 @@ public class RestaurantRequest {
     public void getRestaurants() {
         setLocationString();
         // - Update UI
-        this.updateUIWhenStartingHTTPRequest();
         disposable = RestaurantStream.fetchNearbyRestaurantsStream((builder.toString()))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
                     @Override
@@ -98,7 +97,6 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
-                        updateUIWhenStopingHTTPRequest();
                         if (place_id.equals(results.get(results.size() - 1).getPlace_id())) {
                             //Save the list of restaurants
                             Gson gson = new Gson();
@@ -119,19 +117,6 @@ public class RestaurantRequest {
                 });
 
 
-    }
-
-    private void updateUIWhenStartingHTTPRequest() {
-        while (progressStatus < 100) {
-            progressStatus += 1;
-            progressBar.setProgress(progressStatus);
-            try {
-                // Sleep for 200 milliseconds.
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void updateUIWhenStopingHTTPRequest() {

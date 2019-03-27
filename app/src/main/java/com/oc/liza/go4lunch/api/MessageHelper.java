@@ -35,10 +35,10 @@ public class MessageHelper {
                 .add(message);
     }
 
-    public static Task<DocumentReference> createMessageWithImageForChat(String urlImage, String textMessage, User userSender) {
+    public static Task<DocumentReference> createMessageWithImageForChat(String urlImage, String textMessage, User userSender, Date date) {
 
         // 1 - Creating Message with the URL image
-        Message message = new Message(textMessage, urlImage, userSender, null);
+        Message message = new Message(textMessage, urlImage, userSender, date);
 
         // 2 - Storing Message on Firestore
         return ChatHelper.getChatCollection()

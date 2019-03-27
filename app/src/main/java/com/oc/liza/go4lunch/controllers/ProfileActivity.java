@@ -107,6 +107,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
+        restaurantManager = new RestaurantManager(getApplicationContext());
         //Search function
         // Initialize Places.
         Places.initialize(getApplicationContext(), BuildConfig.API_KEY);
@@ -129,7 +130,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         textview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                restaurantManager = new RestaurantManager(getApplicationContext());
                 restaurantManager.updateListAfterSearch(results);
                 fragmentAdapter.notifyDataSetChanged();
                 textview.onActionViewCollapsed();

@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         ? currentUser.getPhotoUrl().toString() : null;
                 String username = currentUser.getDisplayName();
                 String uid = currentUser.getUid();
-
+                progressBar.setVisibility(View.VISIBLE);
                 // Access the Cloud Firestore instance from the Activity
                 UserHelper.createUser(uid, username, urlPicture, "not selected", null);
                 Log.e("MainActivity", "Success creating new user in Firestore");

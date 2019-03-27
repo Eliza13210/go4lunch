@@ -55,7 +55,7 @@
     <string name="profile_image">photo utilisateur</string>
     <string name="img_description_cardview">cardview</string>
     <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
-    <string name="toast_title_no_image_chosen">Vous n\'avez pas choisi d'image</string>
+    <string name="toast_title_no_image_chosen">Vous n\'avez pas choisi d\'image</string>
     <string name="no_messages">Pas de message</string>
 
     <!-- RESTAURANT -->
