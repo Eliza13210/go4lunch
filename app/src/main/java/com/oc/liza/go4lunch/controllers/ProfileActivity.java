@@ -95,6 +95,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     PlacesClient placesClient;
     SearchView textview;
     SharedPreferences pref;
+    RestaurantManager restaurantManager;
 
     private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
     private DrawerManager manager;
@@ -124,10 +125,11 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         placesClient = Places.createClient(this);
         token = AutocompleteSessionToken.newInstance();
         setBounds();
+
         textview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                RestaurantManager restaurantManager = new RestaurantManager(getApplicationContext());
+                restaurantManager = new RestaurantManager(getApplicationContext());
                 restaurantManager.updateListAfterSearch(results);
                 fragmentAdapter.notifyDataSetChanged();
                 textview.onActionViewCollapsed();
@@ -206,6 +208,15 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
                 });
                 results.clear();
                 return true;
+            }
+        });
+
+        textview.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                restaurantManager.resetFullListOfRestaurants();
+                fragmentAdapter.notifyDataSetChanged();
+                return false;
             }
         });
     }
@@ -326,6 +337,22 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
         MenuItem item = menu.findItem(R.id.search);
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do whatever you need
+                return true; // KEEP IT TO TRUE OR IT DOESN'T OPEN !!
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do whatever you need
+                restaurantManager.resetFullListOfRestaurants();
+                fragmentAdapter.notifyDataSetChanged();
+                return true; // OR FALSE IF YOU DIDN'T WANT IT TO CLOSE!
+            }
+        });
         SearchView sv = (SearchView) item.getActionView();
         if (sv != null) {
             initSearch(sv);

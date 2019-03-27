@@ -9,8 +9,8 @@
     <string name="facebook_application_id" translatable="false">312200446079297</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb312200446079297</string>
     <string name="title_activity_profile">ProfileActivity</string>
-    <string name="error_authentication_canceled">Authentification annulé</string>
-    <string name="error_no_internet">Pas de reseau</string>
+    <string name="error_authentication_canceled">Avbruten</string>
+    <string name="error_no_internet">Inget Internet</string>
     <string name="error_unknown_error">Erreur inconnue</string>
 
     <!-- NAVIGATION MENUS -->
@@ -54,6 +54,9 @@
     <string name="send_button">Envoyer</string>
     <string name="profile_image">photo utilisateur</string>
     <string name="img_description_cardview">cardview</string>
+    <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
+    <string name="toast_title_no_image_chosen">Ingen bild vald</string>
+    <string name="no_messages">Inga meddelanden</string>
 
     <!-- RESTAURANT -->
     <string name="is_eating_at">\u0020äter lunch pâ\u0020</string>
@@ -61,4 +64,8 @@
     <string name="hasn_not_decided">\u0020Har inte bestämt sig </string>
     <string name="drawer_lunch">Du har inte valt restaurang ännu!</string>
     <string name="navigation_icon">Navigation icon</string>
+
+    <!-- SETTINGS-->
+    <string name="delete_user">Delete user</string>
+    <string name="update_username">Update username</string>
 </resources>

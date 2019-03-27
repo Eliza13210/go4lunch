@@ -10,25 +10,37 @@ import java.util.Date;
 
 public class MessageHelper {
 
-        private static final String COLLECTION_NAME = "messages";
-        private static final String CHAT="chat";
+    private static final String COLLECTION_NAME = "messages";
+    private static final String CHAT = "chat";
 
-        // --- GET ---
+    // --- GET ---
 
-        public static Query getAllMessageForChat(){
-            return ChatHelper.getChatCollection()
-                    .document(CHAT)
-                    .collection(COLLECTION_NAME)
-                    .orderBy("dateCreated")
-                    .limit(50);
-        }
+    public static Query getAllMessageForChat() {
+        return ChatHelper.getChatCollection()
+                .document(CHAT)
+                .collection(COLLECTION_NAME)
+                .orderBy("dateCreated")
+                .limit(50);
+    }
 
-    public static Task<DocumentReference> createMessageForChat(String textMessage, User userSender, Date date){
+    public static Task<DocumentReference> createMessageForChat(String textMessage, User userSender, Date date) {
 
         // 1 - Create the Message object
-        Message message = new Message(textMessage, userSender, date);
+        Message message = new Message(textMessage, null, userSender, date);
 
         // 2 - Store Message to Firestore
+        return ChatHelper.getChatCollection()
+                .document(CHAT)
+                .collection(COLLECTION_NAME)
+                .add(message);
+    }
+
+    public static Task<DocumentReference> createMessageWithImageForChat(String urlImage, String textMessage, User userSender) {
+
+        // 1 - Creating Message with the URL image
+        Message message = new Message(textMessage, urlImage, userSender, null);
+
+        // 2 - Storing Message on Firestore
         return ChatHelper.getChatCollection()
                 .document(CHAT)
                 .collection(COLLECTION_NAME)

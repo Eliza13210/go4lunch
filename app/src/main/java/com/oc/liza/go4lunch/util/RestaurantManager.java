@@ -31,7 +31,6 @@ public class RestaurantManager {
     }
 
     public List<RestaurantDetails> getListOfRestaurants() {
-
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurants", null);
         Gson gson = new Gson();
@@ -90,6 +89,22 @@ public class RestaurantManager {
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         pref.edit().putString("ListOfRestaurants", json).apply();
         Log.e("Restaurant Search", "Number of restaurants " + listSearch.size());
+    }
+
+    public void resetFullListOfRestaurants() {
+
+        pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        String json = pref.getString("ListOfRestaurantsBackUp", null);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<RestaurantDetails>>() {
+        }.getType();
+        listOfRestaurants = gson.fromJson(json, type);
+        //Save the updated list of restaurants
+        gson = new Gson();
+        json = gson.toJson(listOfRestaurants);
+        pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        pref.edit().putString("ListOfRestaurants", json).apply();
+        Log.e("Restaurant Search", "Number of restaurants " + listOfRestaurants.size());
     }
 
 }

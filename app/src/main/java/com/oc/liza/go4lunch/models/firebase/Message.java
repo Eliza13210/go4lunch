@@ -11,8 +11,9 @@ public class Message {
     public Message() {
     }
 
-    public Message(String message, User userSender, Date dateCreated) {
+    public Message(String message, String urlImage, User userSender, Date dateCreated) {
         this.message = message;
+        this.urlImage = urlImage;
         this.userSender = userSender;
         this.dateCreated = dateCreated;
     }

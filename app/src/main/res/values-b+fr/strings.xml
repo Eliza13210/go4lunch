@@ -54,6 +54,9 @@
     <string name="send_button">Envoyer</string>
     <string name="profile_image">photo utilisateur</string>
     <string name="img_description_cardview">cardview</string>
+    <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
+    <string name="toast_title_no_image_chosen">Vous n\'avez pas choisi d'image</string>
+    <string name="no_messages">Pas de message</string>
 
     <!-- RESTAURANT -->
     <string name="is_eating_at">\u0020déjeune à\u0020</string>
@@ -61,4 +64,7 @@
     <string name="hasn_not_decided">\u0020Ne s\'est pas encore decidé\u0020</string>
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
     <string name="navigation_icon">Navigation icon</string>
+    <!-- SETTINGS-->
+    <string name="delete_user">Delete user</string>
+    <string name="update_username">Update username</string>
 </resources>

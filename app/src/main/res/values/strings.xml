@@ -54,6 +54,9 @@
     <string name="img_description_cardview">cardview image</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="chat_error">chat error</string>
+    <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
+    <string name="toast_title_no_image_chosen">No image chosen</string>
+    <string name="no_messages">No messages</string>
 
     <!--RESTAURANT-->
     <string name="is_eating_at">\u0020is eating at\u0020</string>
@@ -61,6 +64,8 @@
     <string name="hasn_not_decided">\u0020hasn\'t decided yet</string>
     <string name="drawer_lunch">You haven\'t chosen any restaurant yet!</string>
     <string name="navigation_icon">Navigation icon</string>
+
+    <!-- SETTINGS-->
     <string name="delete_user">Delete user</string>
     <string name="update_username">Update username</string>
 </resources>
