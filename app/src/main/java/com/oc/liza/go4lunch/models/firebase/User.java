@@ -9,7 +9,7 @@ public class User {
     private String uid;
     private String restaurant;
     private String username;
-
+    private String place_id;
     private ArrayList<String> like;
     @Nullable
     private String urlPicture;
@@ -17,11 +17,12 @@ public class User {
     public User() {
     }
 
-    public User(String uid, String username, String urlPicture, String restaurant, ArrayList<String> like) {
+    public User(String uid, String username, String urlPicture, String restaurant, String place_id, ArrayList<String> like) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
         this.restaurant = restaurant;
+        this.place_id = place_id;
         this.like = like;
     }
 
@@ -66,5 +67,13 @@ public class User {
 
     public void setUrlPicture(String urlPicture) {
         this.urlPicture = urlPicture;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
     }
 }

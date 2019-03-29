@@ -113,14 +113,14 @@ public class MainActivity extends AppCompatActivity {
                 String uid = currentUser.getUid();
                 progressBar.setVisibility(View.VISIBLE);
                 // Access the Cloud Firestore instance from the Activity
-                UserHelper.createUser(uid, username, urlPicture, "not selected", null);
+                UserHelper.createUser(uid, username, urlPicture, "not selected", null, null);
                 Log.e("MainActivity", "Success creating new user in Firestore");
 
                 //Get user location
                 locationManager = new LocationManager(this);
                 locationManager.checkLocationPermission();
                 //Get nearby restaurants and launch Profile Activity
-                RestaurantRequest restaurantRequest = new RestaurantRequest(this, progressBar);
+                RestaurantRequest restaurantRequest = new RestaurantRequest(this);
                 restaurantRequest.getRestaurants();
             } else { // ERRORS
                 if (response == null) {

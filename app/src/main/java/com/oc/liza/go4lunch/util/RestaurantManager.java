@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
+import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
@@ -54,10 +55,13 @@ public class RestaurantManager {
     }
 
     public void saveInfoToRestaurantActivity(String query) {
+        Boolean restaurantIsInList=true;
         //Fetch details about Restaurant
         for (int i = 0; i < listOfRestaurants.size(); i++) {
-            if (listOfRestaurants.get(i).getName().equals(query)) {
+            if (listOfRestaurants.get(i).getPlace_id().equals(query)) {
+                restaurantIsInList=false;
                 //Fetch info about restaurant
+                String place_id=listOfRestaurants.get(i).getPlace_id();
                 String name = listOfRestaurants.get(i).getName();
                 Log.e("saving ", "save name " + name);
                 String phone = listOfRestaurants.get(i).getPhone();
@@ -70,9 +74,15 @@ public class RestaurantManager {
 
                 //Save detailed info so it can be accessed from activity
                 SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                pref.edit().putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
+                pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
                         .putString("Address", address).apply();
+
+                startRestaurantActivity();
             }
+        }
+        if(restaurantIsInList) {
+            RestaurantRequest request=new RestaurantRequest(context);
+            request.fetchDetailsForRestaurantActivity(query);
         }
     }
 

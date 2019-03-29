@@ -114,7 +114,7 @@ public class DrawerManager {
                     //Find the chosen restaurant in list
                     if (!user.getRestaurant().equals("not selected")) {
                         //Fetch info about restaurant, save it and start restaurant activity
-                        manager.saveInfoToRestaurantActivity(user.getRestaurant());
+                        manager.saveInfoToRestaurantActivity(user.getPlace_id());
                         manager.startRestaurantActivity();
                     } else {
                         String text = context.getResources().getString(R.string.drawer_lunch);

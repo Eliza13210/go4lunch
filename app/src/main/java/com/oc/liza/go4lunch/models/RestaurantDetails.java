@@ -68,6 +68,10 @@ public class RestaurantDetails {
     @Expose
     private Double lng;
 
+    @SerializedName("place_id")
+    @Expose
+    private String place_id;
+
     public List<String> getTypes() {
         return types;
     }
@@ -178,5 +182,13 @@ public class RestaurantDetails {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
     }
 }

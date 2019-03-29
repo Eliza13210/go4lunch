@@ -7,7 +7,10 @@ import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
+import com.oc.liza.go4lunch.BuildConfig;
+import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
+import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.models.Result;
@@ -28,12 +31,9 @@ public class RestaurantRequest {
     private StringBuilder builder;
     private List<NearbySearchObject> results;
     private List<RestaurantDetails> listOfRestaurants;
-    private int progressStatus = 0;
-    private ProgressBar progressBar;
 
-    public RestaurantRequest(Context context, ProgressBar progressBar) {
+    public RestaurantRequest(Context context) {
         this.context = context;
-        this.progressBar = progressBar;
         results = new ArrayList<>();
         listOfRestaurants = new ArrayList<>();
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
@@ -76,11 +76,11 @@ public class RestaurantRequest {
         //Add restaurants results from fetched nearby search object to the list
         results.addAll(nearbySearchObject.getResults());
         for (NearbySearchObject r : results) {
-            fetchRestaurantDetails(r, r.getPlace_id());
+            fetchRestaurantDetails(r.getPlace_id());
         }
     }
 
-    private void fetchRestaurantDetails(final NearbySearchObject result, final String place_id) {
+    public void fetchRestaurantDetails(final String place_id) {
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
@@ -115,12 +115,44 @@ public class RestaurantRequest {
                         }
                     }
                 });
-
-
     }
 
-    private void updateUIWhenStopingHTTPRequest() {
-        progressStatus = 100;
+    public void fetchDetailsForRestaurantActivity(final String place_id) {
+        this.disposable = RestaurantStream.fetchDetailsStream((place_id))
+                .subscribeWith(new DisposableObserver<NearbySearchObject>() {
+
+                    @Override
+                    public void onNext(NearbySearchObject nearbySearchObject) {
+                        //Fetch info about restaurant
+                        RestaurantDetails restaurant=nearbySearchObject.getDetails();
+                        String place_id = restaurant.getPlace_id();
+                        String name = restaurant.getName();
+                        String phone = restaurant.getPhone();
+                        String address = restaurant.getAddress();
+                        String website = restaurant.getWebsite();
+                        String imgUrl = context.getString(R.string.photo_url)
+                                + restaurant.getPhotos().get(0).getPhotoRef()
+                                + "&key="
+                                + BuildConfig.API_KEY;
+
+                        //Save detailed info so it can be accessed from activity
+                        SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+                        pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
+                                .putString("Address", address).apply();
+                        //Start Restaurant activity
+                        context.startActivity(new Intent(context, RestaurantActivity.class));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("Main", "Error fetching details " + e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void startProfileActivity() {

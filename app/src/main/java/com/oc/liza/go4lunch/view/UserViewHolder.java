@@ -57,7 +57,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
                 this.text.append(user.getRestaurant());
 
                 //Set on click listener to start Restaurant activity
-                showRestaurantWhenClicked(user.getRestaurant(), context);
+                showRestaurantWhenClicked(user.getPlace_id(), context);
             } else {
                 if (Build.VERSION.SDK_INT < 23) {
                     text.setTextAppearance(context, R.style.cursive);
@@ -84,7 +84,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void showRestaurantWhenClicked(final String restaurant, final Context context) {
+    public void showRestaurantWhenClicked(final String place_id, final Context context) {
 
 
         //when user click on view, open the article in a web view inside the app
@@ -92,8 +92,8 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 RestaurantManager manager = new RestaurantManager(context);
-                manager.saveInfoToRestaurantActivity(restaurant);
-                manager.startRestaurantActivity();
+                manager.saveInfoToRestaurantActivity(place_id);
+
             }
         });
     }

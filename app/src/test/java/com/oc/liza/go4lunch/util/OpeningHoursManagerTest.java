@@ -1,18 +1,15 @@
 package com.oc.liza.go4lunch.util;
 
-import android.widget.TextView;
-
 import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.firebase.Restaurant;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class OpeningHoursManagerTest {
 

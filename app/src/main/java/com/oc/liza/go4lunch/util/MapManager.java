@@ -58,7 +58,7 @@ public class MapManager {
                 if (i == 100) {
                     Log.e("Manager", "Clicked on user");
                 } else {
-                    restaurantManager.saveInfoToRestaurantActivity(marker.getTitle());
+                    restaurantManager.saveInfoToRestaurantActivity(listOfRestaurants.get(i).getPlace_id());
                     restaurantManager.startRestaurantActivity();
                 }
                 return false;
@@ -81,7 +81,7 @@ public class MapManager {
             final int finalI = i;
             //Fetch information from Firestore; user going to the restaurant
             UserHelper.getUsersCollection()
-                    .whereEqualTo("restaurant", listOfRestaurants.get(i).getName())
+                    .whereEqualTo("place_id", listOfRestaurants.get(i).getPlace_id())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

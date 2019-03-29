@@ -61,6 +61,7 @@ public class RestaurantActivity extends AppCompatActivity {
 
     private SharedPreferences pref;
     private String restName;
+    private String place_id;
     private List<User> users;
     private UserAdapter adapter;
     private Boolean isClicked = false;
@@ -82,7 +83,7 @@ public class RestaurantActivity extends AppCompatActivity {
     private void getListOfUsers() {
 
         UserHelper.getUsersCollection()
-                .whereEqualTo("restaurant", restName)
+                .whereEqualTo("place_id", place_id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -132,6 +133,7 @@ public class RestaurantActivity extends AppCompatActivity {
         }
         //Name
         restName = pref.getString("Name", "No name");
+        place_id = pref.getString("Place_id", null);
         name.setText(restName);
         //Address
         address.setText(pref.getString("Address", "Far away"));
@@ -175,7 +177,7 @@ public class RestaurantActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 assert user != null;
-                if (user.getRestaurant().equals(restName)) {
+                if (user.getRestaurant().equals(place_id)) {
                     isClicked = true;
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -190,7 +192,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     isClicked = false;
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
                     //Update firestore with selected restaurant
-                    UserHelper.updateRestaurant("Not selected", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                    UserHelper.updateRestaurant("Not selected", null, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
                     getListOfUsers();
                 } else {
@@ -198,7 +200,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     isClicked = true;
 
                     //Update firestore with selected restaurant
-                    UserHelper.updateRestaurant(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                    UserHelper.updateRestaurant(restName, place_id, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
                     getListOfUsers();
                 }

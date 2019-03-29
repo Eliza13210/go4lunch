@@ -94,17 +94,17 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         getRestaurantRating(result.getRating());
 
         //Check if users going
-        checkIfUser(result.getName());
+        checkIfUser(result.getPlace_id());
         //Set photo
         getPhoto(result);
         //Set on click listener to start Restaurant activity
         showRestaurantWhenClicked(result, context);
     }
 
-    public void checkIfUser(final String name) {
+    public void checkIfUser(final String place_id) {
         number_users = 0;
         UserHelper.getUsersCollection()
-                .whereEqualTo("restaurant", name)
+                .whereEqualTo("place_id", place_id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -118,7 +118,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                                 ic_user.setVisibility(View.VISIBLE);
                                 users.setVisibility(View.VISIBLE);
                                 users.setText("(" + number_users + ")");
-                                Log.e("query", name + number_users);
+                                Log.e("query", place_id + number_users);
                             } else {
                                 ic_user.setVisibility(View.INVISIBLE);
                                 users.setVisibility(View.INVISIBLE);
@@ -181,7 +181,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
 
                 //Fetch info about restaurant, save it and start restaurant activity
-                manager.saveInfoToRestaurantActivity(result.getName());
+                manager.saveInfoToRestaurantActivity(result.getPlace_id());
                 manager.startRestaurantActivity();
 
             }
