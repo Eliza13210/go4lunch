@@ -250,8 +250,6 @@ public class RestaurantActivity extends AppCompatActivity {
         super.onBackPressed();
         if (getFragmentManager().getBackStackEntryCount() != 0) {
             getFragmentManager().popBackStack();
-        } else {
-            startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
         }
     }
 }

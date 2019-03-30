@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoTitle">
-        <activity android:name=".controllers.SettingsActivity"></activity>
+        <activity
+            android:name=".controllers.SettingsActivity"
+            android:screenOrientation="portrait"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -31,6 +33,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,11 +44,15 @@
         <activity
             android:name=".controllers.ProfileActivity"
             android:label="@string/hungry"
+            android:screenOrientation="portrait"
             android:theme="@style/ProfileTheme" />
         <activity
             android:name=".controllers.RestaurantActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/RestaurantTheme" />
-        <activity android:name=".controllers.WebviewActivity" />
+        <activity
+            android:name=".controllers.WebviewActivity"
+            android:screenOrientation="portrait" />
         <!-- NOTIFICATION SERVICE -->
         <service android:name=".notifications.NotificationService">
             <intent-filter>
@@ -56,6 +63,7 @@
         <activity
             android:name=".controllers.ChatActivity"
             android:label="@string/title_activity_chat"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle" />
     </application>
 

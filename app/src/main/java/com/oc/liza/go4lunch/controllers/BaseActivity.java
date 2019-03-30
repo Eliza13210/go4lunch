@@ -36,16 +36,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         initToolbar();
 
     }
+
     public abstract int getLayoutView();
 
-    protected void initToolbar(){
+    protected void initToolbar() {
         //Initiate toolbar
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
             }
         });
     }
@@ -59,7 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         };
     }
-
 
 
 }
