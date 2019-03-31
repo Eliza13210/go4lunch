@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_gravity="center"
-            android:background="@color/orange"
+            android:background="@drawable/rounded_button"
             android:textColor="@color/white"
             android:text="Delete"
             />
@@ -58,12 +58,12 @@
             android:maxLines="15" />
 
         <Button
-            android:id="@+id/button_update"
+            android:id="@+id/update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_gravity="center"
-            android:background="@color/orange"
+            android:background="@drawable/rounded_button"
             android:textColor="@color/white"
             android:text="Update"
             />

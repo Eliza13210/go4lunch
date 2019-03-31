@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,15 +20,11 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.util.LocationManager;
-import com.oc.liza.go4lunch.api.RestaurantRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -92,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Show Snack Bar with a message
     private void showSnackBar(LinearLayout linearLayout, String message) {
-        Snackbar.make(linearLayout, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(linearLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     //Result when started sign in with Google or Facebook
@@ -106,22 +102,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 currentUser = mAuth.getCurrentUser();
-                //If not - get current user info
-                String urlPicture = (currentUser.getPhotoUrl() != null)
-                        ? currentUser.getPhotoUrl().toString() : null;
-                String username = currentUser.getDisplayName();
-                String uid = currentUser.getUid();
-                progressBar.setVisibility(View.VISIBLE);
-                // Access the Cloud Firestore instance from the Activity
-                UserHelper.createUser(uid, username, urlPicture, "not selected", null, null);
-                Log.e("MainActivity", "Success creating new user in Firestore");
-
-                //Get user location
-                locationManager = new LocationManager(this);
-                locationManager.checkLocationPermission();
-                //Get nearby restaurants and launch Profile Activity
-                RestaurantRequest restaurantRequest = new RestaurantRequest(this);
-                restaurantRequest.getRestaurants();
+                getUserInfo();
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));
@@ -132,6 +113,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void getUserInfo() {
+
+        //Get current user info
+        assert currentUser != null;
+        String urlPicture = (currentUser.getPhotoUrl() != null) ? currentUser.getPhotoUrl().toString() : null;
+        String username = currentUser.getDisplayName();
+        String uid = currentUser.getUid();
+
+        //Show progressbar
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Create user in Firestore Database
+        UserHelper.createUser(uid, username, urlPicture, "not selected", null, null);
+        Log.e("MainActivity", "Success creating new user in Firestore");
+
+        //Get user location
+        locationManager = new LocationManager(this);
+        locationManager.checkLocationPermission();
+
+        //Get nearby restaurants and launch Profile Activity
+        RestaurantRequest restaurantRequest = new RestaurantRequest(this);
+        restaurantRequest.getRestaurants();
     }
 
     @Override

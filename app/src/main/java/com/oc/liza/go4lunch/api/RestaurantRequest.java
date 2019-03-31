@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.oc.liza.go4lunch.BuildConfig;
@@ -13,7 +12,6 @@ import com.oc.liza.go4lunch.controllers.ProfileActivity;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.network.RestaurantStream;
 
 import java.util.ArrayList;
@@ -80,7 +78,7 @@ public class RestaurantRequest {
         }
     }
 
-    public void fetchRestaurantDetails(final String place_id) {
+    private void fetchRestaurantDetails(final String place_id) {
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
 
@@ -124,7 +122,7 @@ public class RestaurantRequest {
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
                         //Fetch info about restaurant
-                        RestaurantDetails restaurant=nearbySearchObject.getDetails();
+                        RestaurantDetails restaurant = nearbySearchObject.getDetails();
                         String place_id = restaurant.getPlace_id();
                         String name = restaurant.getName();
                         String phone = restaurant.getPhone();

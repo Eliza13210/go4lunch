@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.view.UserAdapter;
 
@@ -177,7 +180,7 @@ public class RestaurantActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 assert user != null;
-                if (user.getRestaurant().equals(place_id)) {
+                if (user.getPlace_id() != null && user.getPlace_id().equals(place_id)) {
                     isClicked = true;
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -240,16 +243,11 @@ public class RestaurantActivity extends AppCompatActivity {
                 return false;
             }
         };
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
-        if (getFragmentManager().getBackStackEntryCount() != 0) {
-            getFragmentManager().popBackStack();
-        }
     }
 }

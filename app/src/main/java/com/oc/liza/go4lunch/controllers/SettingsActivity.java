@@ -27,7 +27,7 @@ import java.util.Objects;
 import butterknife.BindView;
 
 public class SettingsActivity extends BaseActivity {
-    @BindView(R.id.delete_user)
+    @BindView(R.id.button_delete)
     ImageButton delete;
     @BindView(R.id.update_button)
     ImageButton update_button;
