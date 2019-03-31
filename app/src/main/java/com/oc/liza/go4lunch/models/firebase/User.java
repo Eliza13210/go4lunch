@@ -17,13 +17,10 @@ public class User {
     public User() {
     }
 
-    public User(String uid, String username, String urlPicture, String restaurant, String place_id, ArrayList<String> like) {
+    public User(String uid, String username, String urlPicture) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
-        this.restaurant = restaurant;
-        this.place_id = place_id;
-        this.like = like;
     }
 
     // --- GETTERS ---

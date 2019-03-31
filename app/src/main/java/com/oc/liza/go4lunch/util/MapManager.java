@@ -2,7 +2,9 @@ package com.oc.liza.go4lunch.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,9 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,17 +29,55 @@ public class MapManager {
 
     private Context context;
     private RestaurantManager restaurantManager;
+    private GoogleMap map;
 
     private boolean userGoing;
-    private List<Marker> listMarkers = new ArrayList<>();
     private List<RestaurantDetails> listOfRestaurants;
 
-    public MapManager(Context context) {
+    public MapManager(Context context, GoogleMap map) {
         this.context = context;
+        this.map=map;
         restaurantManager = new RestaurantManager(context);
     }
 
-    public void showUser(GoogleMap map) {
+    public void updateLocationUI(MapFragment fragment) {
+        if (map == null) {
+            return;
+        }
+        try {   //Check permission to show user location
+            if (ContextCompat.checkSelfPermission(Objects.requireNonNull(context),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //If ok, initialize map to show user location and buttons to zoom user
+                map.setMyLocationEnabled(true);
+                map.getUiSettings().setMyLocationButtonEnabled(true);
+                map.setOnMyLocationButtonClickListener(fragment);
+                Log.e("Update Map", "permission ok");
+
+            } else { //If no permission, do not show user location, only map
+                map.setMyLocationEnabled(false);
+                map.getUiSettings().setMyLocationButtonEnabled(false);
+                Log.e("Update Map", "permission not yet granted");
+            }
+            //Set map type and zoom
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            map.getUiSettings().setZoomControlsEnabled(true);
+
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    public LatLng getUserLatLng(){
+        SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
+        Double mLatitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
+        Double mLongitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLongitude", null)));
+
+        return new LatLng(mLatitude,
+                mLongitude);
+    }
+
+    public void showUser() {
         //Get latitude and longitude
         SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         Double mLatitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
@@ -72,9 +112,9 @@ public class MapManager {
      * or orange if not
      */
 
-    public void checkIfUser(final GoogleMap map, List<RestaurantDetails> list) {
+    public void checkIfUser(List<RestaurantDetails> list) {
         map.clear();
-        showUser(map);
+        showUser();
         listOfRestaurants = restaurantManager.getListOfRestaurants();
         this.listOfRestaurants = list;
         for (int i = 0; i < listOfRestaurants.size(); i++) {
@@ -91,11 +131,11 @@ public class MapManager {
                                 if (Objects.requireNonNull(task.getResult()).size() > 0) {
                                     userGoing = true;
                                     //create marker and add it to the map
-                                    displayOnMap(listOfRestaurants.get(finalI), finalI, map);
+                                    displayOnMap(listOfRestaurants.get(finalI), finalI);
                                 } else {
                                     userGoing = false;
                                     //create marker and add it to the map
-                                    displayOnMap(listOfRestaurants.get(finalI), finalI, map);
+                                    displayOnMap(listOfRestaurants.get(finalI), finalI);
                                 }
                             } else {
                                 Log.d("manager", "Error getting documents: ", task.getException());
@@ -106,7 +146,7 @@ public class MapManager {
     }
 
     //Show restaurant object as a marker on map
-    private void displayOnMap(RestaurantDetails result, int tag, GoogleMap map) {
+    private void displayOnMap(RestaurantDetails result, int tag) {
 
         String name = result.getName();
 
@@ -128,7 +168,6 @@ public class MapManager {
                 .title(name)
                 .icon(colored_marker));
         marker.setTag(tag);
-        listMarkers.add(marker);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
                 lng), 15));

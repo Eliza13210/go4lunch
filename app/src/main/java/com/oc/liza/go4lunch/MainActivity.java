@@ -20,8 +20,13 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.util.LocationManager;
@@ -116,19 +121,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUserInfo() {
-
-        //Get current user info
-        assert currentUser != null;
-        String urlPicture = (currentUser.getPhotoUrl() != null) ? currentUser.getPhotoUrl().toString() : null;
-        String username = currentUser.getDisplayName();
-        String uid = currentUser.getUid();
-
         //Show progressbar
         progressBar.setVisibility(View.VISIBLE);
 
-        // Create user in Firestore Database
-        UserHelper.createUser(uid, username, urlPicture, "not selected", null, null);
-        Log.e("MainActivity", "Success creating new user in Firestore");
+        //Create user in firestore if not already registered
+        createUserInFirestore();
 
         //Get user location
         locationManager = new LocationManager(this);
@@ -137,6 +134,34 @@ public class MainActivity extends AppCompatActivity {
         //Get nearby restaurants and launch Profile Activity
         RestaurantRequest restaurantRequest = new RestaurantRequest(this);
         restaurantRequest.getRestaurants();
+    }
+
+    // Create user in Firestore database
+    private void createUserInFirestore() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            UserHelper.getUser(currentUser.getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    //Check if user exists in database
+                    if (task.getResult() == null) {
+                        //If not - get current user info
+                        String urlPicture = (currentUser.getPhotoUrl() != null)
+                                ? currentUser.getPhotoUrl().toString() : null;
+                        String username = currentUser.getDisplayName();
+                        String uid = currentUser.getUid();
+
+                        // Access the Cloud Firestore instance from the Activity
+                        UserHelper.createUser(uid, username, urlPicture);
+                        Log.e("MainActivity", "Success creating new user in Firestore");
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("main", "failure firebase "+ e); }
+            });
+
+        }
     }
 
     @Override

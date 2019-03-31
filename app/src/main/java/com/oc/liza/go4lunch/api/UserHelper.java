@@ -7,8 +7,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.oc.liza.go4lunch.models.firebase.User;
 
-import java.util.ArrayList;
-
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
@@ -23,8 +21,8 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, String username, String urlPicture, String restaurant, String place_id, ArrayList<String> like) {
-        User userToCreate = new User(uid, username, urlPicture, restaurant, place_id, like);
+    public static Task<Void> createUser(String uid, String username, String urlPicture) {
+        User userToCreate = new User(uid, username, urlPicture);
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
 
     }

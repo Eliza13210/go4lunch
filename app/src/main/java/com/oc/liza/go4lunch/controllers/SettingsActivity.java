@@ -2,16 +2,14 @@ package com.oc.liza.go4lunch.controllers;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +41,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initSettings() {
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,24 +74,22 @@ public class SettingsActivity extends BaseActivity {
     private void deleteUserFromFirestore() {
 
         new AlertDialog.Builder(this)
-                .setTitle("Delete user")
-                .setMessage("Are you sure you want to delete this user?")
+                .setTitle(R.string.delete_user_dialog)
+                .setMessage(R.string.delete_user_in_settings)
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Continue with delete operation
                         UserHelper.deleteUser(uid).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(getApplicationContext(), "Successfully deleted user", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.successfully_deleted, Toast.LENGTH_SHORT).show();
                                 deleteUserFromFirebase();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Error deleting user: " + e, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getString(R.string.error_deleting_user) + e, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -121,7 +117,6 @@ public class SettingsActivity extends BaseActivity {
             }
         });
     }
-
 
     @Override
     public int getLayoutView() {

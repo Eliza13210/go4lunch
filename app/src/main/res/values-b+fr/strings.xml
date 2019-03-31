@@ -65,6 +65,10 @@
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
     <string name="navigation_icon">Navigation icon</string>
     <!-- SETTINGS-->
-    <string name="delete_user">Delete user</string>
-    <string name="update_username">Update username</string>
+    <string name="delete_user">Supprimer utilisateur</string>
+    <string name="update_username">Changer nom d\'utilisateur</string>
+    <string name="delete_user_in_settings">Êtes vous sur de vouloir supprimer cet utilisateur?</string>
+    <string name="delete_user_dialog">Supprimer utilisateur</string>
+    <string name="successfully_deleted">L\'utilisateur a été supprimé</string>
+    <string name="error_deleting_user">Erreur:</string>
 </resources>

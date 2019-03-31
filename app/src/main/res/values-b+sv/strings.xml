@@ -66,6 +66,10 @@
     <string name="navigation_icon">Navigation icon</string>
 
     <!-- SETTINGS-->
-    <string name="delete_user">Delete user</string>
-    <string name="update_username">Update username</string>
+    <string name="delete_user">Ta bort användare</string>
+    <string name="update_username">Uppdatera namn</string>
+    <string name="delete_user_in_settings">är du säker att du vill ta bort kontot?</string>
+    <string name="delete_user_dialog">Ta bort användare</string>
+    <string name="successfully_deleted">Användaren är borttagen</string>
+    <string name="error_deleting_user">Felmeddelande:</string>
 </resources>

@@ -233,5 +233,4 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         searchManager.disposeWhenDestroy();
     }
 
-
 }
