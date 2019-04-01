@@ -8,10 +8,13 @@ import java.util.List;
 
 public class RestaurantDetails {
 
+    @SerializedName("place_id")
+    @Expose
+    private String place_id;
 
     @SerializedName("types")
     @Expose
-    List<String> types;
+    private List<String> types;
 
     @SerializedName("name")
     @Expose
@@ -67,10 +70,6 @@ public class RestaurantDetails {
     @SerializedName("lng")
     @Expose
     private Double lng;
-
-    @SerializedName("place_id")
-    @Expose
-    private String place_id;
 
     public List<String> getTypes() {
         return types;

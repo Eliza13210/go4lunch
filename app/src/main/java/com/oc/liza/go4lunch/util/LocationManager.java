@@ -29,7 +29,6 @@ public class LocationManager {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private boolean locationPermissionGranted = false;
 
-
     public LocationManager(Context context) {
         this.context = context;
         // Construct a FusedLocationProviderClient.
@@ -66,7 +65,6 @@ public class LocationManager {
                 Toast.makeText(context, "You need to grant permission to access your location", Toast.LENGTH_LONG).show();
             } else {
                 Task locationResult = fusedLocationProviderClient.getLastLocation();
-
                 locationResult.addOnCompleteListener((MainActivity) context, new OnCompleteListener() {
                     Location mLastKnownLocation;
 
@@ -75,9 +73,8 @@ public class LocationManager {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = (Location) task.getResult();
-                            Double mLatitude;
-                            Double mLongitude;
-                            Log.e("Location Manager", "last known location= " + mLastKnownLocation);
+                            double mLatitude;
+                            double mLongitude;
 
                             if (mLastKnownLocation != null) {
                                 //Get the latitude and longitude
@@ -96,8 +93,6 @@ public class LocationManager {
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("CurrentLatitude", Double.toString(mLatitude)).apply();
                             pref.edit().putString("CurrentLongitude", Double.toString(mLongitude)).apply();
-
-                            Log.e("location map", "success");
                         } else {
                             Log.e("map", "Exception: %s", task.getException());
                         }
@@ -113,9 +108,9 @@ public class LocationManager {
     public LatLng getCurrentLatLng() {
         //Get current location
         SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        Double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
-        Double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
-        LatLng latLng = new LatLng(currentLat, currentLng);
-        return latLng;
+        double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
+        double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
+
+        return new LatLng(currentLat, currentLng);
     }
 }

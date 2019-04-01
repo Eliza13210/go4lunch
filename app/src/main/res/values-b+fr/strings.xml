@@ -71,4 +71,6 @@
     <string name="delete_user_dialog">Supprimer utilisateur</string>
     <string name="successfully_deleted">L\'utilisateur a été supprimé</string>
     <string name="error_deleting_user">Erreur:</string>
+    <string name="username_updated">Votre nom d\'utilisateur à été mis à jour</string>
+    <string name="error_updating_username">Erreur, le nom d\'utilisateur n\'a pas été mis à jour</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.oc.liza.go4lunch.controllers.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -37,10 +36,6 @@ public class UsersFragment extends Fragment {
 
     public UsersFragment() {
         // Required empty public constructor
-    }
-
-    public static UsersFragment newInstance() {
-        return new UsersFragment();
     }
 
     @Override
@@ -81,25 +76,13 @@ public class UsersFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        // 3.1 - Reset list
+        // Reset list
         this.users = new ArrayList<>();
-        // 3.2 - Create adapter passing the list of news
+        // Create adapter passing the list of news
         this.adapter = new UserAdapter(this.users);
-        // 3.3 - Attach the adapter to the recycler view to populate items
+        // Attach the adapter to the recycler view to populate items
         this.recyclerView.setAdapter(this.adapter);
-        // 3.4 - Set layout manager to position the items
+        // Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-
 }

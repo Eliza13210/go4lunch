@@ -67,11 +67,18 @@
 
     <!-- SETTINGS-->
     <string name="delete_user">Delete user</string>
-    <string name="update_username">Update username</string>
     <string name="delete_user_in_settings">Are you sure you want to delete this user?</string>
     <string name="delete_user_dialog">Delete user</string>
     <string name="successfully_deleted">Successfully deleted user</string>
     <string name="error_deleting_user">Error deleting user:</string>
+    <string name="update_username">Update username</string>
     <string name="username_updated">Your username is updated:</string>
     <string name="error_updating_username">Error updating username:</string>
+    <string name="error_create">Error creating user</string>
+    <string name="you_are_going">Your are going to:</string>
+    <string name="with_workmates">With your workmates:</string>
+    <string name="closing_soon">Closing soon</string>
+    <string name="closed">Closed</string>
+    <string name="opens_at">Opens at</string>
+    <string name="open_until">Open until</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.oc.liza.go4lunch.view;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,27 +19,13 @@ import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
-import com.oc.liza.go4lunch.controllers.RestaurantActivity;
-import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.util.LocationManager;
 import com.oc.liza.go4lunch.util.OpeningHoursManager;
 import com.oc.liza.go4lunch.util.RestaurantManager;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static java.lang.Math.acos;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 class RestaurantViewHolder extends RecyclerView.ViewHolder {
 

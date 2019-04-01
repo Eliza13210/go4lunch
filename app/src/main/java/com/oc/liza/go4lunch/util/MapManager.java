@@ -36,10 +36,11 @@ public class MapManager {
 
     public MapManager(Context context, GoogleMap map) {
         this.context = context;
-        this.map=map;
+        this.map = map;
         restaurantManager = new RestaurantManager(context);
     }
 
+    //Set my location button listener and show user location
     public void updateLocationUI(MapFragment fragment) {
         if (map == null) {
             return;
@@ -52,9 +53,8 @@ public class MapManager {
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
                 map.setOnMyLocationButtonClickListener(fragment);
-                Log.e("Update Map", "permission ok");
-
-            } else { //If no permission, do not show user location, only map
+            } else {
+                //If no permission, do not show user location, only map
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(false);
                 Log.e("Update Map", "permission not yet granted");
@@ -68,24 +68,18 @@ public class MapManager {
         }
     }
 
-    public LatLng getUserLatLng(){
+    public LatLng getUserLatLng() {
         SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        Double mLatitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
-        Double mLongitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLongitude", null)));
-
+        double mLatitude = Double.parseDouble(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
+        double mLongitude = Double.parseDouble(Objects.requireNonNull(prefs.getString("CurrentLongitude", null)));
         return new LatLng(mLatitude,
                 mLongitude);
     }
 
     public void showUser() {
-        //Get latitude and longitude
-        SharedPreferences prefs = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-        Double mLatitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLatitude", null)));
-        Double mLongitude = Double.valueOf(Objects.requireNonNull(prefs.getString("CurrentLongitude", null)));
         //Add user marker on map
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(mLatitude,
-                        mLongitude))
+                .position(getUserLatLng())
                 .title("User"))
                 .setTag(100);
 
@@ -104,6 +98,8 @@ public class MapManager {
                 return false;
             }
         });
+        //Move camera to show user location
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(getUserLatLng(), 15));
     }
 
     /**
@@ -112,7 +108,7 @@ public class MapManager {
      * or orange if not
      */
 
-    public void checkIfUser(List<RestaurantDetails> list) {
+    public void showRestaurantsOnMap(List<RestaurantDetails> list) {
         map.clear();
         showUser();
         listOfRestaurants = restaurantManager.getListOfRestaurants();
@@ -168,8 +164,5 @@ public class MapManager {
                 .title(name)
                 .icon(colored_marker));
         marker.setTag(tag);
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,
-                lng), 15));
     }
 }

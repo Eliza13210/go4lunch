@@ -1,7 +1,6 @@
 package com.oc.liza.go4lunch.network;
 
 import com.oc.liza.go4lunch.models.NearbySearchObject;
-import com.oc.liza.go4lunch.models.Result;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -24,7 +21,6 @@ import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class RestaurantStreamTest {
-    private List<Result> results;
 
     @Before
     public void setUp() {

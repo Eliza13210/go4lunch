@@ -1,12 +1,9 @@
 package com.oc.liza.go4lunch.view;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,19 +11,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
-import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.util.RestaurantManager;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +81,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 RestaurantManager manager = new RestaurantManager(context);
                 manager.saveInfoToRestaurantActivity(place_id);
+                manager.startRestaurantActivity();
 
             }
         });

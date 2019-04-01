@@ -8,10 +8,12 @@ import java.util.List;
 
 public class NearbySearchObject {
 
+    //API Place Details returns an object/restaurant
     @SerializedName("result")
     @Expose
     private RestaurantDetails details;
 
+    //API Nearby search returns a list of restaurants without details
     @SerializedName("results")
     @Expose
     private List<NearbySearchObject> results;

@@ -12,10 +12,8 @@ import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantManager {
@@ -24,6 +22,7 @@ public class RestaurantManager {
     private Context context;
     private List<RestaurantDetails> listOfRestaurants;
     private SharedPreferences pref;
+    private RestaurantRequest request;
 
 
     public RestaurantManager(Context context) {
@@ -55,13 +54,13 @@ public class RestaurantManager {
     }
 
     public void saveInfoToRestaurantActivity(String query) {
-        Boolean restaurantIsInList=true;
+        boolean restaurantIsInList = false;
         //Fetch details about Restaurant
         for (int i = 0; i < listOfRestaurants.size(); i++) {
             if (listOfRestaurants.get(i).getPlace_id().equals(query)) {
-                restaurantIsInList=false;
+                restaurantIsInList = true;
                 //Fetch info about restaurant
-                String place_id=listOfRestaurants.get(i).getPlace_id();
+                String place_id = listOfRestaurants.get(i).getPlace_id();
                 String name = listOfRestaurants.get(i).getName();
                 Log.e("saving ", "save name " + name);
                 String phone = listOfRestaurants.get(i).getPhone();
@@ -76,22 +75,21 @@ public class RestaurantManager {
                 SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                 pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
                         .putString("Address", address).apply();
-
-                startRestaurantActivity();
             }
         }
-        if(restaurantIsInList) {
-            RestaurantRequest request=new RestaurantRequest(context);
+        if (!restaurantIsInList) {
+            request = new RestaurantRequest(context);
             request.fetchDetailsForRestaurantActivity(query);
         }
     }
 
     public void startRestaurantActivity() {
+        //Check if restaurant request is used and in that case if API request finished before starting activity
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
     }
 
-    public void updateListAfterSearch(List<RestaurantDetails> listSearch) {
+    void updateListAfterSearch(List<RestaurantDetails> listSearch) {
 
         //Save the updated list of restaurants
         Gson gson = new Gson();
@@ -101,7 +99,7 @@ public class RestaurantManager {
         Log.e("Restaurant Search", "Number of restaurants " + listSearch.size());
     }
 
-    public void resetFullListOfRestaurants() {
+    void resetFullListOfRestaurants() {
 
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurantsBackUp", null);

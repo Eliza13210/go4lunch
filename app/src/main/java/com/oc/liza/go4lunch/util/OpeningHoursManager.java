@@ -1,5 +1,6 @@
 package com.oc.liza.go4lunch.util;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -13,40 +14,47 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class OpeningHoursManager {
 
-    public int localTime;
-    public int day;
-    private List<OpeningHours> openHours;
+    private Context context;
+    int localTime;
+    int day;
     private RestaurantDetails details;
-    List<OpeningHours> openingTime = new ArrayList<>();
-    List<OpeningHours> closeTime = new ArrayList<>();
-    String openMorning = "";
-    String closingLunch = "";
+    private List<OpeningHours> openingTime = new ArrayList<>();
+    private List<OpeningHours> closeTime = new ArrayList<>();
 
-    TextView opening_hours;
+    private TextView opening_hours;
 
-    public OpeningHoursManager(RestaurantDetails details, TextView opening_hours) {
+    public OpeningHoursManager(RestaurantDetails details, TextView opening_hours, Context context) {
         this.details = details;
         this.opening_hours = opening_hours;
+        this.context = context;
     }
 
-    public OpeningHoursManager() {
-
+    OpeningHoursManager() {
     }
 
     public void checkOpening() {
-
         getActualTimeAndDay();
         getOpeningHoursToday();
-
     }
 
-    public void getOpeningHoursToday() {
-        //Get list of opening hours for the restaurant
-        openHours = details.getOpening_hours().getPeriods();
+    //First check which day it is
+    void getActualTimeAndDay() {
+        Calendar cal = Calendar.getInstance();
+        Date currentLocalTime = cal.getTime();
+        DateFormat date = new SimpleDateFormat("HHmm", Locale.FRANCE);
 
+        localTime = Integer.parseInt(date.format(currentLocalTime));
+        //Check which day it is
+        day = cal.get(Calendar.DAY_OF_WEEK);
+    }
+
+    private void getOpeningHoursToday() {
+        //Get list of opening hours for the restaurant
+        List<OpeningHours> openHours = details.getOpening_hours().getPeriods();
         int dayOfWeek = 0;
 
         //Check which day it is and set dayOfWeek to get the right opening hours
@@ -82,37 +90,33 @@ public class OpeningHoursManager {
             try {
                 if (openHours.get(i).getOpen().getDay() == dayOfWeek) {
 
-                    openMorning = openHours.get(i).getOpen().getTime();
-                    closingLunch = openHours.get(i).getClose().getTime();
-                    Log.e("open", "open time" + openMorning + "close" + closingLunch + " localtime " + localTime);
+                    //Opening and closing lunch
+                    String openMorning = openHours.get(i).getOpen().getTime();
+                    String closingLunch = openHours.get(i).getClose().getTime();
                     int closingLunchInt = Integer.parseInt(closingLunch);
                     int openMorningInt = Integer.parseInt(openMorning);
 
                     //If restaurant is open
                     //If restaurant is closing in 30 minutes
                     if ((localTime - closingLunchInt) < 30 && (localTime - closingLunchInt) > 0) {
-                        opening_hours.setText("Closing soon");
+                        opening_hours.setText(R.string.closing_soon);
                     }
                     //If restaurant is closed
                     else if (localTime > closingLunchInt) {
-                        opening_hours.setText("Closed");
-                        Log.e("closed", " closed " + localTime + " " + closingLunchInt);
+                        opening_hours.setText(R.string.closed);
                     }
                     //If restaurant is not yet open for lunch
                     else if (localTime < openMorningInt) {
-
-                        Log.e("closed", " closed " + localTime + " " + openMorningInt);
                         String str = Integer.toString(openMorningInt);
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
-                        // String isOpening = String.valueOf(openMorningInt);
-                        opening_hours.setText("Opens at " + str + "pm");
+                        String text = context.getString(R.string.opens_at) + str + "pm";
+                        opening_hours.setText(text);
                     } else if (localTime < closingLunchInt) {
-
                         String str = Integer.toString(closingLunchInt);
 
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
-                        Log.e("stringbuilder", "string " + str);
-                        opening_hours.setText("Open until " + str + "pm");
+                        String text = context.getString(R.string.open_until) + str + "pm";
+                        opening_hours.setText(text);
 
                     } else if (details.getOpening_hours().isOpen_now()) {
                         opening_hours.setText("Open");
@@ -133,17 +137,5 @@ public class OpeningHoursManager {
                 }
             }
         }
-    }
-
-    public void getActualTimeAndDay() {
-        Calendar cal = Calendar.getInstance();
-        Date currentLocalTime = cal.getTime();
-        DateFormat date = new SimpleDateFormat("HHmm");
-
-        localTime = Integer.parseInt(date.format(currentLocalTime));
-        //Check which day it is
-        day = cal.get(Calendar.DAY_OF_WEEK);
-
-        //  Log.e("RestViewH", "localtime " +localTime + day);
     }
 }

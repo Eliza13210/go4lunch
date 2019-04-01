@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.models.Result;
 
 import java.util.List;
 

@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.oc.liza.go4lunch.BuildConfig;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.ProfileActivity;
-import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.NearbySearchObject;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.network.RestaurantStream;
@@ -22,13 +21,15 @@ import io.reactivex.observers.DisposableObserver;
 
 public class RestaurantRequest {
 
-    private Context context;
     //For saving
+    private Context context;
     private SharedPreferences pref;
+    //For API request
     private Disposable disposable;
     private StringBuilder builder;
     private List<NearbySearchObject> results;
     private List<RestaurantDetails> listOfRestaurants;
+    public boolean activityCanStart=false;
 
     public RestaurantRequest(Context context) {
         this.context = context;
@@ -36,7 +37,6 @@ public class RestaurantRequest {
         listOfRestaurants = new ArrayList<>();
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
     }
-
 
     private void setLocationString() {
         //Build location string to fetch nearby restaurants
@@ -49,7 +49,6 @@ public class RestaurantRequest {
     //Search for nearby restaurants
     public void getRestaurants() {
         setLocationString();
-        // - Update UI
         disposable = RestaurantStream.fetchNearbyRestaurantsStream((builder.toString()))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
                     @Override
@@ -70,14 +69,15 @@ public class RestaurantRequest {
     }
 
     private void addToListOfRestaurants(NearbySearchObject nearbySearchObject) {
-
         //Add restaurants results from fetched nearby search object to the list
         results.addAll(nearbySearchObject.getResults());
+        //Get restaurant details for all the objects in the list
         for (NearbySearchObject r : results) {
             fetchRestaurantDetails(r.getPlace_id());
         }
     }
 
+    //Fetch list of restaurants with details, save it and start profile activity
     private void fetchRestaurantDetails(final String place_id) {
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
@@ -85,7 +85,6 @@ public class RestaurantRequest {
                     @Override
                     public void onNext(NearbySearchObject nearbySearchObject) {
                         listOfRestaurants.add(nearbySearchObject.getDetails());
-                        Log.e("ListofRest", "detail " + nearbySearchObject.getDetails().getAddress());
                     }
 
                     @Override
@@ -95,8 +94,9 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
+                        //Save list of restaurants with details so it can be accessed from other activities
                         if (place_id.equals(results.get(results.size() - 1).getPlace_id())) {
-                            //Save the list of restaurants
+                            //Convert to string before saving the list of restaurants
                             Gson gson = new Gson();
                             String json = gson.toJson(listOfRestaurants);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
@@ -107,14 +107,14 @@ public class RestaurantRequest {
                             json = gson.toJson(listOfRestaurants);
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("ListOfRestaurantsBackUp", json).apply();
-
+                            //Start profile activity
                             startProfileActivity();
-                            Log.e("Restaurant Request", "Number of restaurants " + results.size());
                         }
                     }
                 });
     }
 
+    //Fetch restaurant details and start Restaurant activity
     public void fetchDetailsForRestaurantActivity(final String place_id) {
         this.disposable = RestaurantStream.fetchDetailsStream((place_id))
                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
@@ -137,8 +137,6 @@ public class RestaurantRequest {
                         SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                         pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
                                 .putString("Address", address).apply();
-                        //Start Restaurant activity
-                        context.startActivity(new Intent(context, RestaurantActivity.class));
                     }
 
                     @Override
@@ -148,7 +146,7 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
-
+                        activityCanStart=true;
                     }
                 });
     }

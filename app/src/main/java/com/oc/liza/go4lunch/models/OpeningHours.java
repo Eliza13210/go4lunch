@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class OpeningHours {
 
-
     @SerializedName("close")
     @Expose
     private OpeningHours close;

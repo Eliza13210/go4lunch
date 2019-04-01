@@ -18,6 +18,7 @@ import com.oc.liza.go4lunch.models.firebase.Message;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,13 +34,11 @@ class ChatViewHolder extends RecyclerView.ViewHolder {
     LinearLayout profileContainer;
     @BindView(R.id.chat_item_profile_container_profile_image)
     ImageView imageViewProfile;
-    @BindView(R.id.chat_item_profile_container_is_college_image)
-    ImageView imageViewIsMentor;
 
     //MESSAGE CONTAINER
     @BindView(R.id.chat_item_message_container)
     RelativeLayout messageContainer;
-    //IMAGE SENDED CONTAINER
+    //IMAGE SENT CONTAINER
     @BindView(R.id.chat_item_message_container_image_sent_cardview)
     CardView cardViewImageSent;
     @BindView(R.id.chat_item_message_container_image_sent_cardview_image)
@@ -50,7 +49,7 @@ class ChatViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.chat_item_message_container_text_message_container_text_view)
     TextView textViewMessage;
     //DATE TEXT
-    @BindView(R.id.activity_mentor_chat_item_message_container_text_view_date)
+    @BindView(R.id.activity_chat_item_message_container_text_view_date)
     TextView textViewDate;
 
 
@@ -66,7 +65,6 @@ class ChatViewHolder extends RecyclerView.ViewHolder {
     }
 
     void updateWithMessage(Message message, String currentUserId, RequestManager glide) {
-
         // Check if current user is the sender
         Boolean isCurrentUser = message.getUserSender().getUid().equals(currentUserId);
 
@@ -120,11 +118,8 @@ class ChatViewHolder extends RecyclerView.ViewHolder {
         this.rootView.requestLayout();
     }
 
-    // ---
-
     private String convertDateToHour(Date date) {
-        DateFormat dfTime = new SimpleDateFormat("HH:mm");
+        DateFormat dfTime = new SimpleDateFormat("HH:mm", Locale.FRANCE);
         return dfTime.format(date);
     }
-
 }

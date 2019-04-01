@@ -8,9 +8,6 @@ public class Message {
     private Date dateCreated;
     private String urlImage;
 
-    public Message() {
-    }
-
     public Message(String message, String urlImage, User userSender, Date dateCreated) {
         this.message = message;
         this.urlImage = urlImage;
@@ -49,6 +46,4 @@ public class Message {
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
-
-
 }

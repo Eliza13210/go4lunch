@@ -1,4 +1,4 @@
-package com.oc.liza.go4lunch.api;
+package com.oc.liza.go4lunch.chat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -14,7 +14,6 @@ public class MessageHelper {
     private static final String CHAT = "chat";
 
     // --- GET ---
-
     public static Query getAllMessageForChat() {
         return ChatHelper.getChatCollection()
                 .document(CHAT)
@@ -24,10 +23,8 @@ public class MessageHelper {
     }
 
     public static Task<DocumentReference> createMessageForChat(String textMessage, User userSender, Date date) {
-
         // 1 - Create the Message object
         Message message = new Message(textMessage, null, userSender, date);
-
         // 2 - Store Message to Firestore
         return ChatHelper.getChatCollection()
                 .document(CHAT)
@@ -36,10 +33,8 @@ public class MessageHelper {
     }
 
     public static Task<DocumentReference> createMessageWithImageForChat(String urlImage, String textMessage, User userSender, Date date) {
-
         // 1 - Creating Message with the URL image
         Message message = new Message(textMessage, urlImage, userSender, date);
-
         // 2 - Storing Message on Firestore
         return ChatHelper.getChatCollection()
                 .document(CHAT)

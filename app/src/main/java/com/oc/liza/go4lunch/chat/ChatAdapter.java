@@ -12,9 +12,9 @@ import com.oc.liza.go4lunch.models.firebase.Message;
 
 public class ChatAdapter extends FirestoreRecyclerAdapter<Message, ChatViewHolder> {
 
-public interface Listener {
-    void onDataChanged();
-}
+    public interface Listener {
+        void onDataChanged();
+    }
 
     //FOR DATA
     private final RequestManager glide;
@@ -35,8 +35,9 @@ public interface Listener {
         holder.updateWithMessage(model, this.idCurrentUser, this.glide);
     }
 
+    @NonNull
     @Override
-    public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ChatViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_item_chat, parent, false));
     }

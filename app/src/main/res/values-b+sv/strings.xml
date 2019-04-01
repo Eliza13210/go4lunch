@@ -71,5 +71,7 @@
     <string name="delete_user_in_settings">är du säker att du vill ta bort kontot?</string>
     <string name="delete_user_dialog">Ta bort användare</string>
     <string name="successfully_deleted">Användaren är borttagen</string>
-    <string name="error_deleting_user">Felmeddelande:</string>
+    <string name="error_deleting_user">Nâgonting gick fel</string>
+    <string name="username_updated">Användarnamn uppdaterat</string>
+    <string name="error_updating_username">Nâgonting gick fel! Användarnamnet är inte uppdaterat</string>
 </resources>

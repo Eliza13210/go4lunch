@@ -19,7 +19,7 @@ import com.oc.liza.go4lunch.util.RestaurantManager;
 import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener{
+        GoogleMap.OnMyLocationButtonClickListener {
 
     //For google maps
     private GoogleMap mMap;
@@ -27,10 +27,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public MapFragment() {
         // Required empty public constructor
-    }
-
-    public static MapFragment newInstance() {
-        return new MapFragment();
     }
 
     @Override
@@ -47,7 +43,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
         return rootView;
     }
 
@@ -67,13 +62,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         List<RestaurantDetails> listOfRestaurants = restaurantManager.getListOfRestaurants();
         //Use Restaurant Manager to display markers on map
         manager.showUser();
-        manager.checkIfUser(listOfRestaurants);
+        manager.showRestaurantsOnMap(listOfRestaurants);
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
         // (the camera animates to the user's current position).
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(manager.getUserLatLng(), 15));
-          return false;
+        return false;
     }
 }

@@ -32,7 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.api.MessageHelper;
+import com.oc.liza.go4lunch.chat.MessageHelper;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.chat.ChatAdapter;
 import com.oc.liza.go4lunch.models.firebase.Message;

@@ -21,6 +21,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.controllers.ProfileActivity;
 import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.util.RestaurantManager;
@@ -31,13 +32,12 @@ import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
 
-    private final int NOTIFICATION_ID = 007;
-    private final String NOTIFICATION_TAG = "FIREBASEOC";
-
     //Info to use in notification message
     private RestaurantManager manager;
     private String restaurant;
     private String address;
+    private String message;
+    private String place_id;
     private List<User> users = new ArrayList<>();
 
     @Override
@@ -65,15 +65,16 @@ public class NotificationService extends FirebaseMessagingService {
                     // convert document to POJO
                     assert document != null;
                     User user = document.toObject(User.class);
-
                     assert user != null;
-                    restaurant = user.getRestaurant();
-                    if (restaurant!= null) {
+                    if (user.getRestaurant() != null && !user.getRestaurant().equals("not selected")) {
+                        restaurant = user.getRestaurant();
                         address = manager.getRestaurantAddress(restaurant);
-                        getListOfUsers();
-                    }else{
-                        Log.e("Notification", "User has not chosen a restaurant for lunch");
+                        place_id = user.getPlace_id();
+                    } else {
+                        restaurant = getString(R.string.drawer_lunch);
+                        address = "";
                     }
+                    getListOfUsers();
                 }
             }
         });
@@ -82,7 +83,7 @@ public class NotificationService extends FirebaseMessagingService {
     private void getListOfUsers() {
         //Get info about workmates going to the same restaurant
         UserHelper.getUsersCollection()
-                .whereEqualTo("restaurant", restaurant)
+                .whereEqualTo("place_id", place_id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -93,8 +94,14 @@ public class NotificationService extends FirebaseMessagingService {
                                 User user = document.toObject(User.class);
                                 users.add(user);
                             }
-                            //Create notification message
-                            String message = "Your are going to: " + restaurant + ", " + address + "With your workmates: " + users;
+                            //User has chosen a restaurant
+                            if (!restaurant.equals(getString(R.string.drawer_lunch))) {
+                                //Create notification message
+                                message = getString(R.string.you_are_going) + restaurant + ", " + address + getString(R.string.with_workmates) + users;
+                            } else {
+                                //User hasn't chosen a restaurant
+                                message = getString(R.string.drawer_lunch);
+                            }
                             //Send visual message
                             sendVisualNotification(message);
                         } else {
@@ -102,17 +109,22 @@ public class NotificationService extends FirebaseMessagingService {
                         }
                     }
                 });
-
     }
-
-    // ---
 
     private void sendVisualNotification(String messageBody) {
 
         // 1 - Create an Intent that will be shown when user will click on the Notification
-        Intent intent = new Intent(this, RestaurantActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
+        PendingIntent pendingIntent;
+        //User has chosen a restaurant
+        if (!restaurant.equals(getString(R.string.drawer_lunch))) {
+            RestaurantManager manager = new RestaurantManager(this);
+            manager.saveInfoToRestaurantActivity(place_id);
+            Intent intent = new Intent(this, RestaurantActivity.class);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        } else { //User hasn't chosen a restaurant
+            Intent intent = new Intent(this, ProfileActivity.class);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        }
         // 2 - Create a Style for the Notification
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle(getString(R.string.notification_title));
@@ -146,6 +158,8 @@ public class NotificationService extends FirebaseMessagingService {
 
         // 7 - Show notification
         assert notificationManager != null;
+        int NOTIFICATION_ID = 7;
+        String NOTIFICATION_TAG = "FIREBASEOC";
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
     }
 }

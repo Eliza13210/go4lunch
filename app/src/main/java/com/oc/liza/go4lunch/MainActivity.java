@@ -22,7 +22,6 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -151,7 +150,12 @@ public class MainActivity extends AppCompatActivity {
                         String uid = currentUser.getUid();
 
                         // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture);
+                        UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                showSnackBar(linearLayout, getString(R.string.error_create));
+                            }
+                        });
                         Log.e("MainActivity", "Success creating new user in Firestore");
                     }
                 }
