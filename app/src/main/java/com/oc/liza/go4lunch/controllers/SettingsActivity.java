@@ -40,6 +40,11 @@ public class SettingsActivity extends BaseActivity {
         initSettings();
     }
 
+    @Override
+    public int getLayoutView() {
+        return R.layout.activity_settings;
+    }
+
     private void initSettings() {
         uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         delete.setOnClickListener(new View.OnClickListener() {
@@ -56,27 +61,27 @@ public class SettingsActivity extends BaseActivity {
         });
     }
 
+    //Change username for current Firestore user
     private void updateUsername() {
         final String username = update_text.getText().toString();
         UserHelper.updateUsername(username, uid).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Your username is updated: " + username, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.username_updated) + username, Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Error updating username: " + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.error_updating_username) + e, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    //Delete user from Firestore and firebase
     private void deleteUserFromFirestore() {
-
         new AlertDialog.Builder(this)
                 .setTitle(R.string.delete_user_dialog)
                 .setMessage(R.string.delete_user_in_settings)
-
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Continue with delete operation
@@ -113,13 +118,7 @@ public class SettingsActivity extends BaseActivity {
                                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));
                             }
                         });
-
             }
         });
-    }
-
-    @Override
-    public int getLayoutView() {
-        return R.layout.activity_settings;
     }
 }

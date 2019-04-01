@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +29,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
-import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.models.firebase.User;
 import com.oc.liza.go4lunch.view.UserAdapter;
 
@@ -75,16 +72,71 @@ public class RestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant);
         ButterKnife.bind(this);
 
-        initRestaurant();
         initRecyclerView();
+        initRestaurant();
         initMenu();
         initButton();
         getListOfUsers();
     }
 
+    private void initRecyclerView() {
+        // 3.1 - Reset list
+        this.users = new ArrayList<>();
+        // 3.2 - Create adapter passing the list of news
+        this.adapter = new UserAdapter(this.users);
+        // 3.3 - Attach the adapter to the recycler view to populate items
+        this.recyclerView.setAdapter(this.adapter);
+        // 3.4 - Set layout manager to position the items
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    //Show restaurant photo, name and adress
+    private void initRestaurant() {
+        //Get restaurant info saved in shared preferences
+        pref = getSharedPreferences("Go4Lunch", MODE_PRIVATE);
+        //Show photo of restaurant
+        String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
+        try {
+            String url = pref.getString("Img", defaultImg);
+            Glide.with(this)
+                    .load(url)
+                    .into(photo);
+        } catch (Exception e) {
+            Glide.with(this)
+                    .load(defaultImg)
+                    .into(photo);
+        }
+        //Name
+        restName = pref.getString("Name", "No name");
+        name.setText(restName);
+        //Address
+        address.setText(pref.getString("Address", "Far away"));
+        getRestaurantRating();
+    }
+
+    //Show one to three stars depending on rating
+    private void getRestaurantRating() {
+        String restaurantRating = pref.getString("Rating", "0");
+        double rating = Double.parseDouble(restaurantRating);
+
+        if (rating >= 5) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+            star_three.setVisibility(View.VISIBLE);
+
+        } else if (rating >= 2) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+
+        } else if (rating == 1) {
+            star_one.setVisibility(View.VISIBLE);
+        }
+    }
+
     //Check if users are going to this restaurant
     private void getListOfUsers() {
-
+        //Place id to be used in case the restaurant is not in the list
+        place_id = pref.getString("Place_id", null);
         UserHelper.getUsersCollection()
                 .whereEqualTo("place_id", place_id)
                 .get()
@@ -103,63 +155,43 @@ public class RestaurantActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
+    // Initialize menu
+    private void initMenu() {
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        BottomNavigationView.OnNavigationItemSelectedListener
+                mOnNavigationItemSelectedListener
+                = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-    private void initRecyclerView() {
-        // 3.1 - Reset list
-        this.users = new ArrayList<>();
-        // 3.2 - Create adapter passing the list of news
-        this.adapter = new UserAdapter(this.users);
-        // 3.3 - Attach the adapter to the recycler view to populate items
-        this.recyclerView.setAdapter(this.adapter);
-        // 3.4 - Set layout manager to position the items
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_phone:
+                        //Call restaurant
+                        String phone = pref.getString("Phone", null);
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                        startActivity(intent);
+                        return true;
+
+                    case R.id.navigation_like:
+                        //Like restaurant
+                        UserHelper.updateLike(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                .addOnFailureListener(onFailureListener());
+                        return true;
+
+                    case R.id.navigation_website:
+                        //Start web view activity
+                        Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
+                        startActivity(startWebview);
+                        return true;
+                }
+                return false;
+            }
+        };
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    //Show restaurant photo, name and adress
-    private void initRestaurant() {
-        //Get restaurant info saved in shared preferences
-        pref = getSharedPreferences("Go4Lunch", MODE_PRIVATE);
-        //Photo
-        String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
-        try {
-            String url = pref.getString("Img", defaultImg);
-            Glide.with(this)
-                    .load(url)
-                    .into(photo);
-        } catch (Exception e) {
-            Glide.with(this)
-                    .load(defaultImg)
-                    .into(photo);
-        }
-        //Name
-        restName = pref.getString("Name", "No name");
-        place_id = pref.getString("Place_id", null);
-        name.setText(restName);
-        //Address
-        address.setText(pref.getString("Address", "Far away"));
-        getRestaurantRating();
-    }
-
-    private void getRestaurantRating() {
-        String restaurantRating = pref.getString("Rating", "0");
-        Double rating = Double.valueOf(restaurantRating);
-
-        if (rating >= 5) {
-            star_one.setVisibility(View.VISIBLE);
-            star_two.setVisibility(View.VISIBLE);
-            star_three.setVisibility(View.VISIBLE);
-
-        } else if (rating >= 2) {
-            star_one.setVisibility(View.VISIBLE);
-            star_two.setVisibility(View.VISIBLE);
-
-        } else if (rating == 1) {
-            star_one.setVisibility(View.VISIBLE);
-        }
-    }
 
     protected OnFailureListener onFailureListener() {
         return new OnFailureListener() {
@@ -186,18 +218,16 @@ public class RestaurantActivity extends AppCompatActivity {
                 }
             }
         });
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isClicked) {
                     isClicked = false;
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant("Not selected", null, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
-                    getListOfUsers();
+
                 } else {
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                     isClicked = true;
@@ -205,46 +235,12 @@ public class RestaurantActivity extends AppCompatActivity {
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant(restName, place_id, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
-                    getListOfUsers();
                 }
-
+                getListOfUsers();
             }
         });
     }
 
-    private void initMenu() {
-
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        BottomNavigationView.OnNavigationItemSelectedListener
-                mOnNavigationItemSelectedListener
-                = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_phone:
-                        //Call restaurant
-                        String phone = pref.getString("Phone", null);
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                        startActivity(intent);
-                        return true;
-
-                    case R.id.navigation_like:
-                        UserHelper.updateLike(restName, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                .addOnFailureListener(onFailureListener());
-                        return true;
-
-                    case R.id.navigation_website:
-                        //Start web view activity
-                        Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
-                        startActivity(startWebview);
-                        return true;
-                }
-                return false;
-            }
-        };
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
 
     @Override
     public void onBackPressed() {

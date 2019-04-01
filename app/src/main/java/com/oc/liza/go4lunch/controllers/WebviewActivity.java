@@ -32,7 +32,6 @@ public class WebviewActivity extends AppCompatActivity {
         //Create new webview to show the article and set the app as webclient
         webView = new WebView(this);
         webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setJavaScriptEnabled(true);
 
         //Get the url saved in shared preferences
         SharedPreferences sharedPref = this.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);

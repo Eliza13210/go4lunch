@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +40,7 @@ import com.oc.liza.go4lunch.models.firebase.User;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,8 +49,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
-    // FOR DESIGN
-    // 1 - Getting all views needed
     @BindView(R.id.recycler_view_chat)
     RecyclerView recyclerView;
     @BindView(R.id.chat_text_view_recycler_view_empty)
@@ -61,7 +58,6 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
     @BindView(R.id.chat_image_chosen_preview)
     ImageView imageViewPreview;
 
-    // FOR DATA
     // Declaring Adapter and data
     private ChatAdapter ChatAdapter;
     @Nullable
@@ -73,7 +69,7 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
     // Uri of image selected by user
     private Uri uriImageSelected;
     private static final int RC_CHOOSE_PHOTO = 200;
-    String pathImageSavedInFirebase;
+    private String pathImageSavedInFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +103,6 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
     // ACTIONS
     // --------------------
     @OnClick(R.id.activity_chat_add_file_button)
-    // 5 - Calling the appropriate method
     @AfterPermissionGranted(RC_IMAGE_PERMS)
     public void onClickAddFile() {
         this.chooseImageFromPhone();
@@ -119,7 +114,6 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
     // --------------------
     // FILE MANAGEMENT
     // --------------------
-
     private void chooseImageFromPhone() {
         if (!EasyPermissions.hasPermissions(this, PERMS)) {
             EasyPermissions.requestPermissions(this, getString(R.string.popup_title_permission_files_access), RC_IMAGE_PERMS, PERMS);
@@ -148,8 +142,7 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
     @OnClick(R.id.chat_send_button)
     public void onClickSendMessage() {
-        Calendar c = Calendar.getInstance();
-        Date date = c.getTime();
+        Date date = Calendar.getInstance().getTime();
 
         // Check if text field is not empty and current user properly downloaded from Firestore
         if (!TextUtils.isEmpty(editTextMessage.getText()) && modelCurrentUser != null) {
@@ -171,35 +164,28 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
     // Upload a picture in Firebase and send a message
     private void uploadPhotoInFirebaseAndSendMessage(final String message, final Date date) {
-        String uuid = UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
         // UPLOAD TO GCS
         // Create a storage reference from our app
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-
         Uri file = uriImageSelected;
-        final StorageReference imageRef = storageRef.child("images/"+file.getLastPathSegment());
+        final StorageReference imageRef = storageRef.child("images/" + file.getLastPathSegment());
         UploadTask uploadTask = imageRef.putFile(file);
 
-// Register observers to listen for when the download is done or if it fails
+        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                Toast.makeText(getApplicationContext(), getString(R.string.chat_error) + exception, Toast.LENGTH_SHORT).show();
             }
         });
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
-                    throw task.getException();
+                    throw Objects.requireNonNull(task.getException());
                 }
-
                 // Continue with the task to get the download URL
                 return imageRef.getDownloadUrl();
             }
@@ -208,15 +194,12 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    pathImageSavedInFirebase =downloadUri.toString();
-                    Log.e("chat", "path "+ pathImageSavedInFirebase);
+                    assert downloadUri != null;
+                    pathImageSavedInFirebase = downloadUri.toString();
                     // SAVE MESSAGE IN FIRESTORE
                     MessageHelper.createMessageWithImageForChat
                             (pathImageSavedInFirebase, message, modelCurrentUser, date).addOnFailureListener(onFailureListener());
 
-                } else {
-                    // Handle failures
-                    // ...
                 }
             }
         });

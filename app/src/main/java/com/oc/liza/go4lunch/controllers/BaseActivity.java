@@ -33,7 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract int getLayoutView();
 
     protected void initToolbar() {
-        //Initiate toolbar
+        //Initiate toolbar to navigate back to Profile activity
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -22,9 +22,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.firebase.auth.FirebaseAuth;
 import com.oc.liza.go4lunch.BuildConfig;
-import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.fragments.ListFragment;
 import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
@@ -52,11 +50,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     @BindView(R.id.list_search)
     RecyclerView recyclerView;
 
-    //For search function
-    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
-
     //For drawer menu
-    private final FirebaseAuth currentUser = FirebaseAuth.getInstance();
     private DrawerManager manager;
     //Viewpager
     private MyFragmentPagerAdapter fragmentAdapter;
@@ -73,7 +67,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         initViewpager();
         initBottomMenu();
         configureDrawerLayout();
-        initFirebase();
     }
 
     @Override
@@ -137,20 +130,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         manager.initHeader(navView);
     }
 
-    private void initFirebase() {
-        currentUser.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (currentUser != null) {
-                    System.out.println("User logged in");
-                } else {
-                    System.out.println("User not logged in");
-                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                }
-            }
-        });
-    }
-
     @Override
     public void onBackPressed() {
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -166,7 +145,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; the search view
         getMenuInflater().inflate(R.menu.menu_search, menu);
         MenuItem item = menu.findItem(R.id.search);
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -177,12 +156,13 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Show all the restaurants
+                // Show all the restaurants when search view is closed
                 searchManager.resetList();
                 fragmentAdapter.notifyDataSetChanged();
                 return true;
             }
         });
+        //Use search manager to initialize search function
         SearchView sv = (SearchView) item.getActionView();
         if (sv != null) {
             searchManager.initSearch(sv);
@@ -193,6 +173,8 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     //Autocomplete search
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //For search function
+        int AUTOCOMPLETE_REQUEST_CODE = 1;
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
@@ -232,5 +214,4 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         super.onDestroy();
         searchManager.disposeWhenDestroy();
     }
-
 }
