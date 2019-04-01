@@ -67,7 +67,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.address.setText(result.getAddress());
 
         if (result.getOpening_hours() != null) {
-            OpeningHoursManager openingHoursManager = new OpeningHoursManager(result, opening_hours);
+            OpeningHoursManager openingHoursManager = new OpeningHoursManager(result, opening_hours, context);
             openingHoursManager.checkOpening();
         }
         String distance = calculateDistance(result);
@@ -148,7 +148,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         if (distanceDouble > 900) {
             distanceDouble = distanceDouble / 1000;
 
-            distance = String.valueOf(calculator.roundOneDecimale(distanceDouble) + "km");
+            distance = String.valueOf(calculator.roundOneDecimal(distanceDouble) + "km");
         } else {
             distance = String.valueOf(Math.round(distanceDouble)) + "m";
         }
@@ -166,7 +166,11 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
                 //Fetch info about restaurant, save it and start restaurant activity
                 manager.saveInfoToRestaurantActivity(result.getPlace_id());
-                manager.startRestaurantActivity();
+                try {
+                    manager.startRestaurantActivity();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         });

@@ -115,7 +115,11 @@ public class DrawerManager {
                     if (!user.getRestaurant().equals("not selected") && user.getRestaurant()!=null) {
                         //Fetch info about restaurant, save it and start restaurant activity
                         manager.saveInfoToRestaurantActivity(user.getPlace_id());
-                        manager.startRestaurantActivity();
+                        try {
+                            manager.startRestaurantActivity();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         String text = context.getResources().getString(R.string.drawer_lunch);
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();

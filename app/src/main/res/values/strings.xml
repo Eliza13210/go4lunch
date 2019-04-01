@@ -64,6 +64,13 @@
     <string name="hasn_not_decided">\u0020hasn\'t decided yet</string>
     <string name="drawer_lunch">You haven\'t chosen any restaurant yet!</string>
     <string name="navigation_icon">Navigation icon</string>
+    <string name="you_are_going">Your are going to:</string>
+    <string name="with_workmates">With your workmates:</string>
+    <string name="closing_soon">Closing soon</string>
+    <string name="opens_at">Opens at\u0020</string>
+    <string name="open_until">Open until\u0020</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
 
     <!-- SETTINGS-->
     <string name="delete_user">Delete user</string>
@@ -71,14 +78,8 @@
     <string name="delete_user_dialog">Delete user</string>
     <string name="successfully_deleted">Successfully deleted user</string>
     <string name="error_deleting_user">Error deleting user:</string>
-    <string name="update_username">Update username</string>
     <string name="username_updated">Your username is updated:</string>
     <string name="error_updating_username">Error updating username:</string>
     <string name="error_create">Error creating user</string>
-    <string name="you_are_going">Your are going to:</string>
-    <string name="with_workmates">With your workmates:</string>
-    <string name="closing_soon">Closing soon</string>
-    <string name="closed">Closed</string>
-    <string name="opens_at">Opens at</string>
-    <string name="open_until">Open until</string>
+
 </resources>

@@ -64,14 +64,22 @@
     <string name="hasn_not_decided">\u0020Har inte bestämt sig </string>
     <string name="drawer_lunch">Du har inte valt restaurang ännu!</string>
     <string name="navigation_icon">Navigation icon</string>
+    <string name="you_are_going">Du gâr till\u0020</string>
+    <string name="with_workmates">med dina kollegor\u0020</string>
+    <string name="closing_soon">Stänger snart</string>
+    <string name="opens_at">Öppnar\u0020</string>
+    <string name="open_until">Öppet till\u0020</string>
+    <string name="open">Öppet</string>
+    <string name="closed">Stängt</string>
 
     <!-- SETTINGS-->
     <string name="delete_user">Ta bort användare</string>
-    <string name="update_username">Uppdatera namn</string>
     <string name="delete_user_in_settings">är du säker att du vill ta bort kontot?</string>
     <string name="delete_user_dialog">Ta bort användare</string>
     <string name="successfully_deleted">Användaren är borttagen</string>
     <string name="error_deleting_user">Nâgonting gick fel</string>
     <string name="username_updated">Användarnamn uppdaterat</string>
     <string name="error_updating_username">Nâgonting gick fel! Användarnamnet är inte uppdaterat</string>
+    <string name="error_create">Fel uppstod</string>
+
 </resources>

@@ -29,7 +29,6 @@ public class RestaurantRequest {
     private StringBuilder builder;
     private List<NearbySearchObject> results;
     private List<RestaurantDetails> listOfRestaurants;
-    public boolean activityCanStart=false;
 
     public RestaurantRequest(Context context) {
         this.context = context;
@@ -146,7 +145,6 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
-                        activityCanStart=true;
                     }
                 });
     }

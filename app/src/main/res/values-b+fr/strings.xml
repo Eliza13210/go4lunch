@@ -64,13 +64,22 @@
     <string name="hasn_not_decided">\u0020Ne s\'est pas encore decidé\u0020</string>
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
     <string name="navigation_icon">Navigation icon</string>
+    <string name="you_are_going">Vous irez à\u0020</string>
+    <string name="with_workmates">avec vos collègues\u0020</string>
+    <string name="closing_soon">Ferme bientôt</string>
+    <string name="opens_at">Ouvre à\u0020</string>
+    <string name="open_until">Ouvert jusqu\'à\u0020</string>
+    <string name="open">Ouvert</string>
+    <string name="closed">Fermé</string>
+
     <!-- SETTINGS-->
     <string name="delete_user">Supprimer utilisateur</string>
-    <string name="update_username">Changer nom d\'utilisateur</string>
     <string name="delete_user_in_settings">Êtes vous sur de vouloir supprimer cet utilisateur?</string>
     <string name="delete_user_dialog">Supprimer utilisateur</string>
     <string name="successfully_deleted">L\'utilisateur a été supprimé</string>
-    <string name="error_deleting_user">Erreur:</string>
+    <string name="error_deleting_user">Erreur\u0020</string>
     <string name="username_updated">Votre nom d\'utilisateur à été mis à jour</string>
     <string name="error_updating_username">Erreur, le nom d\'utilisateur n\'a pas été mis à jour</string>
+    <string name="error_create">Erreur créant utilisateur</string>
+
 </resources>

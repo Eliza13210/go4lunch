@@ -15,6 +15,7 @@ import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RestaurantManager {
 
@@ -83,8 +84,12 @@ public class RestaurantManager {
         }
     }
 
-    public void startRestaurantActivity() {
+    public void startRestaurantActivity() throws InterruptedException {
         //Check if restaurant request is used and in that case if API request finished before starting activity
+        if(request!=null){
+            TimeUnit.SECONDS.sleep(2);
+            Log.e("Restaurant Manager", "Request, sleep 5 s");
+        }
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);
     }

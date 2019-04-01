@@ -19,27 +19,25 @@ import com.oc.liza.go4lunch.util.RestaurantManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UserViewHolder extends RecyclerView.ViewHolder {
+class UserViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.user_photo)
     ImageView photo;
     @BindView(R.id.user_text)
     TextView text;
 
-
-    public UserViewHolder(@NonNull View itemView) {
+    UserViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateUserItem(final User user, final Context context) {
-
+    void updateUserItem(final User user, final Context context) {
         // IS JOINING IF CONTEXT IS RESTAURANT ACTIVITY
-        if (context.equals(RestaurantActivity.class)) {
+        if (context instanceof RestaurantActivity) {
             this.text.setText(user.getUsername());
             this.text.append(context.getString(R.string.is_joining));
         } else {
-            if (!user.getRestaurant().equals("not selected")) {
+            if (!user.getRestaurant().equals("not selected") || user.getRestaurant() != null) {
                 this.text.setText(user.getUsername());
                 this.text.append(context.getString(R.string.is_eating_at));
                 this.text.append(user.getRestaurant());
@@ -72,19 +70,19 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void showRestaurantWhenClicked(final String place_id, final Context context) {
-
-
+    private void showRestaurantWhenClicked(final String place_id, final Context context) {
         //when user click on view, open the article in a web view inside the app
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RestaurantManager manager = new RestaurantManager(context);
                 manager.saveInfoToRestaurantActivity(place_id);
-                manager.startRestaurantActivity();
-
+                try {
+                    manager.startRestaurantActivity();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
-
 }

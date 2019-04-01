@@ -93,7 +93,11 @@ public class MapManager {
                     Log.e("Manager", "Clicked on user");
                 } else {
                     restaurantManager.saveInfoToRestaurantActivity(listOfRestaurants.get(i).getPlace_id());
-                    restaurantManager.startRestaurantActivity();
+                    try {
+                        restaurantManager.startRestaurantActivity();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
             }

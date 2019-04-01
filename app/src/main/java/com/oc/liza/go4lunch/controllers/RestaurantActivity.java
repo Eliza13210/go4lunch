@@ -135,6 +135,7 @@ public class RestaurantActivity extends AppCompatActivity {
 
     //Check if users are going to this restaurant
     private void getListOfUsers() {
+        users.clear();
         //Place id to be used in case the restaurant is not in the list
         place_id = pref.getString("Place_id", null);
         UserHelper.getUsersCollection()
@@ -240,7 +241,6 @@ public class RestaurantActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {

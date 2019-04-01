@@ -119,21 +119,21 @@ public class OpeningHoursManager {
                         opening_hours.setText(text);
 
                     } else if (details.getOpening_hours().isOpen_now()) {
-                        opening_hours.setText("Open");
+                        opening_hours.setText(R.string.open);
 
                         Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
                     } else if (!details.getOpening_hours().isOpen_now()) {
-                        opening_hours.setText("Closed");
+                        opening_hours.setText(R.string.closed);
                         Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
 
                     }
                 }
             } catch (Exception e) {
                 if (details.getOpening_hours().isOpen_now()) {
-                    opening_hours.setText("Open");
+                    opening_hours.setText(context.getString(R.string.open));
 
                 } else if (!details.getOpening_hours().isOpen_now()) {
-                    opening_hours.setText("Closed");
+                    opening_hours.setText(context.getString(R.string.closed));
                 }
             }
         }

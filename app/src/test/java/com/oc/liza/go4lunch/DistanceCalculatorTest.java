@@ -25,7 +25,7 @@ public class DistanceCalculatorTest {
         LatLng latLng2=new LatLng(43.788811, 4.832314);
         double value=calculator.greatCircleInKilometers(latLng1.latitude, latLng1.longitude, latLng2.latitude,
                 latLng2.longitude);
-        double rounded=calculator.roundOneDecimale(value);
+        double rounded=calculator.roundOneDecimal(value);
         String result=String.valueOf(rounded);
         assertEquals("1.6",result);
     }
