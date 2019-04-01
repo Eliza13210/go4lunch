@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         String uid = currentUser.getUid();
 
                         // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(new OnFailureListener() {
+                        UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 showSnackBar(linearLayout, getString(R.string.error_create));

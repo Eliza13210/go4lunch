@@ -37,7 +37,7 @@ class UserViewHolder extends RecyclerView.ViewHolder {
             this.text.setText(user.getUsername());
             this.text.append(context.getString(R.string.is_joining));
         } else {
-            if (!user.getRestaurant().equals("not selected") || user.getRestaurant() != null) {
+            if (!user.getRestaurant().equals("not selected")) {
                 this.text.setText(user.getUsername());
                 this.text.append(context.getString(R.string.is_eating_at));
                 this.text.append(user.getRestaurant());

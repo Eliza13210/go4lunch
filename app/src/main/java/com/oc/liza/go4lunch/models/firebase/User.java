@@ -17,10 +17,11 @@ public class User {
     public User() {
     }
 
-    public User(String uid, String username, String urlPicture) {
+    public User(String uid, String username, String urlPicture, String restaurant) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
+        this.restaurant=restaurant;
     }
 
     // --- GETTERS ---

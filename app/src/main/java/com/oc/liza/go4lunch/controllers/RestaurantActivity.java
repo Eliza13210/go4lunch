@@ -226,7 +226,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     isClicked = false;
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
                     //Update firestore with selected restaurant
-                    UserHelper.updateRestaurant("Not selected", null, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                    UserHelper.updateRestaurant("not selected", null, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .addOnFailureListener(onFailureListener());
 
                 } else {
