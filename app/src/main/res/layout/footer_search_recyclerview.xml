@@ -8,8 +8,9 @@
         android:id="@+id/google"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/places_powered_by_google"
         android:src="@drawable/powered_by_google"
-        android:visibility="visible"
-        android:layout_centerHorizontal="true"/>
+        android:visibility="visible" />
 
 </RelativeLayout>

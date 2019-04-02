@@ -30,12 +30,4 @@ public class OpeningHoursManagerTest {
 
         assertEquals(1, details.getOpening_hours().getPeriods().size());
     }
-
-    @Test
-    public void getActualTimeAndDay() {
-        OpeningHoursManager manager = new OpeningHoursManager();
-        manager.getActualTimeAndDay();
-        assertNotNull(manager.day);
-        assertNotNull(manager.localTime);
-    }
 }

@@ -21,7 +21,6 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NAME"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -29,16 +28,13 @@
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ADDRESS"
-                android:textSize="12dp"
-
-                />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/opening_hours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:textStyle="italic" />
         </LinearLayout>
 
@@ -50,8 +46,7 @@
             <TextView
                 android:id="@+id/distance"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DISTANCE" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/user"
@@ -64,6 +59,7 @@
                     android:id="@+id/ic_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/user"
                     android:src="@drawable/ic_user"
                     android:visibility="invisible" />
 
@@ -86,6 +82,7 @@
                     android:id="@+id/star_one"
                     android:layout_width="15dp"
                     android:layout_height="15sp"
+                    android:contentDescription="@string/star"
                     android:src="@drawable/ic_star"
                     android:visibility="invisible" />
 
@@ -93,6 +90,7 @@
                     android:id="@+id/star_two"
                     android:layout_width="15dp"
                     android:layout_height="15sp"
+                    android:contentDescription="@string/star"
                     android:src="@drawable/ic_star"
                     android:visibility="invisible" />
 
@@ -100,6 +98,7 @@
                     android:id="@+id/star_three"
                     android:layout_width="15dp"
                     android:layout_height="15sp"
+                    android:contentDescription="@string/star"
                     android:src="@drawable/ic_star"
                     android:visibility="invisible" />
 
@@ -112,8 +111,8 @@
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_phone" />
+            android:contentDescription="@string/photo_restaurant"
+            android:scaleType="centerCrop" />
 
     </LinearLayout>
 

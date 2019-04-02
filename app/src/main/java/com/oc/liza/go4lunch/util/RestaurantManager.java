@@ -42,15 +42,14 @@ public class RestaurantManager {
         return listOfRestaurants;
     }
 
-    public String getRestaurantAddress(String restaurant) {
+    public String getRestaurantAddress(String place_id) {
         String address = "";
         for (int i = 0; i < listOfRestaurants.size(); i++) {
-            if (listOfRestaurants.get(i).getName().equals(restaurant)) {
+            if (listOfRestaurants.get(i).getPlace_id().equals(place_id)) {
                 //Fetch info about restaurant
                 address = listOfRestaurants.get(i).getAddress();
             }
         }
-        Log.e("Manager", address);
         return address;
     }
 
@@ -88,7 +87,7 @@ public class RestaurantManager {
         //Check if restaurant request is used and in that case if API request finished before starting activity
         if(request!=null){
             TimeUnit.SECONDS.sleep(2);
-            Log.e("Restaurant Manager", "Request, sleep 5 s");
+            Log.e("Restaurant Manager", "Request, sleep 2 s");
         }
         Intent restaurantActivity = new Intent(context, RestaurantActivity.class);
         context.startActivity(restaurantActivity);

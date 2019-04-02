@@ -12,13 +12,13 @@ import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
+public class RestaurantViewAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     // FOR DATA
     private List<RestaurantDetails> listOfRestaurants;
     private Context context;
 
-    public RecyclerViewAdapter(List<RestaurantDetails> listOfRestaurants) {
+    public RestaurantViewAdapter(List<RestaurantDetails> listOfRestaurants) {
         this.listOfRestaurants = listOfRestaurants;
     }
 

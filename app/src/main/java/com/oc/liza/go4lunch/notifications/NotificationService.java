@@ -68,8 +68,8 @@ public class NotificationService extends FirebaseMessagingService {
                     assert user != null;
                     if (user.getRestaurant() != null && !user.getRestaurant().equals("not selected")) {
                         restaurant = user.getRestaurant();
-                        address = manager.getRestaurantAddress(restaurant);
                         place_id = user.getPlace_id();
+                        address = manager.getRestaurantAddress(place_id);
                     } else {
                         restaurant = getString(R.string.drawer_lunch);
                         address = "";

@@ -9,7 +9,6 @@
     app:tabMode="scrollable"
     tools:context=".controllers.ProfileActivity">
 
-
     <LinearLayout
         android:id="@+id/activity_profile"
         android:layout_width="match_parent"
@@ -26,6 +25,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <!--RecyclerView containing search result-->
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -33,39 +33,38 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_search"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/toolbar"
-                />
+                android:layout_height="wrap_content" />
         </RelativeLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                />
+        <!--ViewPager containing Fragment-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
+        <!--Bottom Navigation-->
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
-            app:itemBackground="@color/white"
             android:background="?android:attr/windowBackground"
+            app:itemBackground="@color/white"
             app:menu="@menu/navigation" />
 
     </LinearLayout>
-    <!-- NavigationView -->
+    <!-- Navigation Drawer View -->
     <android.support.design.widget.NavigationView
         android:id="@+id/activity_profile_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/orange"
-        app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white"
         android:fitsSystemWindows="true"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
         app:menu="@menu/activity_main_menu_drawer">
 
         <LinearLayout
@@ -79,7 +78,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/coffe_cup" />
+                android:src="@drawable/coffe_cup"
+                android:contentDescription="@string/logo" />
         </LinearLayout>
 
     </android.support.design.widget.NavigationView>

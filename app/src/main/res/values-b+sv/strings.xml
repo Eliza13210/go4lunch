@@ -81,5 +81,11 @@
     <string name="username_updated">Användarnamn uppdaterat</string>
     <string name="error_updating_username">Nâgonting gick fel! Användarnamnet är inte uppdaterat</string>
     <string name="error_create">Fel uppstod</string>
+    <string name="logo">logo</string>
+    <string name="photo_restaurant">photo restaurant</string>
+    <string name="star">star</string>
+    <string name="delete">Ta bort</string>
+    <string name="update">Uppdatera</string>
+    <string name="user">Användare</string>
 
 </resources>

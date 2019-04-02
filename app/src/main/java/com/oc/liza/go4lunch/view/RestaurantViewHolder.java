@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -20,9 +19,10 @@ import com.oc.liza.go4lunch.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
-import com.oc.liza.go4lunch.util.LocationManager;
 import com.oc.liza.go4lunch.util.OpeningHoursManager;
 import com.oc.liza.go4lunch.util.RestaurantManager;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +56,12 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     private int number_users;
 
 
-    public RestaurantViewHolder(@NonNull View itemView) {
+    RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithRestaurantItem(RestaurantDetails result, Context context) {
+    void updateWithRestaurantItem(RestaurantDetails result, Context context) {
         this.context = context;
         this.name.setText(result.getName());
         this.address.setText(result.getAddress());
@@ -70,9 +70,10 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
             OpeningHoursManager openingHoursManager = new OpeningHoursManager(result, opening_hours, context);
             openingHoursManager.checkOpening();
         }
-        String distance = calculateDistance(result);
+        //Calculate distance in meter
+        DistanceCalculator calculator = new DistanceCalculator();
+        String distance = calculator.calculateDistance(result, context);
         this.distance.setText(distance);
-
 
         //set stars depending on rating
         getRestaurantRating(result.getRating());
@@ -85,7 +86,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         showRestaurantWhenClicked(result, context);
     }
 
-    public void checkIfUser(final String place_id) {
+    private void checkIfUser(final String place_id) {
         number_users = 0;
         UserHelper.getUsersCollection()
                 .whereEqualTo("place_id", place_id)
@@ -94,19 +95,17 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.e("manager", document.getId() + " => " + document.getData());
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 number_users++;
                             }
                             if (number_users > 0) {
                                 ic_user.setVisibility(View.VISIBLE);
                                 users.setVisibility(View.VISIBLE);
-                                users.setText("(" + number_users + ")");
-                                Log.e("query", place_id + number_users);
+                                String numberOfUsers = "(" + number_users + ")";
+                                users.setText(numberOfUsers);
                             } else {
                                 ic_user.setVisibility(View.INVISIBLE);
                                 users.setVisibility(View.INVISIBLE);
-
                             }
                         } else {
                             Log.d("manager", "Error getting documents: ", task.getException());
@@ -115,7 +114,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 });
     }
 
-    public void getRestaurantRating(double note) {
+    private void getRestaurantRating(double note) {
 
         if (note >= 4.5) {
             star_one.setVisibility(View.VISIBLE);
@@ -131,32 +130,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public String calculateDistance(RestaurantDetails result) {
-        Double lat = result.getGeometry().getLocation().getLat();
-        Double lng = result.getGeometry().getLocation().getLng();
-        LatLng latLng1 = new LatLng(lat, lng);
-
-        //Get current location
-        LocationManager locationManager = new LocationManager(context);
-        LatLng latLng2 = locationManager.getCurrentLatLng();
-
-        //Calculate distance in meter
-        DistanceCalculator calculator = new DistanceCalculator();
-        double distanceDouble = calculator.greatCircleInMeters(latLng1, latLng2);
-        String distance = "";
-        //If distance is more than 900 m, convert to km
-        if (distanceDouble > 900) {
-            distanceDouble = distanceDouble / 1000;
-
-            distance = String.valueOf(calculator.roundOneDecimal(distanceDouble) + "km");
-        } else {
-            distance = String.valueOf(Math.round(distanceDouble)) + "m";
-        }
-        return distance;
-
-    }
-
-    public void showRestaurantWhenClicked(final RestaurantDetails result, final Context context) {
+    private void showRestaurantWhenClicked(final RestaurantDetails result, final Context context) {
         final RestaurantManager manager = new RestaurantManager(context);
 
         //when user click on view, start restaurant activity
@@ -176,7 +150,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void getPhoto(RestaurantDetails result) {
+    private void getPhoto(RestaurantDetails result) {
         try {
             String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
                     + result.getPhotos().get(0).getPhotoRef()
@@ -187,7 +161,6 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     .into(photo);
         } catch (Exception e) {
             String defaultImg = "https://s3.amazonaws.com/images.seroundtable.com/google-restraurant-menus-1499686091.jpg";
-
             Glide.with(context)
                     .load(defaultImg)
                     .into(photo);

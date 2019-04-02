@@ -39,6 +39,10 @@
     <string name="notification_title">It\'s time for lunch!</string>
     <string name="default_notification_channel_id">default</string>
 
+    <string name="logo">logo</string>
+    <string name="photo_restaurant">photo restaurant</string>
+    <string name="star">star</string>
+
     <!--DRAWER-->
     <string name="your_lunch">YOUR LUNCH</string>
     <string name="chat">CHAT</string>
@@ -81,5 +85,8 @@
     <string name="username_updated">Your username is updated:</string>
     <string name="error_updating_username">Error updating username:</string>
     <string name="error_create">Error creating user</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="user">user</string>
 
 </resources>

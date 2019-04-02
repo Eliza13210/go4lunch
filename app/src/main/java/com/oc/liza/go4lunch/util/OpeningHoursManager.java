@@ -10,7 +10,6 @@ import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +21,6 @@ public class OpeningHoursManager {
     int localTime;
     int day;
     private RestaurantDetails details;
-    private List<OpeningHours> openingTime = new ArrayList<>();
-    private List<OpeningHours> closeTime = new ArrayList<>();
 
     private TextView opening_hours;
 
@@ -111,27 +108,29 @@ public class OpeningHoursManager {
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
                         String text = context.getString(R.string.opens_at) + str + "pm";
                         opening_hours.setText(text);
-                    } else if (localTime < closingLunchInt) {
+                    }
+                    //Restaurant is open, show closing time
+                    else if (localTime < closingLunchInt) {
                         String str = Integer.toString(closingLunchInt);
 
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
                         String text = context.getString(R.string.open_until) + str + "pm";
                         opening_hours.setText(text);
-
-                    } else if (details.getOpening_hours().isOpen_now()) {
+                    }
+                    // Restaurant is open but there are no details about opening hours
+                    else if (details.getOpening_hours().isOpen_now()) {
                         opening_hours.setText(R.string.open);
-
                         Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
-                    } else if (!details.getOpening_hours().isOpen_now()) {
+                    }
+                    // Restaurant is closed but there are no details about opening hours
+                    else if (!details.getOpening_hours().isOpen_now()) {
                         opening_hours.setText(R.string.closed);
                         Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
-
                     }
                 }
             } catch (Exception e) {
                 if (details.getOpening_hours().isOpen_now()) {
                     opening_hours.setText(context.getString(R.string.open));
-
                 } else if (!details.getOpening_hours().isOpen_now()) {
                     opening_hours.setText(context.getString(R.string.closed));
                 }

@@ -11,13 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:padding="2dp"
-        android:src="@drawable/ic_phone"
-        />
+        android:contentDescription="@string/user" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/user_photo"
         android:layout_weight="5"
         android:orientation="vertical">
 
@@ -27,8 +25,7 @@
             android:layout_height="0dp"
             android:layout_weight="4"
             android:layout_marginStart="10dp"
-            android:gravity="center_vertical"
-            android:text="I'm eating french (Le bistro)" />
+            android:gravity="center_vertical" />
 
         <View
             android:id="@+id/line"

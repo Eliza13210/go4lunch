@@ -28,6 +28,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="4"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/photo_restaurant"
                 android:scaleType="centerCrop" />
 
             <RelativeLayout
@@ -40,19 +41,20 @@
                     android:id="@+id/rest_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="10dp"
                     android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:layout_toRightOf="@+id/rest_name"
+                    android:layout_toEndOf="@+id/rest_name"
                     android:orientation="horizontal">
 
 
@@ -60,6 +62,7 @@
                         android:id="@+id/star_one"
                         android:layout_width="15dp"
                         android:layout_height="15sp"
+                        android:contentDescription="@string/star"
                         android:src="@drawable/ic_star"
                         android:visibility="invisible" />
 
@@ -67,6 +70,7 @@
                         android:id="@+id/star_two"
                         android:layout_width="15dp"
                         android:layout_height="15sp"
+                        android:contentDescription="@string/star"
                         android:src="@drawable/ic_star"
                         android:visibility="invisible" />
 
@@ -74,6 +78,7 @@
                         android:id="@+id/star_three"
                         android:layout_width="15dp"
                         android:layout_height="15sp"
+                        android:contentDescription="@string/star"
                         android:src="@drawable/ic_star"
                         android:visibility="invisible" />
                 </LinearLayout>
@@ -84,9 +89,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rest_name"
                     android:background="@color/orange"
-                    android:paddingStart="10dp"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:textColor="@color/white" />
             </RelativeLayout>
 

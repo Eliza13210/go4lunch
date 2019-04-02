@@ -38,6 +38,10 @@
     <string name="channel_description">get info restaurant</string>
     <string name="notification_title">C\'est l\'heure du déjeuner!</string>
     <string name="default_notification_channel_id">default</string>
+    <string name="star">etoile</string>
+    <string name="delete">Supprimer</string>
+    <string name="update">Mettre à jour</string>
+    <string name="user">utilisateur</string>
 
     <!--DRAWER-->
     <string name="title_activity_chat">Chat</string>
@@ -81,5 +85,6 @@
     <string name="username_updated">Votre nom d\'utilisateur à été mis à jour</string>
     <string name="error_updating_username">Erreur, le nom d\'utilisateur n\'a pas été mis à jour</string>
     <string name="error_create">Erreur créant utilisateur</string>
-
+    <string name="logo">logo</string>
+    <string name="photo_restaurant">photo restaurant</string>
 </resources>

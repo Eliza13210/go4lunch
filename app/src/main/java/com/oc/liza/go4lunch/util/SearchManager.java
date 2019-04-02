@@ -34,19 +34,18 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 public class SearchManager {
-
+    //API
     private List<RestaurantDetails> results = new ArrayList<>();
     private Disposable disposable;
 
-    private RestaurantManager restaurantManager;
-
-    private Context context;
+    //For Autocomplete
     private RectangularBounds bounds;
-
     private SearchView searchView;
     private PlacesClient placesClient;
     private AutocompleteSessionToken token;
 
+    private Context context;
+    private RestaurantManager restaurantManager;
     private MyFragmentPagerAdapter fragmentAdapter;
     private PlaceAutocompleteAdapter adapter;
     private RecyclerView recyclerView;
@@ -100,7 +99,6 @@ public class SearchManager {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 search();
                 results.clear();
                 return true;
@@ -140,21 +138,20 @@ public class SearchManager {
                     Log.e("predictions", "is empty");
                 } else {
                     for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                        //If result
+                        //If Autocomplete gave result...
                         Log.i("cust", prediction.getPrimaryText(null).toString());
-
                         String search = prediction.getPlaceId();
-                        Log.e("string", search);
                         disposable = RestaurantStream.fetchDetailsStream(search)
                                 .subscribeWith(new DisposableObserver<NearbySearchObject>() {
                                     @Override
                                     public void onNext(NearbySearchObject nearbySearchObject) {
+                                        //...Check if it is a restaurant
                                         for (int j = 0; j < nearbySearchObject.getDetails().getTypes().size(); j++) {
                                             if (nearbySearchObject.getDetails().getTypes().get(j).equals("restaurant")) {
                                                 results.add(nearbySearchObject.getDetails());
+                                                adapter.notifyDataSetChanged();
                                             }
                                         }
-                                        Log.e("result", " result " + nearbySearchObject.toString() + " " + results.size());
                                     }
 
                                     @Override
@@ -164,10 +161,8 @@ public class SearchManager {
 
                                     @Override
                                     public void onComplete() {
-                                        adapter.notifyDataSetChanged();
                                     }
                                 });
-
                     }
                 }
             }
@@ -181,7 +176,7 @@ public class SearchManager {
                 }
             }
         });
-
+        //Show all the restaurants again when closing searchview
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 import com.oc.liza.go4lunch.util.RestaurantManager;
-import com.oc.liza.go4lunch.view.RecyclerViewAdapter;
+import com.oc.liza.go4lunch.view.RestaurantViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ListFragment extends Fragment {
     //  Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView() {
         // Create adapter passing the list of news
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this.listRestaurants);
+        RestaurantViewAdapter adapter = new RestaurantViewAdapter(this.listRestaurants);
         // Attach the adapter to the recycler view to populate items
         this.recyclerView.setAdapter(adapter);
         // Set layout manager to position the items

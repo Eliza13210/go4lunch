@@ -26,7 +26,7 @@ public class RestaurantStream {
                 restaurantService.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(60, TimeUnit.SECONDS);
+                .timeout(10, TimeUnit.SECONDS);
     }
 
 }
