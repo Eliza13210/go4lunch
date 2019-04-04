@@ -88,5 +88,7 @@
     <string name="delete">Delete</string>
     <string name="update">Update</string>
     <string name="user">user</string>
+    <string name="no_phone_number">No phone number</string>
+    <string name="no_website">No website</string>
 
 </resources>

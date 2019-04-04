@@ -1,9 +1,13 @@
 package com.oc.liza.go4lunch.util;
 
+import android.content.Context;
+import android.widget.TextView;
+
 import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +17,11 @@ import static org.junit.Assert.assertNotNull;
 
 public class OpeningHoursManagerTest {
 
+    private RestaurantDetails details;
+
     @Test
     public void getOpeningHoursToday() {
-        RestaurantDetails details=new RestaurantDetails();
+        details=new RestaurantDetails();
         RestaurantDetails opening_hours=new RestaurantDetails();
 
         List<OpeningHours> listOpenHours=new ArrayList<>();

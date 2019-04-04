@@ -87,5 +87,6 @@
     <string name="delete">Ta bort</string>
     <string name="update">Uppdatera</string>
     <string name="user">Användare</string>
+    <string name="no_phone_number">No phone number</string>
 
 </resources>

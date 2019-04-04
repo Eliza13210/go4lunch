@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.oc.liza.go4lunch.util.DistanceCalculator;
 
 import org.junit.Test;
 

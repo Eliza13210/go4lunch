@@ -87,4 +87,5 @@
     <string name="error_create">Erreur créant utilisateur</string>
     <string name="logo">logo</string>
     <string name="photo_restaurant">photo restaurant</string>
+    <string name="no_phone_number">No phone number</string>
 </resources>

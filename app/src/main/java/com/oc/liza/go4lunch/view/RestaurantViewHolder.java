@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.BuildConfig;
-import com.oc.liza.go4lunch.DistanceCalculator;
+import com.oc.liza.go4lunch.util.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.models.RestaurantDetails;

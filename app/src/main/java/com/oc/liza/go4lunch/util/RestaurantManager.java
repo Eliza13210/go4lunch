@@ -62,7 +62,7 @@ public class RestaurantManager {
                 //Fetch info about restaurant
                 String place_id = listOfRestaurants.get(i).getPlace_id();
                 String name = listOfRestaurants.get(i).getName();
-                Log.e("saving ", "save name " + name);
+                String rating = String.valueOf(listOfRestaurants.get(i).getRating());
                 String phone = listOfRestaurants.get(i).getPhone();
                 String address = listOfRestaurants.get(i).getAddress();
                 String website = listOfRestaurants.get(i).getWebsite();
@@ -73,7 +73,7 @@ public class RestaurantManager {
 
                 //Save detailed info so it can be accessed from activity
                 SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
-                pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
+                pref.edit().putString("Place_id", place_id).putString("Name", name).putString("Rating", rating).putString("Phone", phone).putString("Website", website).putString("Img", imgUrl)
                         .putString("Address", address).apply();
             }
         }
@@ -85,7 +85,7 @@ public class RestaurantManager {
 
     public void startRestaurantActivity() throws InterruptedException {
         //Check if restaurant request is used and in that case if API request finished before starting activity
-        if(request!=null){
+        if (request != null) {
             TimeUnit.SECONDS.sleep(2);
             Log.e("Restaurant Manager", "Request, sleep 2 s");
         }

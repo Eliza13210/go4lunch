@@ -77,6 +77,7 @@ public class RestaurantActivity extends AppCompatActivity {
         initMenu();
         initButton();
         getListOfUsers();
+        getRestaurantRating();
     }
 
     private void initRecyclerView() {
@@ -157,6 +158,21 @@ public class RestaurantActivity extends AppCompatActivity {
                     }
                 });
     }
+    private void getRestaurantRating(double note) {
+
+        if (note >= 4.5) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+            star_three.setVisibility(View.VISIBLE);
+
+        } else if (note > 2) {
+            star_one.setVisibility(View.VISIBLE);
+            star_two.setVisibility(View.VISIBLE);
+
+        } else if (note < 2) {
+            star_one.setVisibility(View.VISIBLE);
+        }
+    }
 
     // Initialize menu
     private void initMenu() {
@@ -171,8 +187,12 @@ public class RestaurantActivity extends AppCompatActivity {
                     case R.id.navigation_phone:
                         //Call restaurant
                         String phone = pref.getString("Phone", null);
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                        startActivity(intent);
+                        if (phone!= null) {
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.no_phone_number, Toast.LENGTH_SHORT).show();
+                        }
                         return true;
 
                     case R.id.navigation_like:
@@ -182,9 +202,14 @@ public class RestaurantActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.navigation_website:
-                        //Start web view activity
-                        Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
-                        startActivity(startWebview);
+                        String url = pref.getString("Website", null);
+                        if(url!=null) {
+                            //Start web view activity
+                            Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
+                            startActivity(startWebview);
+                        } else{
+                            Toast.makeText(getApplicationContext(), R.string.no_website, Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                 }
                 return false;

@@ -36,7 +36,6 @@ public class WebviewActivity extends AppCompatActivity {
         //Get the url saved in shared preferences
         SharedPreferences sharedPref = this.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String url = sharedPref.getString("Website", null);
-        Log.e("web", url);
         webView.loadUrl(url);
     }
 }

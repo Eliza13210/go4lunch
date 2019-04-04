@@ -30,16 +30,13 @@ public class OpeningHoursManager {
         this.context = context;
     }
 
-    OpeningHoursManager() {
-    }
-
     public void checkOpening() {
         getActualTimeAndDay();
         getOpeningHoursToday();
     }
 
     //First check which day it is
-    void getActualTimeAndDay() {
+    private void getActualTimeAndDay() {
         Calendar cal = Calendar.getInstance();
         Date currentLocalTime = cal.getTime();
         DateFormat date = new SimpleDateFormat("HHmm", Locale.FRANCE);

@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.util;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +50,10 @@ public class SearchManager {
     private MyFragmentPagerAdapter fragmentAdapter;
     private PlaceAutocompleteAdapter adapter;
     private RecyclerView recyclerView;
+
+    //To delay
+    CountDownTimer timer = null;
+
 
     public SearchManager(Context context, MyFragmentPagerAdapter fragmentAdapter, RecyclerView recyclerView) {
         this.context = context;
@@ -99,8 +104,19 @@ public class SearchManager {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                search();
-                results.clear();
+                if (timer != null) {
+                    timer.cancel();
+                }
+                timer = new CountDownTimer(1500, 1000) {
+                    public void onTick(long millisUntilFinished) {
+                    }
+                    public void onFinish() {
+                        //do what you wish
+                        search();
+                        results.clear();
+                    }
+                }.start();
+
                 return true;
             }
         });
