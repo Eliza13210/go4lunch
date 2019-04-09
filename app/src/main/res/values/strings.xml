@@ -82,7 +82,7 @@
     <string name="delete_user_dialog">Delete user</string>
     <string name="successfully_deleted">Successfully deleted user</string>
     <string name="error_deleting_user">Error deleting user:</string>
-    <string name="username_updated">Your username is updated:</string>
+    <string name="username_updated">Update username</string>
     <string name="error_updating_username">Error updating username:</string>
     <string name="error_create">Error creating user</string>
     <string name="delete">Delete</string>

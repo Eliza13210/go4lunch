@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -26,9 +26,9 @@ import butterknife.BindView;
 
 public class SettingsActivity extends BaseActivity {
     @BindView(R.id.button_delete)
-    ImageButton delete;
+    Button delete;
     @BindView(R.id.update_button)
-    ImageButton update_button;
+    Button update_button;
     @BindView(R.id.update_text)
     EditText update_text;
 

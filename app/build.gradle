@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
+    testOptions.unitTests.includeAndroidResources = true
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.oc.liza.go4lunch"
@@ -23,6 +26,10 @@ android {
             buildConfigField 'String', "API_KEY", ApiKey
             resValue 'string', "API_KEY", ApiKey
         }
+    }
+    defaultConfig {
+        testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
     }
 }
 
@@ -89,7 +96,11 @@ dependencies {
     //Mockito
     testImplementation 'org.mockito:mockito-core:2.23.4'
 
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.2'
+
     //Espresso
+    implementation 'com.android.support:multidex:1.0.3'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'

@@ -52,7 +52,7 @@ public class SearchManager {
     private RecyclerView recyclerView;
 
     //To delay
-    CountDownTimer timer = null;
+    private CountDownTimer timer = null;
 
 
     public SearchManager(Context context, MyFragmentPagerAdapter fragmentAdapter, RecyclerView recyclerView) {

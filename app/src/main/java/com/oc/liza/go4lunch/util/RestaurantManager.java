@@ -100,7 +100,6 @@ public class RestaurantManager {
         String json = gson.toJson(listSearch);
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         pref.edit().putString("ListOfRestaurants", json).apply();
-        Log.e("Restaurant Search", "Number of restaurants " + listSearch.size());
     }
 
     void resetFullListOfRestaurants() {

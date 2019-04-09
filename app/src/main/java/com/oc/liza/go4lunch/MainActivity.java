@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.util.LocationManager;
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                 ? currentUser.getPhotoUrl().toString() : null;
                         String username = currentUser.getDisplayName();
                         String uid = currentUser.getUid();
+                        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
                         // Access the Cloud Firestore instance from the Activity
                         UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(new OnFailureListener() {

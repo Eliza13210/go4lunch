@@ -60,7 +60,7 @@
 
     <!-- RESTAURANT -->
     <string name="is_eating_at">\u0020äter lunch pâ\u0020</string>
-    <string name="is_joining">\u0020hänger med!</string>
+    <string name="is_joining">\u0020gâr hit!</string>
     <string name="hasn_not_decided">\u0020Har inte bestämt sig </string>
     <string name="drawer_lunch">Du har inte valt restaurang ännu!</string>
     <string name="navigation_icon">Navigation icon</string>

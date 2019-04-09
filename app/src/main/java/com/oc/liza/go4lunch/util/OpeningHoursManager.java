@@ -18,8 +18,9 @@ import java.util.Locale;
 public class OpeningHoursManager {
 
     private Context context;
-    int localTime;
-    int day;
+    String text="";
+     int localTime;
+     int day;
     private RestaurantDetails details;
 
     private TextView opening_hours;
@@ -36,7 +37,7 @@ public class OpeningHoursManager {
     }
 
     //First check which day it is
-    private void getActualTimeAndDay() {
+    void getActualTimeAndDay() {
         Calendar cal = Calendar.getInstance();
         Date currentLocalTime = cal.getTime();
         DateFormat date = new SimpleDateFormat("HHmm", Locale.FRANCE);
@@ -46,7 +47,7 @@ public class OpeningHoursManager {
         day = cal.get(Calendar.DAY_OF_WEEK);
     }
 
-    private void getOpeningHoursToday() {
+     void getOpeningHoursToday() {
         //Get list of opening hours for the restaurant
         List<OpeningHours> openHours = details.getOpening_hours().getPeriods();
         int dayOfWeek = 0;
@@ -92,15 +93,18 @@ public class OpeningHoursManager {
 
                     //If restaurant is open
                     //If restaurant is closing in 30 minutes
-                    if ((localTime - closingLunchInt) < 30 && (localTime - closingLunchInt) > 0) {
+                    if ((closingLunchInt-localTime) < 30 && (localTime - closingLunchInt) < 0) {
+                        text="Closing soon";
                         opening_hours.setText(R.string.closing_soon);
                     }
                     //If restaurant is closed
                     else if (localTime > closingLunchInt) {
+                        text="Closed";
                         opening_hours.setText(R.string.closed);
                     }
                     //If restaurant is not yet open for lunch
                     else if (localTime < openMorningInt) {
+                        text="Not yet open";
                         String str = Integer.toString(openMorningInt);
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
                         String text = context.getString(R.string.opens_at) + str + "pm";
@@ -108,27 +112,22 @@ public class OpeningHoursManager {
                     }
                     //Restaurant is open, show closing time
                     else if (localTime < closingLunchInt) {
-                        String str = Integer.toString(closingLunchInt);
 
+                        String str = Integer.toString(closingLunchInt);
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
-                        String text = context.getString(R.string.open_until) + str + "pm";
+                        text = context.getString(R.string.open_until) + str + "pm";
                         opening_hours.setText(text);
-                    }
-                    // Restaurant is open but there are no details about opening hours
-                    else if (details.getOpening_hours().isOpen_now()) {
-                        opening_hours.setText(R.string.open);
-                        Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
-                    }
-                    // Restaurant is closed but there are no details about opening hours
-                    else if (!details.getOpening_hours().isOpen_now()) {
-                        opening_hours.setText(R.string.closed);
-                        Log.e("open", " nothing matched " + localTime + " " + closingLunchInt + openMorningInt);
                     }
                 }
             } catch (Exception e) {
+                // Restaurant is open but there are no details about opening hours
                 if (details.getOpening_hours().isOpen_now()) {
+                    text="Is open now";
                     opening_hours.setText(context.getString(R.string.open));
-                } else if (!details.getOpening_hours().isOpen_now()) {
+                }
+                // Restaurant is closed but there are no details about opening hours
+                else if (!details.getOpening_hours().isOpen_now()) {
+                    text="Is not open now";
                     opening_hours.setText(context.getString(R.string.closed));
                 }
             }

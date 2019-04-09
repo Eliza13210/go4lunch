@@ -31,11 +31,12 @@ public class LocationManager {
 
     public LocationManager(Context context) {
         this.context = context;
-        // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
     public void checkLocationPermission() {
+
+        // Construct a FusedLocationProviderClient.
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         /*
          * Request location permission, so that we can get the location of the
          * device. The result of the permission request is handled by a callback,

@@ -42,18 +42,18 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        if (remoteMessage.getNotification() != null) {
-            String message = remoteMessage.getNotification().getBody();
-            Log.e("tag", message);
+        if (remoteMessage.getData() != null) {
+            String message = remoteMessage.getData().get("lunch");
+            Log.e("tag", remoteMessage.toString());
             //Check if message is about lunch notification
             assert message != null;
-            if (message.equals("Lunch")) {
+            if (message.equals("lunch")) {
                 this.getInfoAboutLunch();
             }
         }
     }
 
-    private void getInfoAboutLunch() {
+    public void getInfoAboutLunch() {
         manager = new RestaurantManager(getApplicationContext());
         String current = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         //Get info about current users restaurant

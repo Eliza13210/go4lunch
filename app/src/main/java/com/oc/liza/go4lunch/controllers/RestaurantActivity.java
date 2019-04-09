@@ -158,21 +158,6 @@ public class RestaurantActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void getRestaurantRating(double note) {
-
-        if (note >= 4.5) {
-            star_one.setVisibility(View.VISIBLE);
-            star_two.setVisibility(View.VISIBLE);
-            star_three.setVisibility(View.VISIBLE);
-
-        } else if (note > 2) {
-            star_one.setVisibility(View.VISIBLE);
-            star_two.setVisibility(View.VISIBLE);
-
-        } else if (note < 2) {
-            star_one.setVisibility(View.VISIBLE);
-        }
-    }
 
     // Initialize menu
     private void initMenu() {
@@ -187,7 +172,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     case R.id.navigation_phone:
                         //Call restaurant
                         String phone = pref.getString("Phone", null);
-                        if (phone!= null) {
+                        if (phone != null) {
                             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                             startActivity(intent);
                         } else {
@@ -203,11 +188,11 @@ public class RestaurantActivity extends AppCompatActivity {
 
                     case R.id.navigation_website:
                         String url = pref.getString("Website", null);
-                        if(url!=null) {
+                        if (url != null) {
                             //Start web view activity
                             Intent startWebview = new Intent(RestaurantActivity.this, WebviewActivity.class);
                             startActivity(startWebview);
-                        } else{
+                        } else {
                             Toast.makeText(getApplicationContext(), R.string.no_website, Toast.LENGTH_SHORT).show();
                         }
                         return true;
@@ -252,7 +237,12 @@ public class RestaurantActivity extends AppCompatActivity {
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant("not selected", null, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                            .addOnFailureListener(onFailureListener());
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    getListOfUsers();
+                                }
+                            });
 
                 } else {
                     fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
@@ -260,9 +250,13 @@ public class RestaurantActivity extends AppCompatActivity {
 
                     //Update firestore with selected restaurant
                     UserHelper.updateRestaurant(restName, place_id, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                            .addOnFailureListener(onFailureListener());
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    getListOfUsers();
+                                }
+                            });
                 }
-                getListOfUsers();
             }
         });
     }
@@ -270,5 +264,6 @@ public class RestaurantActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        startActivity(new Intent(RestaurantActivity.this, ProfileActivity.class));
     }
 }
