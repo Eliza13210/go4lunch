@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,9 +32,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.oc.liza.go4lunch.R;
-import com.oc.liza.go4lunch.chat.MessageHelper;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.chat.ChatAdapter;
+import com.oc.liza.go4lunch.chat.MessageHelper;
 import com.oc.liza.go4lunch.models.firebase.Message;
 import com.oc.liza.go4lunch.models.firebase.User;
 
@@ -74,7 +73,6 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
         super.onCreate(savedInstanceState);
         this.getCurrentUserFromFirestore();
         this.configureRecyclerView();
@@ -201,11 +199,9 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
                     // SAVE MESSAGE IN FIRESTORE
                     MessageHelper.createMessageWithImageForChat
                             (pathImageSavedInFirebase, message, modelCurrentUser, date).addOnFailureListener(onFailureListener());
-
                 }
             }
         });
-
     }
 
 

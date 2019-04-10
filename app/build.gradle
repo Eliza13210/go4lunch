@@ -29,7 +29,6 @@ android {
     }
     defaultConfig {
         testInstrumentationRunner = 'android.support.test.runner.AndroidJUnitRunner'
-        multiDexEnabled true
     }
 }
 
@@ -99,14 +98,6 @@ dependencies {
     // Robolectric
     testImplementation 'org.robolectric:robolectric:4.2'
 
-    //Espresso
-    implementation 'com.android.support:multidex:1.0.3'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     apply plugin: 'com.google.gms.google-services'
 }

@@ -27,7 +27,6 @@ import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.controllers.fragments.ListFragment;
 import com.oc.liza.go4lunch.controllers.fragments.MapFragment;
 import com.oc.liza.go4lunch.controllers.fragments.UsersFragment;
-import com.oc.liza.go4lunch.notifications.NotificationService;
 import com.oc.liza.go4lunch.util.DrawerManager;
 import com.oc.liza.go4lunch.util.SearchManager;
 import com.oc.liza.go4lunch.view.MyFragmentPagerAdapter;
@@ -52,7 +51,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     RecyclerView recyclerView;
 
     //For drawer menu
-    private DrawerManager manager;
+     DrawerManager manager;
     //Viewpager
     private MyFragmentPagerAdapter fragmentAdapter;
 
@@ -68,13 +67,6 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         initViewpager();
         initBottomMenu();
         configureDrawerLayout();
-        if (getIntent().getExtras() != null) {
-            String pack = (String) getIntent().getExtras().get("lunch");
-            if(pack!=null){
-                NotificationService notify=new NotificationService();
-                notify.getInfoAboutLunch();
-            }
-        }
     }
 
     @Override

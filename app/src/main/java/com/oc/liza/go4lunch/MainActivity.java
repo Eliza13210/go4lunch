@@ -26,9 +26,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.api.UserHelper;
+import com.oc.liza.go4lunch.notifications.FirebaseNotificationManager;
 import com.oc.liza.go4lunch.util.LocationManager;
 
 import java.util.Arrays;
@@ -49,26 +49,34 @@ public class MainActivity extends AppCompatActivity {
 
     //For Firebase login
     private static final int RC_SIGN_IN = 100;
-    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
+    //For Firebase message
+    private String pack;
 
     //For user location
     private LocationManager locationManager;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if User is signed in (non-null)
-        currentUser = mAuth.getCurrentUser();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        createNotificationChannel();
-        startSignInActivity();
+        //Check if MainActivity is launched from Firebase message, received in the device system tray
+        if (getIntent().getExtras() != null) {
+            pack = (String) getIntent().getExtras().get("lunch");
+        }
+        // Check if User is signed in (non-null)
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            //Start login
+            createNotificationChannel();
+            startSignInActivity();
+        } else {
+            //Start profile activity if already logged in
+            getUserInfo();
+        }
     }
 
     private void startSignInActivity() {
@@ -87,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                         .build(),
                 RC_SIGN_IN);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
     }
 
     // Show Snack Bar with a message
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                currentUser = mAuth.getCurrentUser();
+                currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 getUserInfo();
             } else { // ERRORS
                 if (response == null) {
@@ -134,6 +140,13 @@ public class MainActivity extends AppCompatActivity {
         //Get nearby restaurants and launch Profile Activity
         RestaurantRequest restaurantRequest = new RestaurantRequest(this);
         restaurantRequest.getRestaurants();
+
+        //If MainActivity is launched from a Firebase message
+        if (pack != null) {
+            //Show notification message
+            FirebaseNotificationManager notify = new FirebaseNotificationManager(this);
+            notify.getInfoAboutLunch();
+        }
     }
 
     // Create user in Firestore database
@@ -149,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                                 ? currentUser.getPhotoUrl().toString() : null;
                         String username = currentUser.getDisplayName();
                         String uid = currentUser.getUid();
-                        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
                         // Access the Cloud Firestore instance from the Activity
                         UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(new OnFailureListener() {
@@ -164,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e("main", "failure firebase "+ e); }
+                    Log.e("main", "failure firebase " + e);
+                }
             });
 
         }

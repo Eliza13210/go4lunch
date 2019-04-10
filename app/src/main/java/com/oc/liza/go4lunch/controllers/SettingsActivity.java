@@ -119,6 +119,11 @@ public class SettingsActivity extends BaseActivity {
                             }
                         });
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_deleting_user) + e, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

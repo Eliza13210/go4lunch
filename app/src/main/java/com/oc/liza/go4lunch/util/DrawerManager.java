@@ -46,7 +46,7 @@ public class DrawerManager {
         //Set photo
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         try {
-            assert currentUser != null;
+//            assert currentUser != null;
             String url = Objects.requireNonNull(currentUser.getPhotoUrl()).toString();
             Glide.with(context)
                     .load(url)
@@ -112,7 +112,7 @@ public class DrawerManager {
                     user = document.toObject(User.class);
                     assert user != null;
                     //Find the chosen restaurant in list
-                    if (!user.getRestaurant().equals("not selected") && user.getRestaurant()!=null) {
+                    if (!user.getRestaurant().equals("not selected") && user.getRestaurant() != null) {
                         //Fetch info about restaurant, save it and start restaurant activity
                         manager.saveInfoToRestaurantActivity(user.getPlace_id());
                         try {
