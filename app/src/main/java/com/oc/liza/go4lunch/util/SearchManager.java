@@ -123,7 +123,7 @@ public class SearchManager {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                restaurantManager.resetFullListOfRestaurants();
+                resetList();
                 fragmentAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -196,7 +196,7 @@ public class SearchManager {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                restaurantManager.resetFullListOfRestaurants();
+                resetList();
                 fragmentAdapter.notifyDataSetChanged();
                 return false;
             }

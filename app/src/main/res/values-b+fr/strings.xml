@@ -82,10 +82,12 @@
     <string name="delete_user_dialog">Supprimer utilisateur</string>
     <string name="successfully_deleted">L\'utilisateur a été supprimé</string>
     <string name="error_deleting_user">Erreur\u0020</string>
-    <string name="username_updated">Votre nom d\'utilisateur à été mis à jour</string>
-    <string name="error_updating_username">Erreur, le nom d\'utilisateur n\'a pas été mis à jour</string>
+    <string name="username_updated">Votre nom d\'utilisateur à été mis à jour\u0020</string>
+    <string name="error_updating_username">Erreur, le nom d\'utilisateur n\'a pas été mis à jour\u0020</string>
     <string name="error_create">Erreur créant utilisateur</string>
     <string name="logo">logo</string>
     <string name="photo_restaurant">photo restaurant</string>
     <string name="no_phone_number">No phone number</string>
+
+    <string name="no_website">Pas de site web</string>
 </resources>

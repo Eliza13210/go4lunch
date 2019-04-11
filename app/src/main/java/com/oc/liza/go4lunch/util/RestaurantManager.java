@@ -102,7 +102,7 @@ public class RestaurantManager {
         pref.edit().putString("ListOfRestaurants", json).apply();
     }
 
-    void resetFullListOfRestaurants() {
+    public void resetFullListOfRestaurants() {
 
         pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         String json = pref.getString("ListOfRestaurantsBackUp", null);

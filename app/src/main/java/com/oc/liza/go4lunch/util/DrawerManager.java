@@ -46,7 +46,7 @@ public class DrawerManager {
         //Set photo
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         try {
-//            assert currentUser != null;
+            assert currentUser != null;
             String url = Objects.requireNonNull(currentUser.getPhotoUrl()).toString();
             Glide.with(context)
                     .load(url)

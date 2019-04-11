@@ -11,12 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.oc.liza.go4lunch.MainActivity;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
@@ -108,6 +116,36 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void deleteUserFromFirebase() {
+        AuthCredential credential = null;
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+// Get auth credentials from the user for re-authentication. The example below shows
+// email and password credentials but there are multiple possible providers,
+// such as GoogleAuthProvider or FacebookAuthProvider.
+        for (UserInfo user : Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getProviderData()) {
+            if (user.getProviderId().equals("facebook.com")) {
+                credential = FacebookAuthProvider.getCredential(AccessToken.getCurrentAccessToken().toString());
+                Log.e("provider", "facebook");
+            } else {
+                // Get the account
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+                if (acct != null) {
+                    credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                    Log.e("provider", "google");
+                }
+            }
+        }
+
+        // Prompt the user to re-provide their sign-in credentials
+        assert credential != null;
+        assert firebaseUser != null;
+        firebaseUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.e("delete", "User re-authenticated.");
+                    }
+                });
         Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -124,7 +162,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_deleting_user) + e, Toast.LENGTH_SHORT).show();
-                Log.e("error delete", "error "+ e);
+                Log.e("error delete", "error " + e);
             }
         });
     }

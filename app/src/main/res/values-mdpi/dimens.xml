@@ -7,4 +7,5 @@
     <dimen name="default_textsize">10sp</dimen>
     <dimen name="default_textsize_mini">8sp</dimen>
     <dimen name="large_margin">13sp</dimen>
+    <dimen name="padding_ten">10dp</dimen>
 </resources>
