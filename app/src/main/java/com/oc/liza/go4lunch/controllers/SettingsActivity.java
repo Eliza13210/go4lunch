@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -84,12 +85,12 @@ public class SettingsActivity extends BaseActivity {
                 .setMessage(R.string.delete_user_in_settings)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        deleteUserFromFirebase();
                         // Continue with delete operation
                         UserHelper.deleteUser(uid).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(), R.string.successfully_deleted, Toast.LENGTH_SHORT).show();
-                                deleteUserFromFirebase();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -123,6 +124,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_deleting_user) + e, Toast.LENGTH_SHORT).show();
+                Log.e("error delete", "error "+ e);
             }
         });
     }

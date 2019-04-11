@@ -8,6 +8,10 @@ public class Message {
     private Date dateCreated;
     private String urlImage;
 
+    //Empty constructor
+    public Message() {
+    }
+
     public Message(String message, String urlImage, User userSender, Date dateCreated) {
         this.message = message;
         this.urlImage = urlImage;

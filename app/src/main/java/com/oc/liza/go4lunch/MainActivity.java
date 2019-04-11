@@ -155,22 +155,27 @@ public class MainActivity extends AppCompatActivity {
             UserHelper.getUser(currentUser.getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.e("task", "result " + task.getResult());
                     //Check if user exists in database
-                    if (task.getResult() == null) {
-                        //If not - get current user info
-                        String urlPicture = (currentUser.getPhotoUrl() != null)
-                                ? currentUser.getPhotoUrl().toString() : null;
-                        String username = currentUser.getDisplayName();
-                        String uid = currentUser.getUid();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        Log.e("snapshot", documentSnapshot.toString());
+                        if (!documentSnapshot.exists()) {
+                            //If not - get current user info
+                            String urlPicture = (currentUser.getPhotoUrl() != null)
+                                    ? currentUser.getPhotoUrl().toString() : null;
+                            String username = currentUser.getDisplayName();
+                            String uid = currentUser.getUid();
 
-                        // Access the Cloud Firestore instance from the Activity
-                        UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showSnackBar(linearLayout, getString(R.string.error_create));
-                            }
-                        });
-                        Log.e("MainActivity", "Success creating new user in Firestore");
+                            // Access the Cloud Firestore instance from the Activity
+                            UserHelper.createUser(uid, username, urlPicture, "not selected").addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    showSnackBar(linearLayout, getString(R.string.error_create));
+                                }
+                            });
+                            Log.e("MainActivity", "Success creating new user in Firestore");
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
