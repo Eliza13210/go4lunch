@@ -65,10 +65,10 @@
     <!-- RESTAURANT -->
     <string name="is_eating_at">\u0020déjeune à\u0020</string>
     <string name="is_joining">\u0020y va!\u0020</string>
-    <string name="hasn_not_decided">\u0020Ne s\'est pas encore decidé\u0020</string>
+    <string name="hasn_not_decided">\u0020ne s\'est pas encore decidé\u0020</string>
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
     <string name="navigation_icon">Navigation icon</string>
-    <string name="you_are_going">Vous irez à\u0020</string>
+    <string name="you_are_going">Vous allez à\u0020</string>
     <string name="with_workmates">avec vos collègues\u0020</string>
     <string name="closing_soon">Ferme bientôt</string>
     <string name="opens_at">Ouvre à\u0020</string>
@@ -88,6 +88,6 @@
     <string name="logo">logo</string>
     <string name="photo_restaurant">photo restaurant</string>
     <string name="no_phone_number">No phone number</string>
-
     <string name="no_website">Pas de site web</string>
+    <string name="update_username">Changer nom</string>
 </resources>

@@ -1,28 +1,20 @@
 package com.oc.liza.go4lunch.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.widget.TextView;
 
-import com.oc.liza.go4lunch.controllers.RestaurantActivity;
 import com.oc.liza.go4lunch.models.OpeningHours;
 import com.oc.liza.go4lunch.models.RestaurantDetails;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 
 public class OpeningHoursManagerTest {
 

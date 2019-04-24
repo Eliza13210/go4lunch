@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.oc.liza.go4lunch.MainActivity;
+import com.oc.liza.go4lunch.api.RestaurantRequest;
 
 import java.util.Objects;
 
@@ -94,6 +95,9 @@ public class LocationManager {
                             pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
                             pref.edit().putString("CurrentLatitude", Double.toString(mLatitude)).apply();
                             pref.edit().putString("CurrentLongitude", Double.toString(mLongitude)).apply();
+
+                            //Search nearby restaurants and start Profile Activity
+                            getRestaurantsAndStartProfileActivity();
                         } else {
                             Log.e("map", "Exception: %s", task.getException());
                         }
@@ -106,12 +110,18 @@ public class LocationManager {
         }
     }
 
-    public LatLng getCurrentLatLng() {
+    LatLng getCurrentLatLng() {
         //Get current location
         SharedPreferences pref = context.getSharedPreferences("Go4Lunch", Context.MODE_PRIVATE);
         double currentLat = Double.parseDouble(pref.getString("CurrentLatitude", "10"));
         double currentLng = Double.parseDouble(pref.getString("CurrentLongitude", "10"));
 
         return new LatLng(currentLat, currentLng);
+    }
+
+    private void getRestaurantsAndStartProfileActivity() {
+        //Get nearby restaurants and launch Profile Activity
+        RestaurantRequest restaurantRequest = new RestaurantRequest(context);
+        restaurantRequest.getRestaurants();
     }
 }

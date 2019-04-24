@@ -26,7 +26,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.oc.liza.go4lunch.api.RestaurantRequest;
 import com.oc.liza.go4lunch.api.UserHelper;
 import com.oc.liza.go4lunch.notifications.FirebaseNotificationManager;
 import com.oc.liza.go4lunch.util.LocationManager;
@@ -133,13 +132,9 @@ public class MainActivity extends AppCompatActivity {
         //Create user in firestore if not already registered
         createUserInFirestore();
 
-        //Get user location
+        //Get user location, search nearby restaurants and launch Profile Activity
         locationManager = new LocationManager(this);
         locationManager.checkLocationPermission();
-
-        //Get nearby restaurants and launch Profile Activity
-        RestaurantRequest restaurantRequest = new RestaurantRequest(this);
-        restaurantRequest.getRestaurants();
 
         //If MainActivity is launched from a Firebase message
         if (pack != null) {

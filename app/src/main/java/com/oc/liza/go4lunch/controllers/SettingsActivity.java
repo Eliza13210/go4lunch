@@ -76,6 +76,7 @@ public class SettingsActivity extends BaseActivity {
         UserHelper.updateUsername(username, uid).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                update_text.getText().clear();
                 Toast.makeText(getApplicationContext(), getString(R.string.username_updated) + username, Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -119,9 +120,9 @@ public class SettingsActivity extends BaseActivity {
         AuthCredential credential = null;
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-// Get auth credentials from the user for re-authentication. The example below shows
-// email and password credentials but there are multiple possible providers,
-// such as GoogleAuthProvider or FacebookAuthProvider.
+        // Get auth credentials from the user for re-authentication. The example below shows
+        // email and password credentials but there are multiple possible providers,
+        // such as GoogleAuthProvider or FacebookAuthProvider.
         for (UserInfo user : Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getProviderData()) {
             if (user.getProviderId().equals("facebook.com")) {
                 credential = FacebookAuthProvider.getCredential(AccessToken.getCurrentAccessToken().toString());

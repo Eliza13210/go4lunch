@@ -21,7 +21,7 @@ public class User {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
-        this.restaurant=restaurant;
+        this.restaurant = restaurant;
     }
 
     // --- GETTERS ---

@@ -1,6 +1,7 @@
 package com.oc.liza.go4lunch.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.oc.liza.go4lunch.BuildConfig;
+import com.oc.liza.go4lunch.controllers.ProfileActivity;
 import com.oc.liza.go4lunch.util.DistanceCalculator;
 import com.oc.liza.go4lunch.R;
 import com.oc.liza.go4lunch.api.UserHelper;
@@ -144,6 +146,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     manager.startRestaurantActivity();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    context.startActivity(new Intent(context, ProfileActivity.class));
                 }
 
             }

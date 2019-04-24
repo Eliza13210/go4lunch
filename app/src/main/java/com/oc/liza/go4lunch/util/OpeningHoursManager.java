@@ -1,7 +1,6 @@
 package com.oc.liza.go4lunch.util;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.oc.liza.go4lunch.R;
@@ -18,9 +17,9 @@ import java.util.Locale;
 public class OpeningHoursManager {
 
     private Context context;
-    String text="";
-     int localTime;
-     int day;
+    String text = "";
+    int localTime;
+    int day;
     private RestaurantDetails details;
 
     private TextView opening_hours;
@@ -47,7 +46,7 @@ public class OpeningHoursManager {
         day = cal.get(Calendar.DAY_OF_WEEK);
     }
 
-     void getOpeningHoursToday() {
+    void getOpeningHoursToday() {
         //Get list of opening hours for the restaurant
         List<OpeningHours> openHours = details.getOpening_hours().getPeriods();
         int dayOfWeek = 0;
@@ -93,18 +92,18 @@ public class OpeningHoursManager {
 
                     //If restaurant is open
                     //If restaurant is closing in 30 minutes
-                    if ((closingLunchInt-localTime) < 30 && (localTime - closingLunchInt) < 0) {
-                        text="Closing soon";
+                    if ((closingLunchInt - localTime) < 30 && (localTime - closingLunchInt) < 0) {
+                        text = "Closing soon";
                         opening_hours.setText(R.string.closing_soon);
                     }
                     //If restaurant is closed
                     else if (localTime > closingLunchInt) {
-                        text="Closed";
+                        text = "Closed";
                         opening_hours.setText(R.string.closed);
                     }
                     //If restaurant is not yet open for lunch
                     else if (localTime < openMorningInt) {
-                        text="Not yet open";
+                        text = "Not yet open";
                         String str = Integer.toString(openMorningInt);
                         str = new StringBuilder(str).insert(str.length() - 2, ".").toString();
                         String text = context.getString(R.string.opens_at) + str + "pm";
@@ -122,12 +121,12 @@ public class OpeningHoursManager {
             } catch (Exception e) {
                 // Restaurant is open but there are no details about opening hours
                 if (details.getOpening_hours().isOpen_now()) {
-                    text="Is open now";
+                    text = "Is open now";
                     opening_hours.setText(context.getString(R.string.open));
                 }
                 // Restaurant is closed but there are no details about opening hours
                 else if (!details.getOpening_hours().isOpen_now()) {
-                    text="Is not open now";
+                    text = "Is not open now";
                     opening_hours.setText(context.getString(R.string.closed));
                 }
             }

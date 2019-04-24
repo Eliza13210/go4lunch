@@ -62,7 +62,6 @@ public class RestaurantRequest {
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
     }

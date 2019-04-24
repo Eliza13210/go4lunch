@@ -127,7 +127,7 @@ public class FirebaseNotificationManager {
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.coffe_cup)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(context.getString(R.string.notification_title))
+                        .setContentText(context.getString(R.string.notification_title) + " " + message)
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)

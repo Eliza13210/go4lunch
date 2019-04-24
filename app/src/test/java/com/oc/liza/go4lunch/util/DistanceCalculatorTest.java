@@ -1,11 +1,10 @@
-package com.oc.liza.go4lunch;
+package com.oc.liza.go4lunch.util;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.oc.liza.go4lunch.util.DistanceCalculator;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DistanceCalculatorTest {
 

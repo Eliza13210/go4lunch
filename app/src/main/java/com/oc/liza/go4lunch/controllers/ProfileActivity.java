@@ -51,10 +51,10 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
     RecyclerView recyclerView;
 
     //For drawer menu
-     DrawerManager manager;
+    private DrawerManager manager;
     //Viewpager
     private MyFragmentPagerAdapter fragmentAdapter;
-
+    //Handle search
     private SearchManager searchManager;
 
     @Override
@@ -208,6 +208,7 @@ public class ProfileActivity extends BaseActivity implements NavigationView.OnNa
         super.onRestart();
         fragmentAdapter.notifyDataSetChanged();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
