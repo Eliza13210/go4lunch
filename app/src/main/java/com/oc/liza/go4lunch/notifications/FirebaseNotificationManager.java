@@ -35,7 +35,8 @@ public class FirebaseNotificationManager {
     private String address = "";
     private String message;
     private String place_id;
-    private List<User> users = new ArrayList<>();
+    private String userName;
+    private List<String> users = new ArrayList<>();
     private RestaurantManager manager;
 
 
@@ -56,6 +57,7 @@ public class FirebaseNotificationManager {
                     assert document != null;
                     User user = document.toObject(User.class);
                     assert user != null;
+                    userName=user.getUsername();
                     if (user.getRestaurant() != null && !user.getRestaurant().equals("not selected")) {
                         restaurant = user.getRestaurant();
                         place_id = user.getPlace_id();
@@ -82,12 +84,22 @@ public class FirebaseNotificationManager {
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 // convert document to POJO
                                 User user = document.toObject(User.class);
-                                users.add(user);
+                                users.add(user.getUsername());
                             }
                             //User has chosen a restaurant
                             if (!restaurant.equals(context.getString(R.string.drawer_lunch))) {
                                 //Create notification message
-                                message = context.getString(R.string.you_are_going) + restaurant + ", " + address + context.getString(R.string.with_workmates) + users;
+                                StringBuilder builder = new StringBuilder();
+                                for (String name : users) {
+                                    if(!name.equals(userName)) {
+                                        builder.append(name + " ");
+                                    }
+                                }
+                                message = context.getString(R.string.you_are_going) + restaurant + ", "
+                                        + address;
+                                if(users.size()>1){
+                                    message+= context.getString(R.string.with_workmates) + " " + builder;
+                                }
                             } else {
                                 //User hasn't chosen a restaurant
                                 message = context.getString(R.string.drawer_lunch);
@@ -127,11 +139,12 @@ public class FirebaseNotificationManager {
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.coffe_cup)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(context.getString(R.string.notification_title) + " " + message)
+                        .setContentText(context.getString(R.string.notification_title))
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)
-                        .setStyle(inboxStyle);
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(message));
 
         // 5 - Add the Notification to the Notification Manager and show it.
         android.app.NotificationManager notificationManager = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

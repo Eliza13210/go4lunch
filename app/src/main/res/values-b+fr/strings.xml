@@ -69,7 +69,7 @@
     <string name="drawer_lunch">Tu n\'as pas encore choisi de restaurant!</string>
     <string name="navigation_icon">Navigation icon</string>
     <string name="you_are_going">Vous allez à\u0020</string>
-    <string name="with_workmates">avec vos collègues\u0020</string>
+    <string name="with_workmates">\u0020avec vos collègues\u0020\u0020</string>
     <string name="closing_soon">Ferme bientôt</string>
     <string name="opens_at">Ouvre à\u0020</string>
     <string name="open_until">Ouvert jusqu\'à\u0020</string>
