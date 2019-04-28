@@ -56,7 +56,7 @@
     <string name="send_button">Send</string>
     <string name="profile_image">profile_image</string>
     <string name="img_description_cardview">cardview image</string>
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_chat">Chat</string>
     <string name="chat_error">chat error</string>
     <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
     <string name="toast_title_no_image_chosen">No image chosen</string>

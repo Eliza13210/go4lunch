@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
-    <string name="sign_in_google">Connexion avec Google</string>
-    <string name="sign_in_facebook">Connexion avec Facebook</string>
+    <string name="sign_in_google">Logga in med Google</string>
+    <string name="sign_in_facebook">Logga in med Facebook</string>
     <string name="client_id_google">770258625538-kjca2s5damch1of190puatlmub7uuet5.apps.googleusercontent.com</string>
 
     <!-- FACEBOOK PURPOSE -->
@@ -11,18 +11,18 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="error_authentication_canceled">Avbruten</string>
     <string name="error_no_internet">Inget Internet</string>
-    <string name="error_unknown_error">Erreur inconnue</string>
+    <string name="error_unknown_error">Okänt fel</string>
 
     <!-- NAVIGATION MENUS -->
-    <string name="search">Rechercher</string>
+    <string name="search">Sök</string>
 
-    <string name="title_map">Carte</string>
-    <string name="title_list">Liste de restaurants</string>
-    <string name="title_users">Collègues</string>
+    <string name="title_map">Karta</string>
+    <string name="title_list">Restauranglista</string>
+    <string name="title_users">Kollegor</string>
 
     <string name="phone">TEL</string>
-    <string name="like">AIMER</string>
-    <string name="website">SITE WEB</string>
+    <string name="like">GILLA</string>
+    <string name="website">HEMSIDA</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="workmates">Kollegor</string>
@@ -48,11 +48,11 @@
     <string name="log_out">LOGGA UT</string>
 
     <!-- CHAT-->
-    <string name="img_description_photo">photo</string>
-    <string name="img_description_add_file_button">Joindre fichier</string>
-    <string name="write_your_message_here">Ecrire ici…</string>
-    <string name="send_button">Envoyer</string>
-    <string name="profile_image">photo utilisateur</string>
+    <string name="img_description_photo">foto</string>
+    <string name="img_description_add_file_button">Lägg till fil</string>
+    <string name="write_your_message_here">Skriv här…</string>
+    <string name="send_button">Skicka</string>
+    <string name="profile_image">användar foto</string>
     <string name="img_description_cardview">cardview</string>
     <string name="popup_title_permission_files_access">popup_title_permission_files_access</string>
     <string name="toast_title_no_image_chosen">Ingen bild vald</string>
@@ -63,7 +63,7 @@
     <string name="is_joining">\u0020gâr hit!</string>
     <string name="hasn_not_decided">\u0020har inte bestämt sig </string>
     <string name="drawer_lunch">Du har inte valt restaurang ännu!</string>
-    <string name="navigation_icon">Navigation icon</string>
+    <string name="navigation_icon">Navigation ikon</string>
     <string name="you_are_going">Du gâr till\u0020</string>
     <string name="with_workmates">\u0020med dina kollegor\u0020</string>
     <string name="closing_soon">Stänger snart</string>
