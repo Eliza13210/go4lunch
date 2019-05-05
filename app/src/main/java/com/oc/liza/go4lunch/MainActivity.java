@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             UserHelper.getUser(currentUser.getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Log.e("task", "result " + task.getResult());
+
                     //Check if user exists in database
                     if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
