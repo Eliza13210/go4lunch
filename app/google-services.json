@@ -23,14 +23,6 @@
           }
         },
         {
-          "client_id": "770258625538-3kn8p85imvtb1o3q6m6tlbn3hmdmcmfp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.oc.liza.go4lunch",
-            "certificate_hash": "89b949d881bef0b7f986ec14af6cf03680617366"
-          }
-        },
-        {
           "client_id": "770258625538-d78dc04n3hl9mleon2j9769m4lhdmap2.apps.googleusercontent.com",
           "client_type": 3
         }
